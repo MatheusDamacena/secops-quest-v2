@@ -1,0 +1,232 @@
+[
+  {
+    "term": "UDM",
+    "cat": "Arquitetura",
+    "def": "Unified Data Model — schema padrão do Google SecOps para normalizar logs de qualquer fabricante num formato comum. Uma regra YARA-L escrita sobre UDM funciona para todos os produtos."
+  },
+  {
+    "term": "Raw Log",
+    "cat": "Arquitetura",
+    "def": "Log bruto original, exatamente como chegou do produto antes da normalização. O Google SecOps armazena raw log e UDM lado a lado para auditoria."
+  },
+  {
+    "term": "Parser",
+    "cat": "Arquitetura",
+    "def": "Componente que lê o raw log de um produto específico e converte para campos UDM. O Google mantém +500 parsers prontos para os principais fabricantes."
+  },
+  {
+    "term": "SIEM",
+    "cat": "Arquitetura",
+    "def": "Security Information and Event Management — sistema que centraliza, correlaciona e analisa logs de segurança em tempo real."
+  },
+  {
+    "term": "SOAR",
+    "cat": "Arquitetura",
+    "def": "Security Orchestration, Automation and Response — automatiza respostas a incidentes via Playbooks. Integrado nativamente ao Google SecOps."
+  },
+  {
+    "term": "Rules Engine",
+    "cat": "Arquitetura",
+    "def": "Motor do Google SecOps que executa regras YARA-L continuamente sobre eventos normalizados e gera Detections quando as condições são atendidas."
+  },
+  {
+    "term": "Detection",
+    "cat": "Arquitetura",
+    "def": "Alerta gerado pelo Rules Engine quando uma regra YARA-L casa com eventos. Aparece na fila de triagem do SOC para investigação."
+  },
+  {
+    "term": "BindPlane",
+    "cat": "Arquitetura",
+    "def": "Agente de coleta de logs open-source que envia dados de fontes on-premises para o Google SecOps. É a principal opção de Forwarder."
+  },
+  {
+    "term": "Playbook",
+    "cat": "Arquitetura",
+    "def": "Fluxo automatizado no SOAR que define ações em resposta a um alerta: abrir ticket no Jira, bloquear IP, notificar Slack, isolar endpoint."
+  },
+  {
+    "term": "event_type",
+    "cat": "UDM",
+    "def": "Campo obrigatório em todo evento UDM que define o tipo de atividade. Ex: USER_LOGIN, NETWORK_CONNECTION, FILE_CREATION, NETWORK_DNS, PROCESS_LAUNCH."
+  },
+  {
+    "term": "principal",
+    "cat": "UDM",
+    "def": "Seção UDM que representa o ator que iniciou a ação — IP de origem ($e.principal.ip), hostname, usuário ($e.principal.user.userid), processo pai."
+  },
+  {
+    "term": "target",
+    "cat": "UDM",
+    "def": "Seção UDM que representa o alvo da ação — IP de destino ($e.target.ip), porta ($e.target.port), arquivo ($e.target.file.full_path), usuário-alvo."
+  },
+  {
+    "term": "metadata",
+    "cat": "UDM",
+    "def": "Seção presente em todo evento UDM. Contém event_type, event_timestamp, product_name e vendor_name."
+  },
+  {
+    "term": "security_result",
+    "cat": "UDM",
+    "def": "Seção com a decisão de segurança tomada pelo produto: ALLOW, BLOCK, QUARANTINE, UNKNOWN_ACTION. Acessado via $e.security_result.action."
+  },
+  {
+    "term": "network",
+    "cat": "UDM",
+    "def": "Seção com dados da camada de rede: bytes enviados ($e.network.sent_bytes), protocolo, campos DNS ($e.network.dns.questions.name), HTTP."
+  },
+  {
+    "term": "YARA-L",
+    "cat": "YARA-L",
+    "def": "YARA for Logging — linguagem de detecção proprietária do Google SecOps para criar regras que identificam padrões em eventos UDM."
+  },
+  {
+    "term": "meta",
+    "cat": "YARA-L",
+    "def": "Seção obrigatória da regra com metadados: rule_name, severity, author, mitre_attack_technique_id. Não afeta a lógica de detecção."
+  },
+  {
+    "term": "events",
+    "cat": "YARA-L",
+    "def": "Seção central da regra com os filtros nos campos UDM. Variáveis $e, $e1, $e2 representam eventos. Toda regra precisa desta seção."
+  },
+  {
+    "term": "match",
+    "cat": "YARA-L",
+    "def": "Seção opcional que agrupa eventos por uma placeholder variable (ex: $ip) dentro de uma janela de tempo (ex: over 10m). Sem match = evento único."
+  },
+  {
+    "term": "condition",
+    "cat": "YARA-L",
+    "def": "Seção que define o threshold de disparo. Ex: #e > 5 (mais de 5 eventos), #e >= 1 (qualquer ocorrência), #e1 >= 1 and #e2 >= 1 (ambos presentes)."
+  },
+  {
+    "term": "outcome",
+    "cat": "YARA-L",
+    "def": "Seção opcional com variáveis calculadas via sum(), count(), max(), array_distinct(). Usada em composite rules e exibida nos alertas do SOAR."
+  },
+  {
+    "term": "nocase",
+    "cat": "YARA-L",
+    "def": "Modificador que torna o match insensível a maiúsculas/minúsculas. Ex: $e.target.hostname = \"desktop-01\" nocase"
+  },
+  {
+    "term": "net.ip_in_range_cidr()",
+    "cat": "YARA-L",
+    "def": "Verifica se IP está em range CIDR. Sintaxe: net.ip_in_range_cidr($e.principal.ip, \"10.0.0.0/8\"). Exemplo com not: not net.ip_in_range_cidr($e.target.ip, \"192.168.0.0/16\")"
+  },
+  {
+    "term": "re.regex()",
+    "cat": "YARA-L",
+    "def": "Função de expressão regular com backticks para o padrão. Ex: re.regex($e.target.process.file.full_path, `cmd\\\\.exe|powershell\\\\.exe`) nocase"
+  },
+  {
+    "term": "re.capture()",
+    "cat": "YARA-L",
+    "def": "Extrai um grupo de captura de um campo para uma variável. Ex: $domain = re.capture($e.network.dns.questions.name, `\\\\.([^.]+)\\\\.[^.]+$`)"
+  },
+  {
+    "term": "in %",
+    "cat": "YARA-L",
+    "def": "Verifica se um campo está em uma reference list. Ex: $e.target.hostname in %blocklist_domains. Prefixo % sempre indica reference list."
+  },
+  {
+    "term": "BindPlane Agent",
+    "cat": "Ingestão",
+    "def": "Pipeline de telemetria moderno para coleta on-prem de logs (Windows, Linux, firewalls). Substituto recomendado do Forwarder legado. Gerenciado via BindPlane OP console. Suporta OpenTelemetry. Envia ao Google SecOps via Ingestion API."
+  },
+  {
+    "term": "Connector",
+    "cat": "Ingestão",
+    "def": "Componente SOAR baixado via Content Hub que ingere alertas de fontes externas (EDR, NGFW, cloud) para o Google SecOps SOAR. Diferente de Feed (ingesta logs brutos no SIEM) — Connector ingesta alertas já processados para o workflow de resposta."
+  },
+  {
+    "term": "Feed",
+    "cat": "Ingestão",
+    "def": "Mecanismo de ingestão configurado na UI do SecOps. Tipos: Pull (GCS, S3, APIs de terceiros), Push/Webhook (HTTPS endpoint), Pub/Sub (GCP nativo), Amazon Data Firehose."
+  },
+  {
+    "term": "Webhook HTTPS Push",
+    "cat": "Ingestão",
+    "def": "Método push onde a fonte envia logs ao endpoint HTTPS do SecOps. Limite: 4MB/request, 15.000 QPS. Auth via API key no header. Útil para ferramentas SaaS com suporte a webhook."
+  },
+  {
+    "term": "Forwarder",
+    "cat": "Ingestão",
+    "def": "Componente de software legado que coleta logs/packets na rede do cliente e envia ao Google SecOps. Ainda documentado e funcional. Para novos projetos, o BindPlane Agent é o substituto moderno com gerenciamento centralizado e suporte a OpenTelemetry."
+  },
+  {
+    "term": "Pub/Sub",
+    "cat": "Ingestão",
+    "def": "Integração nativa GCP: Cloud Logging → Log Sink → Pub/Sub Topic → Google SecOps. Sem agente ou BindPlane necessários para logs GCP nativos."
+  },
+  {
+    "term": "Reference List",
+    "cat": "YARA-L",
+    "def": "Lista centralizada no Google SecOps (tipo string, regex ou CIDR) referenciada por regras com %. Atualizar a lista atualiza todas as regras automaticamente."
+  },
+  {
+    "term": "Composite Rule",
+    "cat": "YARA-L",
+    "def": "Regra que opera sobre Detections geradas por outras regras. Campos: $d.detection.outcomes[\"var\"] (outcomes), $d.detection.risk_score, $d.detection.rule_labels.key/value (meta), $d.detection.detection_depth = 0 (anti-loop). Ideal para risk-based alerting somando scores de múltiplas regras."
+  },
+  {
+    "term": "over",
+    "cat": "YARA-L",
+    "def": "Palavra-chave do match que define a janela de tempo. Ex: $ip over 10m — agrupa eventos do mesmo IP em 10 minutos. Suporta s, m, h, d."
+  },
+  {
+    "term": "#e / #e1",
+    "cat": "YARA-L",
+    "def": "Na condition, representa a contagem de eventos correspondentes. #e > 5 = mais de 5 eventos. Usar #e1, #e2 para múltiplas variáveis de evento."
+  },
+  {
+    "term": "Curated Detections",
+    "cat": "Operações",
+    "def": "Regras YARA-L prontas mantidas pelo Google/Mandiant, mapeadas para MITRE ATT&CK. Atualizam automaticamente. Disponíveis nos pacotes Enterprise e Enterprise Plus."
+  },
+  {
+    "term": "MITRE ATT&CK",
+    "cat": "Operações",
+    "def": "Framework de táticas e técnicas de ataque. 14 táticas, centenas de técnicas. Ex: T1110 = Brute Force, T1055 = Process Injection, T1486 = Data Encrypted for Impact."
+  },
+  {
+    "term": "IOC",
+    "cat": "Operações",
+    "def": "Indicator of Compromise — artefato que indica possível comprometimento: IP malicioso, hash de malware, domínio de C2. Geralmente armazenado em reference lists."
+  },
+  {
+    "term": "Triage",
+    "cat": "Operações",
+    "def": "Processo de avaliação e priorização de alertas na fila do SOC. O Google SecOps possui Triage Agent com IA para automatizar parte deste processo."
+  },
+  {
+    "term": "Risk Analytics",
+    "cat": "Operações",
+    "def": "UEBA integrado ao SecOps. Usa entidade como unidade primária. Agrega $risk_score de múltiplas regras para usuários/assets ao longo do tempo com decaimento. Defaults: Alert = 40pts, Detection = 15pts."
+  },
+  {
+    "term": "Cases & Alerts",
+    "cat": "Operações",
+    "def": "Cases agrupam Alerts (detecções individuais) correlacionados para investigação. Alert Grouping define agrupamento automático. O analista trabalha no Case com SLA timer e prioridade."
+  },
+  {
+    "term": "Graph Investigator",
+    "cat": "Operações",
+    "def": "Ferramenta de visualização em grafo: nós (User, Asset, IP, Domínio, Hash) ligados por eventos. Identifica blast radius e movimento lateral. Disponível na fase Investigate."
+  },
+  {
+    "term": "Content Hub",
+    "cat": "Operações",
+    "def": "Marketplace do SecOps: Integrations, Playbooks prontos, Parsers, Dashboards, Use Cases. Instalável em 1 clique, atualizado automaticamente."
+  },
+  {
+    "term": "Data RBAC",
+    "cat": "Admin",
+    "def": "Role-Based Access Control nos dados do SecOps. Scoped users: acesso a labels específicos. Global users: acesso total. Risk Analytics exige Global user."
+  },
+  {
+    "term": "Asset Aliasing",
+    "cat": "UDM",
+    "def": "Enriquecimento automático: DHCP → hostname → usuário. O SecOps correlaciona IPs com logs DHCP para adicionar contexto automaticamente, sem join manual em YARA-L."
+  }
+]

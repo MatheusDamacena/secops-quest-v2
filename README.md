@@ -31,7 +31,7 @@ src/
 │   └── useProgress.js  # Progresso, XP, streak
 ├── firebase/
 │   ├── config.js   # Inicialização Firebase
-│   └── db.js       # Helpers Firestore (saveUser, loadUser, leaderboard)
+│   └── db.js       # Helpers Firestore
 ├── data/           # Conteúdo em JSON (módulos, questões, glossário)
 ├── styles/
 │   └── tokens.js   # Design tokens — cores e fontes centralizadas
@@ -40,69 +40,35 @@ src/
 
 ---
 
-## Passo a passo: configuração inicial
+## Passo a passo: do zero ao deploy
 
-### 1. Criar o repositório no GitHub
+### PASSO 1 — Criar o projeto Firebase
 
-1. Acesse github.com → **New repository**
-2. Nome: `secops-quest-v2`
-3. Visibilidade: **Public**
-4. Clique em **Create repository**
-5. No terminal do seu Mac:
-
-```bash
-cd ~/Documents
-git clone https://github.com/MatheusDamacena/secops-quest-v2.git
-cd secops-quest-v2
-```
-
----
-
-### 2. Copiar os arquivos do projeto
-
-Copie todos os arquivos deste projeto para a pasta clonada e faça o primeiro commit:
-
-```bash
-# Instalar dependências
-npm install
-
-# Testar localmente (vai funcionar mesmo sem Firebase ainda)
-npm run dev
-# Abre http://localhost:5173
-
-# Primeiro commit
-git add .
-git commit -m "feat: estrutura inicial SecOps Quest v2"
-git push origin main
-```
-
----
-
-### 3. Criar o projeto Firebase
+> ⚠️ Faça isso ANTES de rodar o projeto localmente.
 
 1. Acesse **console.firebase.google.com**
 2. Clique em **Adicionar projeto**
 3. Nome: `secops-quest-v2`
-4. Desative o Google Analytics (não precisa)
+4. Desative o Google Analytics
 5. Clique em **Criar projeto**
 
-#### 3.1 Ativar Authentication
+#### 1.1 — Ativar Authentication
 
-1. No menu lateral: **Authentication → Primeiros passos**
+1. Menu lateral → **Authentication → Primeiros passos**
 2. Aba **Sign-in method**
 3. Ative **E-mail/senha**
 4. Ative **Google**
 
-#### 3.2 Criar Firestore
+#### 1.2 — Criar Firestore
 
-1. No menu lateral: **Firestore Database → Criar banco de dados**
+1. Menu lateral → **Firestore Database → Criar banco de dados**
 2. Selecione **Modo de produção**
 3. Região: **southamerica-east1** (São Paulo)
 4. Clique em **Ativar**
 
-#### 3.3 Configurar Security Rules do Firestore
+#### 1.3 — Configurar Security Rules
 
-No Firestore → **Regras**, cole:
+No Firestore → aba **Regras**, substitua o conteúdo por:
 
 ```
 rules_version = '2';
@@ -121,99 +87,159 @@ service cloud.firestore {
 
 Clique em **Publicar**.
 
-#### 3.4 Pegar as credenciais
+#### 1.4 — Pegar as credenciais do Firebase
 
-1. Configurações do projeto (ícone ⚙️) → **Configurações do projeto**
+1. Clique no ícone ⚙️ → **Configurações do projeto**
 2. Aba **Seus aplicativos** → clique em **</>** (Web)
-3. Nome: `secops-quest-v2-web`
-4. **Não** ative o Firebase Hosting
-5. Copie o objeto `firebaseConfig`
+3. Nome do app: `secops-quest-v2-web`
+4. **Não** marque "Firebase Hosting"
+5. Clique em **Registrar app**
+6. Você vai ver um objeto assim — **copie os valores**:
 
-#### 3.5 Criar o .env.local
+```js
+const firebaseConfig = {
+  apiKey: "AIzaSy...",
+  authDomain: "secops-quest-v2.firebaseapp.com",
+  projectId: "secops-quest-v2",
+  storageBucket: "secops-quest-v2.firebasestorage.app",
+  messagingSenderId: "524982...",
+  appId: "1:524982...:web:..."
+};
+```
 
-Na raiz do projeto:
+---
+
+### PASSO 2 — Configurar o projeto local
+
+1. Descompacte o zip do projeto
+2. Entre na pasta:
+
+```bash
+cd ~/Documents/secops-quest-v2
+```
+
+3. Crie o arquivo `.env.local` a partir do template:
 
 ```bash
 cp .env.example .env.local
 ```
 
-Edite o `.env.local` com os valores do Firebase:
+4. Abra o `.env.local` no VSCode e preencha com os valores do Firebase:
 
 ```
 VITE_FB_API_KEY=AIzaSy...
 VITE_FB_AUTH_DOMAIN=secops-quest-v2.firebaseapp.com
 VITE_FB_PROJECT_ID=secops-quest-v2
 VITE_FB_STORAGE_BUCKET=secops-quest-v2.firebasestorage.app
-VITE_FB_MESSAGING_SENDER_ID=524982818...
-VITE_FB_APP_ID=1:524982818...:web:...
+VITE_FB_MESSAGING_SENDER_ID=524982...
+VITE_FB_APP_ID=1:524982...:web:...
 ```
 
-Teste local:
+5. Instale as dependências:
+
+```bash
+npm install
+```
+
+6. Rode localmente:
+
 ```bash
 npm run dev
 ```
 
----
-
-### 4. Criar conta na Vercel e conectar o repositório
-
-1. Acesse **vercel.com** → **Sign up with GitHub**
-2. Clique em **New Project**
-3. Importe `MatheusDamacena/secops-quest-v2`
-4. Framework: **Vite** (detecta automático)
-5. **Environment Variables** — adicione todas do `.env.local`:
-   - `VITE_FB_API_KEY`
-   - `VITE_FB_AUTH_DOMAIN`
-   - `VITE_FB_PROJECT_ID`
-   - `VITE_FB_STORAGE_BUCKET`
-   - `VITE_FB_MESSAGING_SENDER_ID`
-   - `VITE_FB_APP_ID`
-6. Clique em **Deploy**
-
-Seu site estará em: `secops-quest-v2.vercel.app`
+Acesse **http://localhost:5173** — deve aparecer a tela de login.
 
 ---
 
-### 5. Configurar CI/CD com GitHub Actions
+### PASSO 3 — Criar o repositório no GitHub
 
-O deploy automático via GitHub Actions requer 3 secrets da Vercel.
+1. Acesse **github.com → New repository**
+2. Nome: `secops-quest-v2`
+3. Visibilidade: **Private** (pode mudar depois)
+4. **Não** inicialize com README
+5. Clique em **Create repository**
 
-#### 5.1 Pegar os tokens da Vercel
+6. No terminal, dentro da pasta do projeto:
 
 ```bash
-# Instalar Vercel CLI
+git init
+git add .
+git commit -m "feat: estrutura inicial SecOps Quest v2"
+git remote add origin https://github.com/MatheusDamacena/secops-quest-v2.git
+git branch -M main
+git push -u origin main
+```
+
+---
+
+### PASSO 4 — Criar conta na Vercel e fazer o deploy
+
+1. Acesse **vercel.com**
+2. Clique em **Sign up → Continue with GitHub**
+3. Clique em **New Project**
+4. Importe `MatheusDamacena/secops-quest-v2`
+5. Framework: **Vite** (detectado automaticamente)
+6. Em **Environment Variables**, adicione as 6 variáveis do `.env.local`:
+
+| Nome | Valor |
+|------|-------|
+| `VITE_FB_API_KEY` | sua API Key |
+| `VITE_FB_AUTH_DOMAIN` | seu Auth Domain |
+| `VITE_FB_PROJECT_ID` | `secops-quest-v2` |
+| `VITE_FB_STORAGE_BUCKET` | seu Storage Bucket |
+| `VITE_FB_MESSAGING_SENDER_ID` | seu Sender ID |
+| `VITE_FB_APP_ID` | seu App ID |
+
+7. Clique em **Deploy**
+
+Seu site estará disponível em: `https://secops-quest-v2.vercel.app`
+
+---
+
+### PASSO 5 — Configurar CI/CD com GitHub Actions
+
+A partir daqui, todo `git push` na branch `main` faz deploy automático na Vercel.
+
+#### 5.1 — Instalar o Vercel CLI e linkar o projeto
+
+```bash
 npm i -g vercel
-
-# Login
 vercel login
-
-# Linkar o projeto (rode na pasta do projeto)
 vercel link
-# Isso cria .vercel/project.json com org-id e project-id
+```
+
+O comando `vercel link` vai perguntar qual projeto linkar — selecione `secops-quest-v2`. Isso cria o arquivo `.vercel/project.json`.
+
+Veja os IDs gerados:
+
+```bash
 cat .vercel/project.json
 ```
 
-Você vai ver algo como:
+Você vai ver:
 ```json
-{ "orgId": "team_xxx", "projectId": "prj_xxx" }
+{
+  "orgId": "team_xxx",
+  "projectId": "prj_xxx"
+}
 ```
 
-#### 5.2 Gerar token de acesso da Vercel
+#### 5.2 — Gerar token da Vercel
 
-1. vercel.com → **Account Settings → Tokens**
+1. **vercel.com → Account Settings → Tokens**
 2. Clique em **Create Token**
 3. Nome: `github-actions`
 4. Copie o token gerado
 
-#### 5.3 Adicionar secrets no GitHub
+#### 5.3 — Adicionar secrets no GitHub
 
 Acesse: `github.com/MatheusDamacena/secops-quest-v2/settings/secrets/actions`
 
-Adicione:
+Clique em **New repository secret** e adicione um por um:
 
 | Secret | Valor |
 |--------|-------|
-| `VERCEL_TOKEN` | token gerado no passo 5.2 |
+| `VERCEL_TOKEN` | token do passo 5.2 |
 | `VERCEL_ORG_ID` | `orgId` do project.json |
 | `VERCEL_PROJECT_ID` | `projectId` do project.json |
 | `VITE_FB_API_KEY` | sua API Key Firebase |
@@ -223,7 +249,7 @@ Adicione:
 | `VITE_FB_MESSAGING_SENDER_ID` | seu Sender ID |
 | `VITE_FB_APP_ID` | seu App ID |
 
-#### 5.4 Testar o CI/CD
+#### 5.4 — Testar o CI/CD
 
 ```bash
 git commit --allow-empty -m "test: verificar CI/CD"
@@ -232,57 +258,56 @@ git push origin main
 
 Acesse: `github.com/MatheusDamacena/secops-quest-v2/actions`
 
-Deve aparecer o workflow rodando. Em ~60 segundos o deploy vai para a Vercel.
+Em ~60 segundos o deploy aparece na Vercel.
 
 ---
 
-### 6. Proteção da API Key Firebase
+### PASSO 6 — Proteger a API Key do Firebase
 
-No Firebase Console → **Configurações do projeto → Suas APIs**:
-
-1. Clique em **API Key** → **Editar**
-2. Em **Restrições de aplicativo**: selecione **Referenciadores HTTP**
-3. Adicione:
+1. Firebase Console → **Configurações do projeto**
+2. Aba **Geral** → role até **Suas APIs**
+3. Clique na **API Key** → **Editar restrições**
+4. Em **Restrições de aplicativo**: selecione **Referenciadores HTTP**
+5. Adicione:
    - `https://secops-quest-v2.vercel.app/*`
-   - `http://localhost:5173/*` (para desenvolvimento)
-4. Salve
+   - `http://localhost:5173/*`
+6. Salve
 
 ---
 
-## Fluxo de desenvolvimento
+## Fluxo de desenvolvimento no dia a dia
 
 ```
-você edita um arquivo → git push → GitHub Actions roda → Vercel deploya
-                                                        ↓
-                                              em ~60 segundos online
+editar arquivo → git add . → git commit -m "..." → git push → deploy automático
 ```
 
-Para desenvolvimento local:
 ```bash
-npm run dev      # servidor local com hot-reload
-npm run build    # gerar dist/ para testar o build
-npm run preview  # testar o build localmente
+npm run dev      # desenvolvimento local com hot-reload
+npm run build    # gerar build de produção
+npm run preview  # testar o build localmente antes de publicar
 ```
-
----
-
-## Adicionar novo conteúdo
-
-Todo o conteúdo fica em `src/data/`. Para adicionar um módulo novo:
-
-1. Edite `src/data/modules.json`
-2. Adicione as questões em `src/data/questions/modulo-novo.json`
-3. Faça o PR ou push direto no main
 
 ---
 
 ## Rollback de emergência
 
 ```bash
-# Ver histórico de commits
+# Ver histórico
 git log --oneline -10
 
-# Voltar para um commit específico
+# Voltar para commit específico
 git reset --hard <hash>
 git push origin main --force
 ```
+
+---
+
+## Adicionar novo conteúdo (módulos, questões)
+
+Todo conteúdo fica em `src/data/`. Para adicionar:
+
+1. Edite ou crie arquivos JSON em `src/data/`
+2. Importe no screen correspondente
+3. Faça o push — deploy automático
+
+Não precisa tocar em lógica de jogo nem em componentes.
