@@ -1,0 +1,120 @@
+import { useState, useEffect } from 'react';
+import { getLeaderboard } from '../firebase/db';
+import { C, F } from '../styles/tokens';
+
+export default function LeaderboardScreen({ currentUserId, onBack }) {
+  const [entries, setEntries] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [refresh, setRefresh] = useState(0);
+
+  useEffect(() => {
+    setLoading(true);
+    getLeaderboard().then(data => { setEntries(data); setLoading(false); });
+  }, [refresh]);
+
+  const total = entries.length;
+  const maxDx = entries[0]?.dx || 1;
+  const promoteZone = 3;
+  const demoteZone  = total >= 7 ? 3 : 0;
+  const zoneColor   = (rank) => {
+    if (rank <= promoteZone) return '#22d3a0';
+    if (demoteZone > 0 && rank > total - demoteZone) return '#ff4d4d';
+    return null;
+  };
+  const rankIcon = (rank) => rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
+
+  return (
+    <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column' }}>
+      {/* Header */}
+      <div style={{ background:C.surface, borderBottom:`1px solid ${C.border}`, padding:'14px 20px', display:'flex', alignItems:'center', gap:12 }}>
+        <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:29, cursor:'pointer', minWidth:44, minHeight:44 }}>‹</button>
+        <div style={{ flex:1 }}>
+          <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:2 }}>RANKING GLOBAL</div>
+          <div style={{ fontFamily:F.display, color:C.text, fontSize:20, fontWeight:900 }}>🏆 Leaderboard</div>
+        </div>
+        <button onClick={() => { setEntries([]); setRefresh(r => r+1); }}
+          style={{ background:'none', border:`1px solid ${C.border}`, borderRadius:10, color: loading ? C.accent : C.textDim, fontSize:18, cursor:'pointer', padding:'8px 12px' }}>
+          {loading ? '⟳' : '↺'}
+        </button>
+      </div>
+
+      {/* Legenda */}
+      {!loading && total >= 7 && (
+        <div style={{ display:'flex', gap:12, padding:'8px 16px 4px', justifyContent:'flex-end' }}>
+          <span style={{ fontFamily:F.mono, fontSize:10, color:'#22d3a0' }}>▲ PROMOÇÃO</span>
+          <span style={{ fontFamily:F.mono, fontSize:10, color:'#ff4d4d' }}>▼ REBAIXAMENTO</span>
+        </div>
+      )}
+
+      <div style={{ flex:1, overflowY:'auto', padding:'8px 0 80px' }}>
+        {loading ? (
+          <div style={{ textAlign:'center', padding:80 }}>
+            <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:14 }}>Carregando ranking…</div>
+          </div>
+        ) : entries.length === 0 ? (
+          <div style={{ textAlign:'center', padding:80 }}>
+            <div style={{ fontSize:56, marginBottom:16 }}>🏆</div>
+            <div style={{ fontFamily:F.display, color:C.text, fontSize:20, fontWeight:800, marginBottom:8 }}>Seja o primeiro!</div>
+          </div>
+        ) : (
+          <div style={{ maxWidth:640, margin:'0 auto' }}>
+            {/* Separador zona promoção */}
+            <div style={{ display:'flex', alignItems:'center', gap:8, padding:'0 16px 8px' }}>
+              <div style={{ flex:1, height:1, background:'#22d3a044' }}/>
+              <div style={{ fontFamily:F.mono, fontSize:10, color:'#22d3a0', letterSpacing:1 }}>⬆ ZONA DE PROMOÇÃO</div>
+              <div style={{ flex:1, height:1, background:'#22d3a044' }}/>
+            </div>
+
+            {entries.map((entry, idx) => {
+              const rank    = idx + 1;
+              const isMe    = entry.userId === currentUserId;
+              const zone    = zoneColor(rank);
+              const barW    = Math.max(4, Math.round(((entry.dx||0) / maxDx) * 100));
+              const showDemoteSep = demoteZone > 0 && rank === total - demoteZone + 1;
+
+              return (
+                <div key={entry.id}>
+                  {showDemoteSep && (
+                    <div style={{ display:'flex', alignItems:'center', gap:8, padding:'8px 16px 6px' }}>
+                      <div style={{ flex:1, height:1, background:'#ff4d4d44' }}/>
+                      <div style={{ fontFamily:F.mono, fontSize:10, color:'#ff4d4d', letterSpacing:1 }}>⬇ ZONA DE REBAIXAMENTO</div>
+                      <div style={{ flex:1, height:1, background:'#ff4d4d44' }}/>
+                    </div>
+                  )}
+                  <div style={{
+                    margin:'0 16px 10px',
+                    background: isMe ? (zone ? zone+'18' : C.accent+'18') : C.surface,
+                    border:`2px solid ${isMe ? (zone||C.accent)+'88' : zone ? zone+'55' : C.border}`,
+                    borderBottom:`4px solid ${isMe ? (zone||C.accent) : zone ? zone+'88' : C.cardDepth}`,
+                    borderRadius:16, padding:'14px 16px',
+                    display:'flex', alignItems:'center', gap:14, transition:'all .12s',
+                  }}>
+                    <div style={{ fontFamily:F.display, fontSize:rank<=3?22:16, fontWeight:900, color:zone||(isMe?C.accent:C.textDim), minWidth:36, textAlign:'center', flexShrink:0 }}>
+                      {rankIcon(rank)}
+                    </div>
+                    <div style={{ fontSize:30, lineHeight:1, flexShrink:0 }}>{entry.avatar}</div>
+                    <div style={{ flex:1, minWidth:0 }}>
+                      <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:6 }}>
+                        <div style={{ fontFamily:F.display, color:isMe?(zone||C.accent):C.text, fontSize:15, fontWeight:800, overflow:'hidden', whiteSpace:'nowrap', textOverflow:'ellipsis' }}>
+                          {entry.name}
+                        </div>
+                        {isMe && <div style={{ fontFamily:F.mono, fontSize:10, color:zone||C.accent, background:(zone||C.accent)+'22', borderRadius:6, padding:'2px 7px', flexShrink:0, letterSpacing:1 }}>VOCÊ</div>}
+                      </div>
+                      <div style={{ height:6, background:C.border, borderRadius:99, overflow:'hidden' }}>
+                        <div style={{ height:'100%', width:`${barW}%`, background:isMe?(zone||C.accent):zone||C.cyan, borderRadius:99, transition:'width .6s ease' }}/>
+                      </div>
+                    </div>
+                    <div style={{ textAlign:'right', flexShrink:0 }}>
+                      <div style={{ fontFamily:F.display, fontSize:16, fontWeight:900, color:zone||(isMe?C.accent:C.text) }}>⚡ {entry.dx||0} DX</div>
+                      <div style={{ fontFamily:F.mono, fontSize:11, color:C.textDim, marginTop:2 }}>🔥 {entry.streak||0} dias</div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
