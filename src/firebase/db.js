@@ -32,3 +32,10 @@ export async function getLeaderboard() {
     return valid.filter(Boolean).sort((a, b) => (b.dx || 0) - (a.dx || 0));
   } catch (e) { console.warn('[db] getLeaderboard failed:', e.message); return []; }
 }
+
+// Deleta todos os dados do usuário (users + leaderboard)
+// Chamada quando o usuário deleta sua conta pelo app
+export async function deleteUserData(uid) {
+  try { await deleteDoc(doc(db, 'users', uid)); } catch (e) { console.warn('[db] deleteUserData users:', e.message); }
+  try { await deleteDoc(doc(db, 'leaderboard', uid)); } catch (e) { console.warn('[db] deleteUserData leaderboard:', e.message); }
+}

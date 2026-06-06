@@ -2,9 +2,13 @@
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut, deleteUser } from 'firebase/auth';
 import { auth } from '../firebase/config';
-import { loadUser, saveLeaderboard } from '../firebase/db';
+import { loadUser, saveLeaderboard, deleteUserData } from '../firebase/db';
 
 const LS_KEY = 'secops-quest-v2';
+
+function clearLocalSession() {
+  try { localStorage.removeItem(LS_KEY); } catch {}
+}
 
 export function useAuth() {
   const [fbUser,      setFbUser]      = useState(null);
@@ -20,18 +24,20 @@ export function useAuth() {
         return;
       }
 
-      // 1. Verificar se o usuário existe no Firestore
+      // Verificar se o usuário existe no Firestore
+      // NUNCA usar localStorage como fallback de identidade —
+      // só o Firestore é a fonte de verdade
       const data = await loadUser(user.uid);
 
-      if (!data) {
-        // Usuário foi deletado do Firestore — limpar tudo e deslogar
-        // Também limpar localStorage para não restaurar sessão antiga
-        try { localStorage.removeItem(LS_KEY); } catch {}
+      if (!data || !data?.profile?.name) {
+        // Usuário não existe no Firestore — foi deletado ou nunca completou o setup
+        // Limpar localStorage para não restaurar dados de outro usuário
+        clearLocalSession();
 
-        // Se foi recriado pelo Google OAuth, deletar da Auth também
+        // Tentar deletar da Auth também (caso tenha sido recriado pelo OAuth)
         try { await deleteUser(user); } catch {}
 
-        // Deslogar do Firebase Auth
+        // Deslogar
         await signOut(auth);
 
         setFbUser(null);
@@ -40,19 +46,22 @@ export function useAuth() {
         return;
       }
 
-      // 2. Usuário existe — carregar normalmente
+      // Usuário existe e tem perfil — carregar normalmente
       setFbUser(user);
+      setProfile(data.profile);
 
-      if (data?.profile?.name) {
-        setProfile(data.profile);
-        saveLeaderboard(user.uid, {
-          name:   data.profile.name,
-          avatar: data.profile.avatar,
-          dx:     data.totalXp || 0,
-          streak: data.streak  || 0,
-          userId: data.profile.userId,
-        });
-      }
+      // Sincronizar localStorage com dados do Firestore
+      try {
+        localStorage.setItem(LS_KEY, JSON.stringify(data));
+      } catch {}
+
+      saveLeaderboard(user.uid, {
+        name:   data.profile.name,
+        avatar: data.profile.avatar,
+        dx:     data.totalXp || 0,
+        streak: data.streak  || 0,
+        userId: data.profile.userId,
+      });
 
       setLoadingAuth(false);
     });
