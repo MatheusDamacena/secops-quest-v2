@@ -62,7 +62,7 @@ export default function App() {
       {screen === 'home'        && <HomeScreen        {...commonProps} />}
       {screen === 'glossary'    && <GlossaryScreen    onBack={() => goTo('home')} t={t} />}
       {screen === 'leaderboard' && <LeaderboardScreen currentUserId={profile?.userId} onBack={() => goTo('home')} />}
-      {screen === 'profile'     && <ProfileScreen     {...commonProps} fbUser={fbUser} onBack={() => goTo('home')} />}
+      {screen === 'profile'     && <ProfileScreen     {...commonProps} setProfile={setProfile} fbUser={fbUser} onBack={() => goTo('home')} />}
       {screen === 'missions'    && <M4Screen          {...moduleProps} />}
       <IOSInstallBanner />
     </>
