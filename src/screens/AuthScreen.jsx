@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../firebase/config';
+import { FaLock, FaKey, FaGoogle } from 'react-icons/fa';
 import { C, F } from '../styles/tokens';
 
 export default function AuthScreen() {
@@ -48,7 +49,7 @@ export default function AuthScreen() {
 
   if (mode === 'forgot') return (
     <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'32px 20px' }}>
-      <div style={{ fontSize:48, marginBottom:16 }}>🔑</div>
+      <FaKey size={48} color={C.cyan} style={{ marginBottom:16 }} />
       <div style={{ fontFamily:F.display, color:C.text, fontSize:22, fontWeight:900, marginBottom:8 }}>Recuperar senha</div>
       <div style={{ fontFamily:F.mono, color:C.muted, fontSize:13, marginBottom:32, textAlign:'center' }}>Digite seu email para receber o link de redefinição.</div>
       <div style={{ width:'100%', maxWidth:400 }}>
@@ -67,12 +68,12 @@ export default function AuthScreen() {
 
   return (
     <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'32px 20px' }}>
-      <div style={{ fontSize:56, marginBottom:8 }}>🔒</div>
+      <FaLock size={56} color={C.cyan} style={{ marginBottom:8 }} />
       <div style={{ fontFamily:F.display, color:C.text, fontSize:26, fontWeight:900, marginBottom:4 }}>SecOps Quest</div>
       <div style={{ fontFamily:F.mono, color:C.muted, fontSize:12, letterSpacing:2, marginBottom:32 }}>GOOGLE SECOPS · YARA-L · UDM</div>
       <div style={{ width:'100%', maxWidth:400 }}>
         <button onClick={handleGoogle} disabled={loading} style={{ width:'100%', background:C.surface, border:`1.5px solid ${C.border}`, borderBottom:'4px solid rgba(0,0,0,.4)', borderRadius:14, padding:'13px 16px', fontFamily:F.display, fontWeight:800, fontSize:15, color:C.text, cursor:'pointer', marginBottom:16, display:'flex', alignItems:'center', justifyContent:'center', gap:10 }}>
-          <span style={{ fontSize:20 }}>🌐</span> Entrar com Google
+<FaGoogle size={18} /> Entrar com Google
         </button>
         <div style={{ textAlign:'center', fontFamily:F.mono, color:C.muted, fontSize:12, marginBottom:16 }}>— ou —</div>
         <input value={email} onChange={e => setEmail(e.target.value)} placeholder="email@empresa.com" type="email"

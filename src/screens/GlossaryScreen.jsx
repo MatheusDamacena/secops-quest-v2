@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { C, F } from '../styles/tokens';
+import { FaBook } from 'react-icons/fa';
 import glossary from '../data/glossary.json';
 
 const CATS = ['Todos', 'Arquitetura', 'UDM', 'YARA-L', 'Ingestão', 'Operações', 'Admin'];
@@ -20,7 +21,7 @@ export default function GlossaryScreen({ onBack }) {
         <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:29, cursor:'pointer', minWidth:44 }}>‹</button>
         <div>
           <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:2 }}>REFERÊNCIA</div>
-          <div style={{ fontFamily:F.display, color:C.text, fontSize:20, fontWeight:900 }}>📖 Glossário</div>
+          <div style={{ fontFamily:F.display, color:C.text, fontSize:20, fontWeight:900, display:'flex', alignItems:'center', gap:8 }}><FaBook size={18} color={C.cyan} /> Glossário</div>
         </div>
       </div>
 

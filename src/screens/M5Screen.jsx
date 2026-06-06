@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import { C, F } from '../styles/tokens';
 import ModuleScreen from './ModuleScreen';
+import NodeIcon from '../components/NodeIcon';
+import { FaTrophy } from 'react-icons/fa';
 import { M5_LESSONS, M5_FINAL_CHALLENGE } from '../data/content';
 
 export default function M5Screen({ progress, onComplete, onBack }) {
@@ -17,7 +19,7 @@ export default function M5Screen({ progress, onComplete, onBack }) {
           <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:29, cursor:'pointer' }}>‹</button>
           <div>
             <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:2 }}>MÓDULO 5</div>
-            <div style={{ fontFamily:F.display, color:C.text, fontSize:20, fontWeight:900 }}>🏆 YARA-L Avançado</div>
+            <div style={{ fontFamily:F.display, color:C.text, fontSize:20, fontWeight:900, display:'flex', alignItems:'center', gap:8 }}><FaTrophy size={18} color={C.yellow} /> YARA-L Avançado</div>
           </div>
         </div>
         <div style={{ flex:1, overflowY:'auto', padding:'16px 16px 80px', maxWidth:600, width:'100%', margin:'0 auto' }}>
@@ -29,7 +31,7 @@ export default function M5Screen({ progress, onComplete, onBack }) {
                   borderBottom:`4px solid ${isDone ? C.purple : C.cardDepth}`,
                   borderRadius:16, padding:'14px 16px', marginBottom:12,
                   display:'flex', alignItems:'center', gap:14, cursor:'pointer' }}>
-                <div style={{ fontSize:32 }}>{isDone ? '✅' : lesson.icon}</div>
+                <div style={{ width:32, height:32, display:'flex', alignItems:'center', justifyContent:'center' }}>{isDone ? <NodeIcon icon='✅' size={24} /> : <NodeIcon icon={lesson.icon} size={24} />}</div>
                 <div style={{ flex:1 }}>
                   <div style={{ fontFamily:F.display, color:C.text, fontSize:15, fontWeight:800 }}>{lesson.title}</div>
                   <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, marginTop:2 }}>
@@ -45,7 +47,7 @@ export default function M5Screen({ progress, onComplete, onBack }) {
             <div onClick={() => setShowFinal(true)}
               style={{ background:C.purple+'18', border:`2px solid ${C.purple}55`, borderBottom:`4px solid ${C.purple}`,
                 borderRadius:16, padding:'14px 16px', marginTop:8, display:'flex', alignItems:'center', gap:14, cursor:'pointer' }}>
-              <div style={{ fontSize:32 }}>🏆</div>
+              <FaTrophy size={32} color={C.yellow} />
               <div style={{ flex:1 }}>
                 <div style={{ fontFamily:F.display, color:C.purple, fontSize:15, fontWeight:800 }}>Desafio Final</div>
                 <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, marginTop:2 }}>YARA-L Avançado · desbloqueado!</div>

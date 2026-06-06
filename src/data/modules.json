@@ -1,51 +1,9 @@
 [
-  {
-    "id": 0,
-    "icon": "🏛",
-    "title": "Conceitos Fundamentais",
-    "sub": "SIEM · UDM · Ingestão · Investigação · Content Hub",
-    "lessons": 7
-  },
-  {
-    "id": 1,
-    "icon": "🗺",
-    "title": "Arquitetura SecOps",
-    "sub": "Monte o fluxo completo · puzzle de fixação",
-    "lessons": 1
-  },
-  {
-    "id": 2,
-    "icon": "🔬",
-    "title": "UDM — Modelo de Dados",
-    "sub": "Inspecione campos e event types",
-    "lessons": 2
-  },
-  {
-    "id": 3,
-    "icon": "📐",
-    "title": "YARA-L Básico",
-    "sub": "Anatomia de uma regra",
-    "lessons": 4
-  },
-  {
-    "id": 4,
-    "icon": "🎮",
-    "title": "Missões de Detecção",
-    "sub": "15 casos reais · técnica, comportamental e IA",
-    "lessons": 15
-  },
-  {
-    "id": 5,
-    "icon": "🏆",
-    "title": "YARA-L Avançado",
-    "sub": "Outcome · Reference Lists · Data Tables · Risk Analytics",
-    "lessons": 7
-  },
-  {
-    "id": 6,
-    "icon": "🔌",
-    "title": "Fluxos e Onboarding",
-    "sub": "6 puzzles específicos por tipo de log",
-    "lessons": 6
-  }
+  { "id": 0, "iconId": "m0", "title": "Conceitos Fundamentais",  "sub": "SIEM · UDM · Ingestão · Investigação · Content Hub",          "lessons": 7  },
+  { "id": 1, "iconId": "m1", "title": "Arquitetura SecOps",       "sub": "Monte o fluxo completo · puzzle de fixação",                  "lessons": 1  },
+  { "id": 2, "iconId": "m2", "title": "UDM — Modelo de Dados",    "sub": "Inspecione campos e event types",                             "lessons": 2  },
+  { "id": 3, "iconId": "m3", "title": "YARA-L Básico",            "sub": "Anatomia de uma regra",                                       "lessons": 4  },
+  { "id": 4, "iconId": "m4", "title": "Missões de Detecção",      "sub": "15 casos reais · técnica, comportamental e IA",               "lessons": 15 },
+  { "id": 5, "iconId": "m5", "title": "YARA-L Avançado",          "sub": "Outcome · Reference Lists · Data Tables · Risk Analytics",    "lessons": 7  },
+  { "id": 6, "iconId": "m6", "title": "Fluxos e Onboarding",      "sub": "8 puzzles específicos por tipo de log",                       "lessons": 8  }
 ]

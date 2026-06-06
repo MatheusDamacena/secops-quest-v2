@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getLeaderboard } from '../firebase/db';
+import { FaTrophy, FaMedal, FaBolt, FaFire, FaArrowUp, FaArrowDown } from 'react-icons/fa';
 import { C, F } from '../styles/tokens';
 
 export default function LeaderboardScreen({ currentUserId, onBack }) {
@@ -21,7 +22,12 @@ export default function LeaderboardScreen({ currentUserId, onBack }) {
     if (demoteZone > 0 && rank > total - demoteZone) return '#ff4d4d';
     return null;
   };
-  const rankIcon = (rank) => rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
+  const rankIcon = (rank) => {
+    if (rank === 1) return <FaMedal size={22} color='#FFD700' />;
+    if (rank === 2) return <FaMedal size={20} color='#C0C0C0' />;
+    if (rank === 3) return <FaMedal size={18} color='#CD7F32' />;
+    return rank;
+  };
 
   return (
     <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column' }}>
@@ -30,7 +36,7 @@ export default function LeaderboardScreen({ currentUserId, onBack }) {
         <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:29, cursor:'pointer', minWidth:44, minHeight:44 }}>‹</button>
         <div style={{ flex:1 }}>
           <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:2 }}>RANKING GLOBAL</div>
-          <div style={{ fontFamily:F.display, color:C.text, fontSize:20, fontWeight:900 }}>🏆 Leaderboard</div>
+          <div style={{ fontFamily:F.display, color:C.text, fontSize:20, fontWeight:900, display:'flex', alignItems:'center', gap:8 }}><FaTrophy size={18} color={C.yellow} /> Leaderboard</div>
         </div>
         <button onClick={() => { setEntries([]); setRefresh(r => r+1); }}
           style={{ background:'none', border:`1px solid ${C.border}`, borderRadius:10, color: loading ? C.accent : C.textDim, fontSize:18, cursor:'pointer', padding:'8px 12px' }}>
@@ -41,8 +47,8 @@ export default function LeaderboardScreen({ currentUserId, onBack }) {
       {/* Legenda */}
       {!loading && total >= 7 && (
         <div style={{ display:'flex', gap:12, padding:'8px 16px 4px', justifyContent:'flex-end' }}>
-          <span style={{ fontFamily:F.mono, fontSize:10, color:'#22d3a0' }}>▲ PROMOÇÃO</span>
-          <span style={{ fontFamily:F.mono, fontSize:10, color:'#ff4d4d' }}>▼ REBAIXAMENTO</span>
+          <span style={{ fontFamily:F.mono, fontSize:10, color:'#22d3a0', display:'flex', alignItems:'center', gap:3 }}><FaArrowUp size={9} /> PROMOÇÃO</span>
+          <span style={{ fontFamily:F.mono, fontSize:10, color:'#ff4d4d', display:'flex', alignItems:'center', gap:3 }}><FaArrowDown size={9} /> REBAIXAMENTO</span>
         </div>
       )}
 
@@ -53,7 +59,7 @@ export default function LeaderboardScreen({ currentUserId, onBack }) {
           </div>
         ) : entries.length === 0 ? (
           <div style={{ textAlign:'center', padding:80 }}>
-            <div style={{ fontSize:56, marginBottom:16 }}>🏆</div>
+            <FaTrophy size={56} color={C.yellow} style={{ marginBottom:16 }} />
             <div style={{ fontFamily:F.display, color:C.text, fontSize:20, fontWeight:800, marginBottom:8 }}>Seja o primeiro!</div>
           </div>
         ) : (
@@ -105,8 +111,8 @@ export default function LeaderboardScreen({ currentUserId, onBack }) {
                       </div>
                     </div>
                     <div style={{ textAlign:'right', flexShrink:0 }}>
-                      <div style={{ fontFamily:F.display, fontSize:16, fontWeight:900, color:zone||(isMe?C.accent:C.text) }}>⚡ {entry.dx||0} DX</div>
-                      <div style={{ fontFamily:F.mono, fontSize:11, color:C.textDim, marginTop:2 }}>🔥 {entry.streak||0} dias</div>
+                      <div style={{ fontFamily:F.display, fontSize:16, fontWeight:900, color:zone||(isMe?C.accent:C.text), display:'flex', alignItems:'center', gap:4 }}><FaBolt size={12} />{entry.dx||0} DX</div>
+                      <div style={{ fontFamily:F.mono, fontSize:11, color:C.textDim, marginTop:2, display:'flex', alignItems:'center', gap:4 }}><FaFire size={10} color={C.orange} />{entry.streak||0} dias</div>
                     </div>
                   </div>
                 </div>

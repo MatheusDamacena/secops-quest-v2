@@ -43,8 +43,8 @@ export default function App() {
   const moduleProps = { progress, onBack: () => goTo('home'), onComplete: handleModuleComplete };
 
   if (screen === 'module') {
-    if (moduleId === 0) return <M0Screen {...moduleProps} />;
-    if (moduleId === 1) return <M1Screen {...moduleProps} />;
+    if (moduleId === 0) return <M1Screen {...moduleProps} />;
+    if (moduleId === 1) return <M0Screen {...moduleProps} />;
     if (moduleId === 2) return <M2Screen {...moduleProps} />;
     if (moduleId === 3) return <M3Screen {...moduleProps} />;
     if (moduleId === 4) return <M4Screen {...moduleProps} />;

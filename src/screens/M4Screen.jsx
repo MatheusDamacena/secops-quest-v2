@@ -2,6 +2,9 @@
 import { useState } from 'react';
 import { C, F } from '../styles/tokens';
 import { Btn3D, ProgressHeader, FeedbackPanel } from '../components/GameUI';
+import NodeIcon from '../components/NodeIcon';
+import { FaGamepad } from 'react-icons/fa';
+import { GiPartyPopper } from 'react-icons/gi';
 import { MISSIONS } from '../data/content';
 
 function MissionDetail({ mission, onComplete, onBack }) {
@@ -38,7 +41,7 @@ function MissionDetail({ mission, onComplete, onBack }) {
   if (done) {
     return (
       <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:32 }}>
-        <div style={{ fontSize:64, marginBottom:16 }}>🎉</div>
+        <GiPartyPopper size={64} color='#22d3a0' style={{ marginBottom:16 }} />
         <div style={{ fontFamily:F.display, color:C.text, fontSize:22, fontWeight:900, marginBottom:8, textAlign:'center' }}>{mission.title}</div>
         <div style={{ fontFamily:F.mono, color:C.accent, fontSize:16, fontWeight:700, marginBottom:8 }}>+{xp} DX</div>
         <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:12, marginBottom:32 }}>MITRE {mission.mitre}</div>
@@ -56,7 +59,7 @@ function MissionDetail({ mission, onComplete, onBack }) {
         </div>
         <div style={{ background:C.surface, border:`2px solid ${step.color}44`, borderRadius:14, padding:'16px', marginBottom:20 }}>
           <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:8 }}>
-            <span style={{ fontSize:22 }}>{step.icon}</span>
+            <NodeIcon icon={step.icon} color={step.color} size={22} />
             <div style={{ fontFamily:F.display, color:step.color, fontSize:15, fontWeight:800 }}>{step.label}</div>
             {step.multi && <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:10, background:C.surface2, borderRadius:6, padding:'2px 8px' }}>múltipla escolha</div>}
           </div>
@@ -85,7 +88,16 @@ function MissionDetail({ mission, onComplete, onBack }) {
 
       {!checked ? (
         <div style={{ position:'fixed', bottom:0, left:0, right:0, padding:'16px 20px 32px', background:C.bg }}>
-          <Btn3D disabled={Object.keys(selected).filter(k => selected[k]).length === 0} onClick={checkStep}>VERIFICAR</Btn3D>
+          <button onClick={checkStep}
+            disabled={Object.keys(selected).filter(k => selected[k]).length === 0}
+            style={{ display:'block', margin:'0 auto', width:'100%', maxWidth:480,
+              background: Object.keys(selected).filter(k=>selected[k]).length > 0 ? C.cyan : C.surface2,
+              border:'none', borderBottom:`4px solid ${Object.keys(selected).filter(k=>selected[k]).length > 0 ? '#008a91' : C.cardDepth}`,
+              borderRadius:14, padding:'16px', fontFamily:F.display, fontWeight:800, fontSize:16,
+              color: Object.keys(selected).filter(k=>selected[k]).length > 0 ? '#fff' : C.textDim,
+              cursor: Object.keys(selected).filter(k=>selected[k]).length > 0 ? 'pointer' : 'not-allowed' }}>
+            VERIFICAR
+          </button>
         </div>
       ) : (
         <FeedbackPanel correct={checked === 'correct'} onNext={nextStep}
@@ -119,7 +131,7 @@ export default function M4Screen({ progress, onComplete, onBack }) {
         <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:29, cursor:'pointer' }}>‹</button>
         <div>
           <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:2 }}>MÓDULO 4</div>
-          <div style={{ fontFamily:F.display, color:C.text, fontSize:20, fontWeight:900 }}>🎮 Missões de Detecção</div>
+          <div style={{ fontFamily:F.display, color:C.text, fontSize:20, fontWeight:900, display:'flex', alignItems:'center', gap:8 }}><FaGamepad size={18} color={C.accent} /> Missões de Detecção</div>
         </div>
         <div style={{ marginLeft:'auto', fontFamily:F.mono, color:C.accent, fontSize:12 }}>{done.length}/{MISSIONS.length}</div>
       </div>
@@ -137,7 +149,7 @@ export default function M4Screen({ progress, onComplete, onBack }) {
                     borderBottom:`4px solid ${isDone ? C.btn3d_green : C.cardDepth}`,
                     borderRadius:16, padding:'14px 16px', marginBottom:10,
                     display:'flex', alignItems:'center', gap:12, cursor:'pointer' }}>
-                  <div style={{ fontSize:28 }}>{isDone ? '✅' : mission.emoji}</div>
+                  <div style={{ width:28, height:28, display:'flex', alignItems:'center', justifyContent:'center' }}><NodeIcon icon={isDone ? '✅' : mission.emoji} size={22} /></div>
                   <div style={{ flex:1 }}>
                     <div style={{ fontFamily:F.display, color:C.text, fontSize:14, fontWeight:800 }}>{mission.title}</div>
                     <div style={{ display:'flex', gap:8, marginTop:4 }}>
