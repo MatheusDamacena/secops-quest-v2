@@ -5,13 +5,12 @@ import { C, F } from '../styles/tokens';
 import { AVATARS } from '../data/avatars';
 import { FaShieldAlt, FaSkull, FaSearch } from 'react-icons/fa';
 
-const CATEGORIES = [
-  { label: 'Defensores', Icon: FaShieldAlt, color: '#00c4cc', ids: ['guardian','analyst','sentinel','protector','eagle','hawk'] },
-  { label: 'Atacantes',  Icon: FaSkull, color: '#ff4d4d', ids: ['phantom','reaper','ninja','dragon','wolf','snake','raven','bughunter','invader'] },
-  { label: 'Operações',  Icon: FaSearch, color: '#22d3a0', ids: ['terminal','watcher','spy','bot','chronicle','ghost','malware','identity','soclead'] },
-];
-
-export default function SetupScreen({ fbUser, onDone }) {
+export default function SetupScreen({ fbUser, onDone, lang = 'pt', setLang, t = k => k }) {
+  const CATEGORIES = [
+    { label: t('setup_cat_def'), Icon: FaShieldAlt, color: '#00c4cc', ids: ['guardian','analyst','sentinel','protector','eagle','hawk'] },
+    { label: t('setup_cat_atk'), Icon: FaSkull,     color: '#ff4d4d', ids: ['phantom','reaper','ninja','dragon','wolf','snake','raven','bughunter','invader'] },
+    { label: t('setup_cat_ops'), Icon: FaSearch,    color: '#22d3a0', ids: ['terminal','watcher','spy','bot','chronicle','ghost','malware','identity','soclead'] },
+  ];
   const [name,   setName]   = useState('');
   const [avatar, setAvatar] = useState(AVATARS[0]);
   const [saving, setSaving] = useState(false);
@@ -20,7 +19,7 @@ export default function SetupScreen({ fbUser, onDone }) {
     if (!name.trim()) return;
     setSaving(true);
     const profile = {
-      name: name.trim(),
+      name: name.trim().slice(0, 30),
       avatarId: avatar.id,
       avatarColor: avatar.color,
       avatarLabel: avatar.label,
@@ -57,7 +56,7 @@ export default function SetupScreen({ fbUser, onDone }) {
       <div style={{ width:'100%', maxWidth:480 }}>
         {/* Nome */}
         <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:2, marginBottom:8 }}>SEU NOME</div>
-        <input value={name} onChange={e => setName(e.target.value)} placeholder="Ex: João Silva"
+        <input value={name} onChange={e => setName(e.target.value.slice(0, 30))} placeholder="Ex: João Silva" maxLength={30}
           style={{ width:'100%', background:C.surface, border:`1.5px solid ${C.border}`, borderRadius:12, padding:'13px 16px', fontFamily:F.mono, fontSize:15, color:C.text, outline:'none', marginBottom:28 }} />
 
         {/* Avatares por categoria */}
@@ -95,7 +94,7 @@ export default function SetupScreen({ fbUser, onDone }) {
             borderRadius:14, padding:14, fontFamily:F.display, fontWeight:900, fontSize:16,
             color: name.trim() ? '#fff' : C.textDim,
             cursor: name.trim() ? 'pointer' : 'not-allowed' }}>
-          {saving ? 'Salvando...' : '▶ ENTRAR NO JOGO'}
+          {saving ? '...' : t('setup_btn')}
         </button>
       </div>
     </div>
