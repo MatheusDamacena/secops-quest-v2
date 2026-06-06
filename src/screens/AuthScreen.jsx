@@ -15,13 +15,20 @@ export default function AuthScreen({ lang = 'pt', setLang, t = k => k }) {
 
   const errMsg = (code) => {
     const map = {
-      'auth/user-not-found':    'Email não encontrado.',
-      'auth/wrong-password':    'Senha incorreta.',
-      'auth/email-already-in-use': 'Email já cadastrado.',
-      'auth/weak-password':     'Senha muito fraca (mín. 6 caracteres).',
-      'auth/invalid-email':     'Email inválido.',
+      'auth/user-not-found':          'Email não encontrado.',
+      'auth/wrong-password':          'Senha incorreta.',
+      'auth/email-already-in-use':    'Email já cadastrado.',
+      'auth/weak-password':           'Senha muito fraca (mín. 6 caracteres).',
+      'auth/invalid-email':           'Email inválido.',
+      'auth/invalid-credential':      'Credenciais inválidas.',
+      'auth/unauthorized-domain':     'Domínio não autorizado.',
+      'auth/popup-blocked':           'Popup bloqueado. Permita popups e tente novamente.',
+      'auth/popup-closed-by-user':    'Login cancelado.',
+      'auth/cancelled-popup-request': 'Login cancelado.',
+      'auth/network-request-failed':  'Erro de rede.',
+      'auth/too-many-requests':       'Muitas tentativas. Aguarde e tente novamente.',
     };
-    return map[code] || 'Erro. Tente novamente.';
+    return map[code] || ('Erro: ' + (code || 'desconhecido'));
   };
 
   const handleGoogle = async () => {
