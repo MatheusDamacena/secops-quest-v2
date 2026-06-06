@@ -4,7 +4,6 @@ import { signOut, deleteUser } from 'firebase/auth';
 import { auth } from '../firebase/config';
 import { deleteUserData } from '../firebase/db';
 import { FaBolt, FaFire, FaSignOutAlt, FaTrash, FaLandmark, FaGamepad, FaDoorOpen } from 'react-icons/fa';
-import { LANGS } from '../data/i18n';
 import { C, F } from '../styles/tokens';
 import Avatar from '../components/Avatar';
 import modules from '../data/modules.json';
@@ -65,27 +64,6 @@ export default function ProfileScreen({ profile, totalXp, streak, progress, onBa
 
         {/* Ações */}
         <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
-          {/* Seletor de idioma */}
-          <div style={{ marginBottom:16 }}>
-            <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:2, marginBottom:10 }}>
-              {t('profile_language')}
-            </div>
-            <div style={{ display:'flex', gap:8 }}>
-              {LANGS.map(l => (
-                <button key={l.code} onClick={() => setLang?.(l.code)}
-                  style={{ flex:1, background: lang === l.code ? C.cyanDim : C.surface,
-                    border:`1.5px solid ${lang === l.code ? C.cyan : C.border}`,
-                    borderRadius:12, padding:'10px 8px', cursor:'pointer',
-                    display:'flex', flexDirection:'column', alignItems:'center', gap:4 }}>
-                  <span style={{ fontSize:20 }}>{l.flag}</span>
-                  <span style={{ fontFamily:F.mono, color: lang === l.code ? C.cyan : C.textDim, fontSize:10 }}>
-                    {l.label}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
-
           <button onClick={() => setConfirmLogout('logout')}
             style={{ background:C.surface, border:`1.5px solid ${C.border}`, borderRadius:14, padding:'14px 20px', fontFamily:F.display, fontWeight:800, fontSize:15, color:C.textMid, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:10 }}>
             <FaSignOutAlt size={16} /> Sair do jogo

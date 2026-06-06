@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../firebase/config';
-import { LANGS } from '../data/i18n';
 import { FaLock, FaKey, FaGoogle } from 'react-icons/fa';
 import AppLogo from '../components/AppLogo';
 import { C, F } from '../styles/tokens';
 
-export default function AuthScreen({ lang = 'pt', setLang, t = k => k }) {
+export default function AuthScreen() {
   const [mode,     setMode]     = useState('login'); // login | register | forgot
   const [email,    setEmail]    = useState('');
   const [pass,     setPass]     = useState('');
@@ -93,18 +92,7 @@ export default function AuthScreen({ lang = 'pt', setLang, t = k => k }) {
   return (
     <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'32px 20px' }}>
       <AppLogo size={90} />
-      {/* Seletor de idioma */}
-      <div style={{ display:'flex', gap:6, marginBottom:4, marginTop:8 }}>
-        {LANGS.map(l => (
-          <button key={l.code} onClick={() => setLang?.(l.code)}
-            style={{ background: lang === l.code ? 'rgba(0,196,204,0.12)' : 'transparent',
-              border:`1px solid ${lang === l.code ? '#00c4cc' : 'rgba(255,255,255,0.1)'}`,
-              borderRadius:8, padding:'4px 10px', cursor:'pointer', color: lang === l.code ? '#00c4cc' : '#6b7580',
-              fontFamily:'monospace', fontSize:11 }}>
-            {l.flag} {l.code.toUpperCase()}
-          </button>
-        ))}
-      </div>
+
       <div style={{ fontFamily:F.display, color:C.text, fontSize:26, fontWeight:900, marginBottom:4 }}>SecOps Quest</div>
       <div style={{ fontFamily:F.mono, color:C.muted, fontSize:12, letterSpacing:2, marginBottom:32 }}>GOOGLE SECOPS · YARA-L · UDM</div>
       <div style={{ width:'100%', maxWidth:400 }}>
