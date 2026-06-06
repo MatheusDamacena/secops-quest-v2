@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../firebase/config';
 import { FaLock, FaKey, FaGoogle } from 'react-icons/fa';
+import AppLogo from '../components/AppLogo';
 import { C, F } from '../styles/tokens';
 
 export default function AuthScreen() {
@@ -49,7 +50,7 @@ export default function AuthScreen() {
 
   if (mode === 'forgot') return (
     <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'32px 20px' }}>
-      <FaKey size={48} color={C.cyan} style={{ marginBottom:16 }} />
+      <AppLogo size={72} />
       <div style={{ fontFamily:F.display, color:C.text, fontSize:22, fontWeight:900, marginBottom:8 }}>Recuperar senha</div>
       <div style={{ fontFamily:F.mono, color:C.muted, fontSize:13, marginBottom:32, textAlign:'center' }}>Digite seu email para receber o link de redefinição.</div>
       <div style={{ width:'100%', maxWidth:400 }}>
@@ -68,7 +69,7 @@ export default function AuthScreen() {
 
   return (
     <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'32px 20px' }}>
-      <FaLock size={56} color={C.cyan} style={{ marginBottom:8 }} />
+      <AppLogo size={90} />
       <div style={{ fontFamily:F.display, color:C.text, fontSize:26, fontWeight:900, marginBottom:4 }}>SecOps Quest</div>
       <div style={{ fontFamily:F.mono, color:C.muted, fontSize:12, letterSpacing:2, marginBottom:32 }}>GOOGLE SECOPS · YARA-L · UDM</div>
       <div style={{ width:'100%', maxWidth:400 }}>
