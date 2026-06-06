@@ -20,26 +20,27 @@ export function useAuth() {
         return;
       }
 
-      // Verificar se o usuário existe no Firestore
-      // Firestore é a única fonte de verdade — sem fallback de localStorage
+      // Verificar se o usuário tem dados no Firestore
       const data = await loadUser(user.uid);
 
       if (!data || !data?.profile?.name) {
-        // Usuário não existe no Firestore — foi deletado ou nunca fez setup
-        // Limpar localStorage e deslogar (sem tentar deleteUser — causa erro de auth)
+        // Usuário autenticado mas sem dados no Firestore:
+        // pode ser novo usuário (Google OAuth pela primeira vez) OU
+        // usuário que teve os dados deletados.
+        // Em ambos os casos: manter fbUser logado e ir para SetupScreen.
+        // Limpar localStorage para não restaurar dados antigos.
         try { localStorage.removeItem(LS_KEY); } catch {}
-        await signOut(auth);
-        setFbUser(null);
-        setProfile(null);
+        setFbUser(user);   // mantém logado — App vai mostrar SetupScreen
+        setProfile(null);  // sem perfil = SetupScreen
         setLoadingAuth(false);
         return;
       }
 
-      // Usuário existe — carregar normalmente
+      // Usuário existe com perfil completo — carregar normalmente
       setFbUser(user);
       setProfile(data.profile);
 
-      // Sincronizar localStorage com Firestore
+      // Sincronizar localStorage
       try { localStorage.setItem(LS_KEY, JSON.stringify(data)); } catch {}
 
       saveLeaderboard(user.uid, {
