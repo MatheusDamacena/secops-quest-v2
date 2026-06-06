@@ -2,8 +2,10 @@
 import { useState } from 'react';
 import { useAuth }     from './hooks/useAuth';
 import { useProgress } from './hooks/useProgress';
+import { useLanguage } from './hooks/useLanguage';
 
 import LoadingScreen     from './screens/LoadingScreen';
+import IOSInstallBanner  from './components/IOSInstallBanner';
 import AuthScreen        from './screens/AuthScreen';
 import SetupScreen       from './screens/SetupScreen';
 import HomeScreen        from './screens/HomeScreen';
@@ -21,15 +23,16 @@ import M6Screen          from './screens/M6Screen';
 export default function App() {
   const { fbUser, profile, setProfile, loadingAuth } = useAuth();
   const { progress, setProgress, totalXp, setTotalXp, streak, setStreak, loaded } = useProgress({ fbUser, profile });
+  const { lang, setLang, t } = useLanguage();
 
   const [screen,    setScreen]    = useState('home');
   const [moduleId,  setModuleId]  = useState(null);
   const [setupDone, setSetupDone] = useState(false);
 
-  if (!loaded || loadingAuth) return <LoadingScreen />;
-  if (!fbUser) return <AuthScreen />;
+  if (!loaded || loadingAuth) return <LoadingScreen t={t} />;
+  if (!fbUser) return <AuthScreen lang={lang} setLang={setLang} t={t} />;
   if (!profile?.name && !setupDone) {
-    return <SetupScreen fbUser={fbUser} onDone={(p) => { setProfile(p); setSetupDone(true); setScreen('home'); }} />;
+    return <SetupScreen fbUser={fbUser} onDone={(p) => { setProfile(p); setSetupDone(true); setScreen('home'); }} lang={lang} setLang={setLang} t={t} />;
   }
 
   const goTo = (s, id = null) => { setScreen(s); if (id !== null) setModuleId(id); };
@@ -40,7 +43,7 @@ export default function App() {
     if (isModuleDone) goTo('home');
   };
 
-  const moduleProps = { progress, onBack: () => goTo('home'), onComplete: handleModuleComplete };
+  const moduleProps = { progress, onBack: () => goTo('home'), onComplete: handleModuleComplete, lang, t };
 
   if (screen === 'module') {
     if (moduleId === 0) return <M1Screen {...moduleProps} />;
@@ -52,15 +55,16 @@ export default function App() {
     if (moduleId === 6) return <M6Screen {...moduleProps} />;
   }
 
-  const commonProps = { profile, totalXp, streak, progress, onNavigate: goTo };
+  const commonProps = { profile, totalXp, streak, progress, onNavigate: goTo, lang, setLang, t };
 
   return (
     <>
       {screen === 'home'        && <HomeScreen        {...commonProps} />}
-      {screen === 'glossary'    && <GlossaryScreen    onBack={() => goTo('home')} />}
+      {screen === 'glossary'    && <GlossaryScreen    onBack={() => goTo('home')} t={t} />}
       {screen === 'leaderboard' && <LeaderboardScreen currentUserId={profile?.userId} onBack={() => goTo('home')} />}
       {screen === 'profile'     && <ProfileScreen     {...commonProps} fbUser={fbUser} onBack={() => goTo('home')} />}
       {screen === 'missions'    && <M4Screen          {...moduleProps} />}
+      <IOSInstallBanner />
     </>
   );
 }
