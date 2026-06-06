@@ -39,7 +39,7 @@ export function useProgress({ fbUser, profile }) {
     // localStorage imediato
     try { localStorage.setItem(LS_KEY, JSON.stringify(data)); } catch {}
 
-    // Firestore com debounce de 2s
+    // Firestore com debounce de 500ms
     if (fbUser) {
       clearTimeout(saveTimer.current);
       saveTimer.current = setTimeout(() => {
@@ -48,8 +48,20 @@ export function useProgress({ fbUser, profile }) {
           name: profile.name, avatar: profile.avatar,
           dx: totalXp, streak, userId: profile.userId,
         });
-      }, 2000);
+      }, 500);
     }
+
+    // Cleanup: forçar save ao desmontar
+    return () => {
+      if (fbUser && saveTimer.current) {
+        clearTimeout(saveTimer.current);
+        saveUser(fbUser.uid, data);
+        saveLeaderboard(fbUser.uid, {
+          name: profile.name, avatar: profile.avatar,
+          dx: totalXp, streak, userId: profile.userId,
+        });
+      }
+    };
   }, [progress, totalXp, streak, loaded, profile, fbUser]);
 
   return { progress, setProgress, totalXp, setTotalXp, streak, setStreak, loaded };

@@ -21,15 +21,12 @@ export async function saveLeaderboard(uid, entry) {
 export async function getLeaderboard() {
   try {
     const snap = await getDocs(collection(db, 'leaderboard'));
-    const entries = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    const valid = await Promise.all(entries.map(async e => {
-      try {
-        const u = await getDoc(doc(db, 'users', e.id));
-        if (!u.exists()) { await deleteDoc(doc(db, 'leaderboard', e.id)); return null; }
-        return e;
-      } catch { return e; }
-    }));
-    return valid.filter(Boolean).sort((a, b) => (b.dx || 0) - (a.dx || 0));
+    // Retorna todas as entradas que têm nome — sem validar users/ em tempo real
+    // para evitar race condition e deleção prematura de entradas válidas
+    const entries = snap.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .filter(e => e.name && e.name.trim());
+    return entries.sort((a, b) => (b.dx || 0) - (a.dx || 0));
   } catch (e) { console.warn('[db] getLeaderboard failed:', e.message); return []; }
 }
 
