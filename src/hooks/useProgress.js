@@ -23,13 +23,13 @@ export function useProgress({ fbUser, profile }) {
 
     // Calcula streak com base no lastPlayed
     const calcStreak = (data) => {
-      if (!data) return 0;
+      if (!data) return 1;
       const today     = new Date().toDateString();
       const yesterday = new Date(Date.now() - 86400000).toDateString();
       const last      = data.lastPlayed;
-      if (last === today)      return data.streak || 1;  // já jogou hoje
-      if (last === yesterday)  return data.streak || 1;  // jogou ontem — mantém
-      return 0;                                           // quebrou a sequência
+      if (last === today)      return data.streak || 1;       // já jogou hoje
+      if (last === yesterday)  return (data.streak || 0) + 1; // novo dia! incrementa
+      return 1;                                                // quebrou — começa do 1
     };
 
     const loadData = async () => {
@@ -68,20 +68,20 @@ export function useProgress({ fbUser, profile }) {
   useEffect(() => {
     if (!loaded || !profile?.name) return;
 
-    // Calcular novo streak ao salvar
+    // Calcular novo streak ao salvar (sem chamar setStreak aqui - evita loop)
     const today = new Date().toDateString();
-    const prevLastPlayed = (() => {
-      try { return JSON.parse(localStorage.getItem(LS_KEY))?.lastPlayed; } catch { return null; }
+    const savedData = (() => {
+      try { return JSON.parse(localStorage.getItem(LS_KEY)); } catch { return null; }
     })();
-    const newStreak = (() => {
-      if (!prevLastPlayed)                                       return 1;
-      if (prevLastPlayed === today)                              return streak; // já salvou hoje
+    const prevLastPlayed = savedData?.lastPlayed;
+    const currentStreak = (() => {
+      if (!prevLastPlayed)                                       return Math.max(streak, 1);
+      if (prevLastPlayed === today)                              return streak;
       const yesterday = new Date(Date.now() - 86400000).toDateString();
-      if (prevLastPlayed === yesterday)                          return streak + 1; // dia seguinte!
-      return 1; // quebrou
+      if (prevLastPlayed === yesterday)                          return streak; // onLoad já incrementou
+      return streak;
     })();
-    if (newStreak !== streak) setStreak(newStreak);
-    const data = { profile, progress, totalXp, streak: newStreak, lastPlayed: today };
+    const data = { profile, progress, totalXp, streak: currentStreak, lastPlayed: today };
 
     // localStorage imediato (cache local)
     try { localStorage.setItem(LS_KEY, JSON.stringify(data)); } catch {}
