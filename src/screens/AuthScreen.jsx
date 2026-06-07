@@ -106,11 +106,11 @@ export default function AuthScreen() {
           style={{ width:'100%', background:C.surface, border:`1.5px solid ${C.border}`, borderRadius:12, padding:'13px 16px', fontFamily:F.mono, fontSize:14, color:C.text, outline:'none', marginBottom:12 }} />
         {error && <div style={{ background:C.wrongBg, border:`1px solid ${C.wrong}`, borderRadius:10, padding:'10px 14px', fontFamily:F.mono, color:C.wrong, fontSize:12, marginBottom:12, textAlign:'center' }}>{error}</div>}
         <button onClick={handleEmail} disabled={loading} style={{ width:'100%', background:C.accent, border:'none', borderBottom:'4px solid #008a91', borderRadius:14, padding:14, fontFamily:F.display, fontWeight:900, fontSize:16, color:'#fff', cursor:'pointer', marginBottom:12 }}>
-          {loading ? '...' : mode === 'login' ? t('auth_enter') : t('auth_create')}
+          {loading ? '...' : mode === 'login' ? '▶ Entrar' : '▶ Criar conta'}
         </button>
         <div style={{ textAlign:'center', marginBottom:8 }}>
           <button onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError(''); }} style={{ background:'none', border:'none', fontFamily:F.mono, color:C.accent, fontSize:12, cursor:'pointer' }}>
-            {mode === 'login' ? t('auth_no_account') : 'Já tem conta? Fazer login'}
+            {mode === 'login' ? 'Não tem conta? Criar agora' : 'Já tem conta? Fazer login'}
           </button>
         </div>
         {mode === 'login' && (
