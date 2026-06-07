@@ -6,7 +6,7 @@ import { ProgressHeader, FeedbackPanel, Lives } from '../components/GameUI';
 import { FaSkull, FaSyncAlt, FaHandPointer } from 'react-icons/fa';
 import { GiPartyPopper } from 'react-icons/gi';
 
-export default function ModuleScreen({ lesson, onComplete, onBack, xpPerChallenge = 10 }) {
+export default function ModuleScreen({ lesson, onComplete, onBack, xpPerChallenge = 10, t = k => k }) {
   const cards      = lesson.cards      || [];
   const challenges = lesson.challenges || [];
   const totalSteps = cards.length + challenges.length;
@@ -48,7 +48,7 @@ export default function ModuleScreen({ lesson, onComplete, onBack, xpPerChalleng
               display:'flex', flexDirection:'column', justifyContent:'center',
               cursor:'pointer', transition:'all .3s' }}>
             <div style={{ fontFamily:F.mono, color: flipped ? C.cyan : C.textDim, fontSize:9, letterSpacing:3, marginBottom:12 }}>
-              {flipped ? 'RESPOSTA ▼' : <><FaHandPointer size={13} style={{marginRight:6}} /> Toque para ver a resposta</>}
+              {flipped ? t('card_answer') : <><FaHandPointer size={13} style={{marginRight:6}} /> {t('card_tap')}</>}
             </div>
             <div style={{ fontFamily:F.mono, color: flipped ? C.text : C.textMid, fontSize:14, lineHeight:1.9, whiteSpace:'pre-wrap' }}>
               {flipped ? card.a : card.q}
@@ -71,7 +71,7 @@ export default function ModuleScreen({ lesson, onComplete, onBack, xpPerChalleng
           {isLast ? (
             <button onClick={() => { setChalIdx(0); setLives(3); setPhase('challenges'); }}
               style={{ flex:1, background:C.cyan, border:'none', borderBottom:'4px solid #008a91', borderRadius:14, padding:'16px', fontFamily:F.display, fontWeight:800, fontSize:15, color:'#fff', cursor:'pointer' }}>
-              ▶ FAZER OS DESAFIOS
+              {t('card_challenges')}
             </button>
           ) : (
             <>
@@ -83,7 +83,7 @@ export default function ModuleScreen({ lesson, onComplete, onBack, xpPerChalleng
               )}
               <button onClick={() => { setCardIdx(i => i+1); setFlipped(false); }}
                 style={{ flex:1, background:C.cyan, border:'none', borderBottom:'4px solid #008a91', borderRadius:14, padding:'16px', fontFamily:F.display, fontWeight:800, fontSize:15, color:'#fff', cursor:'pointer' }}>
-                PRÓXIMO →
+                {t('card_next')}
               </button>
             </>
           )}
@@ -96,7 +96,7 @@ export default function ModuleScreen({ lesson, onComplete, onBack, xpPerChalleng
   if (failed) return (
     <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:32 }}>
       <FaSkull size={64} color='#ff4d4d' style={{ marginBottom:16 }} />
-      <div style={{ fontFamily:F.display, color:C.red, fontSize:22, fontWeight:900, marginBottom:8, textAlign:'center' }}>Sem vidas!</div>
+      <div style={{ fontFamily:F.display, color:C.red, fontSize:22, fontWeight:900, marginBottom:8, textAlign:'center' }}>{t('chal_no_lives')}</div>
       <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:14, marginBottom:32, textAlign:'center' }}>Tente os exercícios novamente.</div>
       <button onClick={() => { setFailed(false); setChalIdx(0); setAnswered(false); setSelected(null); setTfAnswer(null); setLives(3); }}
         style={{ background:C.cyan, border:'none', borderBottom:'4px solid #008a91', borderRadius:14, padding:'14px 32px', fontFamily:F.display, fontWeight:900, fontSize:16, color:'#fff', cursor:'pointer' }}>
@@ -135,14 +135,14 @@ export default function ModuleScreen({ lesson, onComplete, onBack, xpPerChalleng
 
     return (
       <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column' }}>
-        <ProgressHeader current={currentStep} total={totalSteps} onBack={() => { setCardIdx(cards.length-1); setFlipped(false); setPhase('cards'); }} xpEarned={xp}
+        <ProgressHeader current={currentStep} total={totalSteps} onBack={cards.length > 0 ? () => { setCardIdx(cards.length-1); setFlipped(false); setPhase('cards'); } : onBack} xpEarned={xp}
           right={<Lives count={lives} />}
         />
         <div style={{ flex:1, padding:'20px 20px 120px', maxWidth:600, width:'100%', margin:'0 auto' }}>
 
           {/* Tipo de exercício */}
           <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:2, marginBottom:16 }}>
-            {chal.type === 'truefalse' ? 'VERDADEIRO OU FALSO?' : 'COMPLETE A FRASE'}
+            {chal.type === 'truefalse' ? t('chal_truefalse') : t('chal_complete')}
           </div>
 
           {/* Complete */}
@@ -190,8 +190,8 @@ export default function ModuleScreen({ lesson, onComplete, onBack, xpPerChalleng
               </div>
               <div style={{ display:'flex', gap:12, marginBottom:80 }}>
                 {[
-                  { val:true,  label:'Verdadeiro', icon:'✓', iconBg:'#22d3a0', iconColor:'#0a0b0c' },
-                  { val:false, label:'Falso',       icon:'✗', iconBg:'#ff4d4d', iconColor:'#fff' },
+                  { val:true,  label:t('chal_true'), icon:'✓', iconBg:'#22d3a0', iconColor:'#0a0b0c' },
+                  { val:false, label:t('chal_false'),       icon:'✗', iconBg:'#ff4d4d', iconColor:'#fff' },
                 ].map(opt => {
                   const isSel   = !answered && tfAnswer === opt.val;
                   const isCorr  = answered && opt.val === chal.answer;
@@ -231,7 +231,7 @@ export default function ModuleScreen({ lesson, onComplete, onBack, xpPerChalleng
                 borderRadius:14, padding:'16px', fontFamily:F.display, fontWeight:800, fontSize:16,
                 color: (selected !== null || tfAnswer !== null) ? '#fff' : C.textDim,
                 cursor: (selected !== null || tfAnswer !== null) ? 'pointer' : 'not-allowed' }}>
-              VERIFICAR
+              {t('chal_verify')}
             </button>
           </div>
         )}
@@ -239,7 +239,7 @@ export default function ModuleScreen({ lesson, onComplete, onBack, xpPerChalleng
         {/* Feedback */}
         {answered && (
           <FeedbackPanel correct={isCorrect()} explanation={chal.hint || null} onNext={handleAnswer}
-            nextLabel={chalIdx + 1 < challenges.length ? 'CONTINUAR' : 'FINALIZAR'} />
+            nextLabel={chalIdx + 1 < challenges.length ? t('chal_continue') : t('chal_finish')} />
         )}
       </div>
     );
@@ -250,14 +250,14 @@ export default function ModuleScreen({ lesson, onComplete, onBack, xpPerChalleng
     <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:32 }}>
       <GiPartyPopper size={64} color='#22d3a0' style={{ marginBottom:16 }} />
       <div style={{ fontFamily:F.display, color:C.text, fontSize:24, fontWeight:900, marginBottom:8, textAlign:'center' }}>
-        {lesson.title} concluída!
+        {lesson.title} {t('completed')}
       </div>
       <div style={{ fontFamily:F.mono, color:C.cyan, fontSize:18, fontWeight:700, marginBottom:32 }}>
-        +{xp} DX conquistados
+        +{xp} {t('dx_earned')}
       </div>
       <button onClick={() => onComplete(xp)}
         style={{ background:C.cyan, border:'none', borderBottom:'4px solid #008a91', borderRadius:14, padding:'16px 40px', fontFamily:F.display, fontWeight:900, fontSize:16, color:'#fff', cursor:'pointer' }}>
-        CONTINUAR →
+        {t('btn_continue')}
       </button>
     </div>
   );
