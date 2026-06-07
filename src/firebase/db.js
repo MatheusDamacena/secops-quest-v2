@@ -36,8 +36,8 @@ export async function getLeaderboard() {
       if (!e.name || !e.name.trim()) return null; // sem nome = lixo
       try {
         const userDoc = await getDoc(doc(db, 'users', e.id));
-        if (!userDoc.exists()) {
-          // Usuário deletado — limpar leaderboard silenciosamente
+        if (!userDoc.exists() || !userDoc.data()?.profile?.name) {
+          // Usuário deletado ou sem perfil — limpar leaderboard silenciosamente
           try { await deleteDoc(doc(db, 'leaderboard', e.id)); } catch {}
           return null;
         }
