@@ -45,7 +45,7 @@ export function useProgress({ fbUser, profile }) {
       saveTimer.current = setTimeout(() => {
         saveUser(fbUser.uid, data);
         saveLeaderboard(fbUser.uid, {
-          name: profile.name, avatar: profile.avatar,
+          name: profile.name, avatarId: profile.avatarId, avatarColor: profile.avatarColor,
           dx: totalXp, streak, userId: profile.userId,
         });
       }, 500);
@@ -57,7 +57,7 @@ export function useProgress({ fbUser, profile }) {
         clearTimeout(saveTimer.current);
         saveUser(fbUser.uid, data);
         saveLeaderboard(fbUser.uid, {
-          name: profile.name, avatar: profile.avatar,
+          name: profile.name, avatarId: profile.avatarId, avatarColor: profile.avatarColor,
           dx: totalXp, streak, userId: profile.userId,
         });
       }
