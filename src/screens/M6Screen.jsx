@@ -335,7 +335,8 @@ export default function M6Screen({ progress, onComplete, onBack, lang = 'pt', t 
   const handleComplete = (xp) => {
     setXpEarned(x => x + xp);
     const newDone = done.includes(puzzleId) ? done : [...done, puzzleId];
-    onComplete({ m6: newDone }, xp, newDone.length >= M6_PUZZLES.length);
+    // M6: nunca auto-navega para home — usuario volta pela lista
+    onComplete({ m6: newDone }, xp, false);
   };
 
   const handleBack = (action) => {
