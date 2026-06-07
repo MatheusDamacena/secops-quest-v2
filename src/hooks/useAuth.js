@@ -38,9 +38,8 @@ export function useAuth() {
         // Erro de rede/Firestore — manter usuário logado sem perfil
         setFbUser(user);
         setProfile(null);
+        setLoadingAuth(false);
       }
-
-      setLoadingAuth(false);
     });
     return unsub;
   }, []);
