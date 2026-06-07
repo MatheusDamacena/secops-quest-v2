@@ -180,18 +180,15 @@ function PuzzleDetail({ puzzle, pIdx, totalPuzzles, nextPuzzle, onComplete, onBa
       <style>{STYLE}</style>
       <FaCrosshairs size={64} color='#22d3a0' style={{ marginBottom:12 }} />
       <div style={{ fontFamily:F.display, fontSize:26, fontWeight:800, color:C.green, marginBottom:6 }}>FLUXO COMPLETO!</div>
-      <div style={{ fontFamily:F.display, fontSize:32, color:C.yellow, marginBottom:8 }}>+{animXp} DX</div>
-      <div style={{ fontFamily:F.mono, color:puzzle.color||C.accent, fontSize:11, letterSpacing:2, marginBottom:28 }}>{puzzle.tag}</div>
-      <div style={{ display:'flex', flexDirection:'column', gap:10, width:'100%', maxWidth:360 }}>
-        {pIdx + 1 < totalPuzzles && (
-          <button onClick={() => { onBack('next'); }}
-            style={{ background:C.green, color:'#0a0b0c', border:'none', borderRadius:14, padding:'16px', fontFamily:F.display, fontWeight:800, fontSize:18, cursor:'pointer', boxShadow:`0 0 24px ${C.green}44` }}>
-            PRÓXIMO: {nextPuzzle?.emoji} {nextPuzzle?.title} →
-          </button>
-        )}
-        <button onClick={() => { onBack(); }}
-          style={{ background:'transparent', color:C.textDim, border:`1px solid ${C.border}`, borderRadius:14, padding:'13px', fontFamily:F.display, fontWeight:700, fontSize:16, cursor:'pointer' }}>
-          ← TODOS OS PUZZLES
+      <div style={{ fontFamily:F.display, fontSize:32, color:C.yellow, marginBottom:4 }}>+{animXp} DX</div>
+      <div style={{ fontFamily:F.mono, color:puzzle.color||C.accent, fontSize:11, letterSpacing:2, marginBottom:32 }}>{puzzle.tag}</div>
+      <div style={{ width:'100%', maxWidth:400 }}>
+        <button onClick={() => onBack()}
+          style={{ width:'100%', background:C.green, color:'#fff', border:'none',
+            borderBottom:`4px solid ${C.btn3d_green}`, borderRadius:14,
+            padding:'16px', fontFamily:F.display, fontWeight:900,
+            fontSize:18, cursor:'pointer' }}>
+          CONCLUÍDO →
         </button>
       </div>
     </div>
