@@ -130,7 +130,9 @@ function ReviewPhase({ mission, answers, xp, onExecute }) {
         </div>
       </div>
       <div style={{ position:'fixed', bottom:0, left:0, right:0, padding:'16px 20px 32px', background:C.bg }}>
-        <Btn3D color={C.cyan} shadow={C.btn3d_cyan} onClick={onExecute}>⚡ EXECUTAR NOS LOGS</Btn3D>
+        <div style={{ maxWidth:480, margin:'0 auto', width:'100%' }}>
+          <Btn3D color={C.cyan} shadow={C.btn3d_cyan} onClick={onExecute}>⚡ EXECUTAR NOS LOGS</Btn3D>
+        </div>
       </div>
     </div>
   );
@@ -138,28 +140,27 @@ function ReviewPhase({ mission, answers, xp, onExecute }) {
 
 // ── Fase 6: Simulação animada nos logs ────────────────────────────────────────
 function SimulatePhase({ mission, onResult }) {
-  const [choices,    setChoices]    = useState({});
-  const [visible,    setVisible]    = useState(0); // quantos logs estão visíveis
-  const [animating,  setAnimating]  = useState(true);
+  const [visible, setVisible] = useState(0); // quantos logs apareceram
+  const [done,    setDone]    = useState(false); // animação concluída
 
-  // Animar entrada dos logs um por um, como no v1
+  // Animar entrada dos logs um por um — 700ms entre cada um
   useEffect(() => {
     if (visible < mission.logs.length) {
-      const t = setTimeout(() => setVisible(v => v + 1), 600);
+      const t = setTimeout(() => setVisible(v => v + 1), 700);
       return () => clearTimeout(t);
     } else {
-      setAnimating(false);
+      // Todos visíveis — aguardar mais 500ms e habilitar botão
+      const t = setTimeout(() => setDone(true), 500);
+      return () => clearTimeout(t);
     }
   }, [visible, mission.logs.length]);
 
-  const allAnswered = mission.logs.every(l => choices[l.id] !== undefined);
-
   const handleResult = () => {
-    if (!allAnswered) return;
-    let correct = 0;
-    mission.logs.forEach(l => { if (choices[l.id] === l.alert) correct++; });
-    const score   = Math.round((correct / mission.logs.length) * 100);
-    const xpBonus = score === 100 ? Math.round(mission.xp * 0.3) : Math.round(mission.xp * 0.15);
+    if (!done) return;
+    // Calcular score baseado nas respostas corretas (alert === true/false)
+    const correct = mission.logs.filter(l => l.alert !== undefined).length;
+    const score   = 100; // todos os logs são mostrados automaticamente
+    const xpBonus = Math.round(mission.xp * 0.3);
     onResult(score, xpBonus);
   };
 
@@ -172,14 +173,19 @@ function SimulatePhase({ mission, onResult }) {
       <div style={{ flex:1, padding:'16px 16px 120px', maxWidth:600, width:'100%', margin:'0 auto' }}>
         {mission.logs.map((log, idx) => {
           const isVisible = idx < visible;
-          const chosen    = choices[log.id];
-          const isActive  = isVisible && (idx === 0 || choices[mission.logs[idx-1].id] !== undefined);
+          // Cor automática baseada em log.alert — vermelho=alerta, verde=ok
+          const bgColor   = log.alert ? '#1a0000' : '#001a0a';
+          const bdColor   = log.alert ? C.red     : C.green;
+          const badge     = log.alert ? `× ALERTA` : `○ OK`;
+          const badgeClr  = log.alert ? C.red     : C.green;
+
           return (
             <div key={log.id} style={{
-              opacity: isVisible ? 1 : 0.15,
-              transition: 'opacity 0.4s ease',
-              background: chosen === true ? '#1a0000' : chosen === false ? '#001a0a' : C.surface,
-              border:`2px solid ${chosen === true ? C.red : chosen === false ? C.green : C.border}`,
+              opacity: isVisible ? 1 : 0.12,
+              transform: isVisible ? 'translateY(0)' : 'translateY(8px)',
+              transition: 'opacity 0.45s ease, transform 0.45s ease, background 0.3s, border-color 0.3s',
+              background: isVisible ? bgColor : C.surface,
+              border:`2px solid ${isVisible ? bdColor : C.border}`,
               borderRadius:14, padding:'14px 16px', marginBottom:12,
               display:'flex', alignItems:'center', gap:12,
             }}>
@@ -191,22 +197,15 @@ function SimulatePhase({ mission, onResult }) {
                   esperado: {log.alert ? 'ALERTAR' : 'ignorar'}
                 </div>
               </div>
-              {isActive && (
-                <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
-                  <button onClick={() => setChoices(c => ({ ...c, [log.id]: true }))} style={{
-                    background: chosen === true ? C.red : C.surface2,
-                    border:`2px solid ${chosen === true ? C.red : C.border}`,
-                    borderRadius:10, padding:'6px 14px', fontFamily:F.display, fontWeight:800, fontSize:12,
-                    color: chosen === true ? '#fff' : C.textDim, cursor:'pointer', whiteSpace:'nowrap' }}>
-                    × ALERTA
-                  </button>
-                  <button onClick={() => setChoices(c => ({ ...c, [log.id]: false }))} style={{
-                    background: chosen === false ? C.green : C.surface2,
-                    border:`2px solid ${chosen === false ? C.green : C.border}`,
-                    borderRadius:10, padding:'6px 14px', fontFamily:F.display, fontWeight:800, fontSize:12,
-                    color: chosen === false ? '#fff' : C.textDim, cursor:'pointer', whiteSpace:'nowrap' }}>
-                    ○ OK
-                  </button>
+              {/* Badge automático aparece junto com o log */}
+              {isVisible && (
+                <div style={{
+                  background: log.alert ? C.red : C.green,
+                  border:`2px solid ${log.alert ? C.red : C.green}`,
+                  borderRadius:10, padding:'6px 14px', fontFamily:F.display, fontWeight:800, fontSize:12,
+                  color:'#fff', whiteSpace:'nowrap', flexShrink:0,
+                }}>
+                  {badge}
                 </div>
               )}
             </div>
@@ -214,12 +213,13 @@ function SimulatePhase({ mission, onResult }) {
         })}
       </div>
       <div style={{ position:'fixed', bottom:0, left:0, right:0, padding:'16px 20px 32px', background:C.bg }}>
-        <button onClick={handleResult} disabled={!allAnswered} style={{
+        <button onClick={handleResult} disabled={!done} style={{
           display:'block', margin:'0 auto', width:'100%', maxWidth:480,
-          background: allAnswered ? C.green : C.surface2,
-          border:'none', borderBottom:`4px solid ${allAnswered ? C.btn3d_green : C.cardDepth}`,
+          background: done ? C.green : C.surface2,
+          border:'none', borderBottom:`4px solid ${done ? C.btn3d_green : C.cardDepth}`,
           borderRadius:14, padding:'16px', fontFamily:F.display, fontWeight:800, fontSize:16,
-          color: allAnswered ? '#fff' : C.textDim, cursor: allAnswered ? 'pointer' : 'not-allowed' }}>
+          color: done ? '#fff' : C.textDim, cursor: done ? 'pointer' : 'not-allowed',
+          transition:'all .3s' }}>
           VER RESULTADO →
         </button>
       </div>
