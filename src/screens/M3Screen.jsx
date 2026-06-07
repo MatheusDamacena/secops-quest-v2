@@ -154,7 +154,7 @@ export default function M3Screen({ progress, onComplete, onBack, lang = 'pt', t 
       <ModuleScreen
         lesson={{ title:'Nivelamento YARA-L', cards:[], challenges: M3_SKIP_CHALLENGE, icon:'⚡' }}
         onBack={() => setShowSkip(false)}
-        onComplete={(xp) => { onComplete({ m3: M3_LESSONS.map((_, i) => i) }, xp, true); setShowSkip(false); }}
+        onComplete={(xp) => { setShowSkip(false); onComplete({ m3: M3_LESSONS.map((_, i) => i) }, xp, true); }}
         t={t}
       />
     );

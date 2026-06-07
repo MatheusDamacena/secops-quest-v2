@@ -164,7 +164,7 @@ function PuzzleDetail({ puzzle, pIdx, totalPuzzles, onComplete, onBack }) {
         {/* Botão */}
         <div style={{ position:'fixed', bottom:0, left:0, right:0, padding:'16px 18px 32px', background:C.bg, borderTop:`1px solid ${C.border}` }}>
           <button onClick={() => {
-            if (isLast) { onComplete(puzzle.xp); setPhase('done'); }
+            if (isLast) { setPhase('done'); }
             else setExplainIdx(i => i + 1);
           }} style={{ width:'100%', background: isLast ? C.green : (puzzle.color||C.accent), color:'#0a0b0c', border:'none', borderRadius:14, padding:'16px', fontFamily:F.display, fontWeight:800, fontSize:18, cursor:'pointer', boxShadow:`0 0 24px ${isLast ? C.green : (puzzle.color||C.accent)}44` }}>
             {isLast ? <><FaTrophy size={14} style={{marginRight:6}} /> CONCLUIR PUZZLE</> : 'PRÓXIMA ETAPA →'}
@@ -184,12 +184,12 @@ function PuzzleDetail({ puzzle, pIdx, totalPuzzles, onComplete, onBack }) {
       <div style={{ fontFamily:F.mono, color:puzzle.color||C.accent, fontSize:11, letterSpacing:2, marginBottom:28 }}>{puzzle.tag}</div>
       <div style={{ display:'flex', flexDirection:'column', gap:10, width:'100%', maxWidth:360 }}>
         {pIdx + 1 < totalPuzzles && (
-          <button onClick={() => onBack('next')}
+          <button onClick={() => { onComplete(puzzle.xp); onBack('next'); }}
             style={{ background:C.green, color:'#0a0b0c', border:'none', borderRadius:14, padding:'16px', fontFamily:F.display, fontWeight:800, fontSize:18, cursor:'pointer', boxShadow:`0 0 24px ${C.green}44` }}>
             PRÓXIMO: {M6_PUZZLES[pIdx+1]?.emoji} {M6_PUZZLES[pIdx+1]?.title} →
           </button>
         )}
-        <button onClick={onBack}
+        <button onClick={() => { onComplete(puzzle.xp); onBack(); }}
           style={{ background:'transparent', color:C.textDim, border:`1px solid ${C.border}`, borderRadius:14, padding:'13px', fontFamily:F.display, fontWeight:700, fontSize:16, cursor:'pointer' }}>
           ← TODOS OS PUZZLES
         </button>

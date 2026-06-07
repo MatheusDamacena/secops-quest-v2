@@ -1,6 +1,6 @@
 // ─── MODULE SCREEN ─────────────────────────────────────────────────────────────
 // Flashcards com flip + challenges com verificação
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { C, F } from '../styles/tokens';
 import { ProgressHeader, FeedbackPanel, Lives } from '../components/GameUI';
 import { FaSkull, FaSyncAlt, FaHandPointer } from 'react-icons/fa';
@@ -25,6 +25,12 @@ export default function ModuleScreen({ lesson, onComplete, onBack, xpPerChalleng
   const chal   = challenges[chalIdx];
   const card   = cards[cardIdx];
   const isLast = cardIdx === cards.length - 1;
+
+  // Embaralhar opções uma vez por desafio (estável por chalIdx)
+  const shuffledOptions = useMemo(() => {
+    if (!chal?.options) return [];
+    return [...chal.options].sort(() => Math.random() - 0.5);
+  }, [chalIdx, chal?.type]);
 
   // ── FLASHCARDS ──
   if (phase === 'cards') {
@@ -165,7 +171,7 @@ export default function ModuleScreen({ lesson, onComplete, onBack, xpPerChalleng
                   ))}
                 </div>
               </div>
-              {chal.options.map(opt => (
+              {shuffledOptions.map(opt => (
                 <div key={opt} onClick={() => !answered && setSelected(opt)}
                   style={{ background: answered && opt === chal.blank ? C.correctBg : answered && selected === opt && opt !== chal.blank ? C.wrongBg : !answered && selected === opt ? C.cyanDim : C.surface,
                     border:`2px solid ${answered && opt === chal.blank ? C.correct : answered && selected === opt && opt !== chal.blank ? C.wrong : !answered && selected === opt ? C.cyan : C.border}`,

@@ -1,10 +1,9 @@
 // ─── MÓDULO 4 — MISSÕES DE DETECÇÃO ──────────────────────────────────────────
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { C, F } from '../styles/tokens';
 import { Btn3D, ProgressHeader } from '../components/GameUI';
 import NodeIcon from '../components/NodeIcon';
 import { FaBolt } from 'react-icons/fa';
-import { GiPartyPopper } from 'react-icons/gi';
 import { useContent } from '../hooks/useContent';
 
 // ── Fase 1-4: Steps de seleção ────────────────────────────────────────────────
@@ -16,6 +15,12 @@ function StepsPhase({ mission, onDone, onBack }) {
 
   const step        = mission.steps[stepIdx];
   const totalSteps  = mission.steps.length;
+
+  // Embaralhar opções uma vez por step
+  const shuffledOpts = useMemo(() =>
+    [...step.options].sort(() => Math.random() - 0.5),
+  [stepIdx]);
+
   const correctIds  = step.options.filter(o => o.correct).map(o => o.id);
   const selectedIds = Object.keys(selected).filter(k => selected[k]);
   const selCorrect  = selectedIds.filter(id => correctIds.includes(id));
@@ -64,7 +69,7 @@ function StepsPhase({ mission, onDone, onBack }) {
           )}
         </div>
         {/* Opções */}
-        {step.options.map(opt => {
+        {shuffledOpts.map(opt => {
           const isSel   = !!selected[opt.id];
           const isWrong = isSel && !opt.correct;
           return (
