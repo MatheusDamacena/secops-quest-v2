@@ -23,7 +23,8 @@ export default function LeaderboardScreen({ currentUserId, onBack }) {
     if (demoteZone > 0 && rank > total - demoteZone) return '#ff4d4d';
     return null;
   };
-  const rankIcon = (rank) => {
+  const rankIcon = (rank, isGrandmaster) => {
+    if (rank === 1 && isGrandmaster) return <FaTrophy size={24} color='#FFD700' style={{ filter:'drop-shadow(0 0 8px #FFD700)' }} />;
     if (rank === 1) return <FaMedal size={22} color='#FFD700' />;
     if (rank === 2) return <FaMedal size={20} color='#C0C0C0' />;
     if (rank === 3) return <FaMedal size={18} color='#CD7F32' />;
@@ -97,7 +98,7 @@ export default function LeaderboardScreen({ currentUserId, onBack }) {
                     display:'flex', alignItems:'center', gap:14, transition:'all .12s',
                   }}>
                     <div style={{ fontFamily:F.display, fontSize:rank<=3?22:16, fontWeight:900, color:zone||(isMe?C.accent:C.textDim), minWidth:36, textAlign:'center', flexShrink:0 }}>
-                      {rankIcon(rank)}
+                      {rankIcon(rank, entry.grandmaster)}
                     </div>
                     <div style={{ fontSize:30, lineHeight:1, flexShrink:0 }}><Avatar profile={{ avatarId: entry.avatarId, avatarColor: entry.avatarColor }} size={36} /></div>
                     <div style={{ flex:1, minWidth:0 }}>

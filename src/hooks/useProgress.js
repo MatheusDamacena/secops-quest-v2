@@ -67,9 +67,18 @@ export function useProgress({ fbUser, profile }) {
       clearTimeout(saveTimer.current);
       saveTimer.current = setTimeout(() => {
         saveUser(fbUser.uid, data);
+        const gm = (
+          (progress?.m0 === true || progress?.m0 === 100) &&
+          (progress?.m1||[]).length >= 7 &&
+          (progress?.m2 === true || progress?.m2 === 100) &&
+          (progress?.m3||[]).length >= 4 &&
+          (progress?.m4||[]).length >= 15 &&
+          (progress?.m5||[]).length >= 7 &&
+          (progress?.m6||[]).length >= 8
+        );
         saveLeaderboard(fbUser.uid, {
           name: profile.name, avatarId: profile.avatarId, avatarColor: profile.avatarColor,
-          dx: totalXp, streak, userId: profile.userId,
+          dx: totalXp, streak, userId: profile.userId, grandmaster: gm,
         });
       }, 500);
     }
@@ -79,9 +88,18 @@ export function useProgress({ fbUser, profile }) {
       if (fbUser && saveTimer.current) {
         clearTimeout(saveTimer.current);
         saveUser(fbUser.uid, data);
+        const gm = (
+          (progress?.m0 === true || progress?.m0 === 100) &&
+          (progress?.m1||[]).length >= 7 &&
+          (progress?.m2 === true || progress?.m2 === 100) &&
+          (progress?.m3||[]).length >= 4 &&
+          (progress?.m4||[]).length >= 15 &&
+          (progress?.m5||[]).length >= 7 &&
+          (progress?.m6||[]).length >= 8
+        );
         saveLeaderboard(fbUser.uid, {
           name: profile.name, avatarId: profile.avatarId, avatarColor: profile.avatarColor,
-          dx: totalXp, streak, userId: profile.userId,
+          dx: totalXp, streak, userId: profile.userId, grandmaster: gm,
         });
       }
     };

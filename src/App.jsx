@@ -19,6 +19,7 @@ import M3Screen          from './screens/M3Screen';
 import M4Screen          from './screens/M4Screen';
 import M5Screen          from './screens/M5Screen';
 import M6Screen          from './screens/M6Screen';
+import CelebrationScreen from './screens/CelebrationScreen';
 
 export default function App() {
   const { fbUser, profile, setProfile, loadingAuth } = useAuth();
@@ -37,10 +38,24 @@ export default function App() {
 
   const goTo = (s, id = null) => { setScreen(s); if (id !== null) setModuleId(id); };
 
+  const isGrandmaster = (p) => {
+    return (p?.m0 === true || p?.m0 === 100) &&
+           (p?.m1||[]).length >= 7 &&
+           (p?.m2 === true || p?.m2 === 100) &&
+           (p?.m3||[]).length >= 4 &&
+           (p?.m4||[]).length >= 15 &&
+           (p?.m5||[]).length >= 7 &&
+           (p?.m6||[]).length >= 8;
+  };
+
   const handleModuleComplete = (progressUpdate, xpEarned, isModuleDone) => {
-    setProgress(p => ({ ...p, ...progressUpdate }));
+    setProgress(p => {
+      const next = { ...p, ...progressUpdate };
+      if (isModuleDone && isGrandmaster(next)) goTo('celebration');
+      else if (isModuleDone) goTo('home');
+      return next;
+    });
     setTotalXp(x => x + xpEarned);
-    if (isModuleDone) goTo('home');
   };
 
   const moduleProps = { progress, onBack: () => goTo('home'), onComplete: handleModuleComplete, lang, t };
@@ -60,6 +75,7 @@ export default function App() {
   return (
     <>
       {screen === 'home'        && <HomeScreen        {...commonProps} />}
+      {screen === 'celebration'  && <CelebrationScreen profile={profile} totalXp={totalXp} streak={streak} onContinue={() => goTo('profile')} />}
       {screen === 'glossary'    && <GlossaryScreen    onBack={() => goTo('home')} t={t} />}
       {screen === 'leaderboard' && <LeaderboardScreen currentUserId={profile?.userId} onBack={() => goTo('home')} />}
       {screen === 'profile'     && <ProfileScreen     {...commonProps} setProfile={setProfile} fbUser={fbUser} onBack={() => goTo('home')} />}

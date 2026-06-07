@@ -3,13 +3,22 @@ import { useState } from 'react';
 import { signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential, deleteUser } from 'firebase/auth';
 import { auth } from '../firebase/config';
 import { saveUser, deleteUserData } from '../firebase/db';
-import { FaBolt, FaFire, FaSignOutAlt, FaTrash, FaLandmark, FaGamepad,
+import { FaBolt, FaFire, FaSignOutAlt, FaTrash, FaLandmark, FaGamepad, FaTrophy,
          FaPencilAlt, FaCheck, FaTimes, FaLock, FaEye, FaEyeSlash, FaUserTimes } from 'react-icons/fa';
 import { C, F } from '../styles/tokens';
 import Avatar from '../components/Avatar';
 import modules from '../data/modules.json';
 
 export default function ProfileScreen({ profile, setProfile, totalXp, streak, progress, onBack, fbUser }) {
+  const grandmaster = (
+    (progress?.m0 === true || progress?.m0 === 100) &&
+    (progress?.m1||[]).length >= 7 &&
+    (progress?.m2 === true || progress?.m2 === 100) &&
+    (progress?.m3||[]).length >= 4 &&
+    (progress?.m4||[]).length >= 15 &&
+    (progress?.m5||[]).length >= 7 &&
+    (progress?.m6||[]).length >= 8
+  );
 
   const [modal,        setModal]        = useState(null); // 'logout' | 'reset' | 'delete' | 'password'
   const [editingName,  setEditingName]  = useState(false);
@@ -194,6 +203,23 @@ export default function ProfileScreen({ profile, setProfile, totalXp, streak, pr
             </div>
           ))}
         </div>
+
+        {/* Certificado Grandmaster */}
+        {grandmaster && (
+          <div style={{ background:'linear-gradient(135deg, #1a1400, #2a2000)', border:`2px solid #FFD700`, borderRadius:20, padding:'24px 20px', marginBottom:16, textAlign:'center', position:'relative', overflow:'hidden' }}>
+            <div style={{ position:'absolute', top:0, left:0, right:0, bottom:0, backgroundImage:'repeating-linear-gradient(-45deg, rgba(255,215,0,0.04) 0px, rgba(255,215,0,0.04) 1px, transparent 1px, transparent 10px)', pointerEvents:'none' }} />
+            <div style={{ fontSize:48, marginBottom:8 }}>🏆</div>
+            <div style={{ fontFamily:F.mono, color:'#FFD700', fontSize:10, letterSpacing:4, marginBottom:4 }}>CERTIFICADO DE CONCLUSÃO</div>
+            <div style={{ fontFamily:F.display, color:'#FFD700', fontSize:20, fontWeight:900, marginBottom:4 }}>GRANDMASTER</div>
+            <div style={{ fontFamily:F.display, color:'#fff', fontSize:16, fontWeight:800, marginBottom:4 }}>{profile?.name}</div>
+            <div style={{ fontFamily:F.mono, color:'#FFD70099', fontSize:11, marginBottom:12 }}>concluiu todos os 7 módulos do SecOps Quest</div>
+            <div style={{ display:'flex', justifyContent:'center', gap:16 }}>
+              <div style={{ fontFamily:F.mono, fontSize:11, color:'#FFD70099' }}>⚡ {totalXp} DX</div>
+              <div style={{ fontFamily:F.mono, fontSize:11, color:'#FFD70099' }}>🔥 {streak} dias</div>
+              <div style={{ fontFamily:F.mono, fontSize:11, color:'#FFD70099' }}>📅 {new Date().toLocaleDateString('pt-BR')}</div>
+            </div>
+          </div>
+        )}
 
         {/* Ações */}
         <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
