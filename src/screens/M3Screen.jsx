@@ -5,7 +5,7 @@ import { Btn3D, ProgressHeader, FeedbackPanel, Lives } from '../components/GameU
 import NodeIcon from '../components/NodeIcon';
 import { FaSkull, FaSyncAlt, FaBolt } from 'react-icons/fa';
 import { GiPartyPopper } from 'react-icons/gi';
-import { M3_LESSONS, M3_SKIP_CHALLENGE } from '../data/content';
+import { useContent } from '../hooks/useContent';
 import ModuleScreen from './ModuleScreen';
 
 // Sub-tela para lição com content + quiz
@@ -38,7 +38,7 @@ function M3LessonScreen({ lesson, onComplete, onBack }) {
               {lesson.content}
             </pre>
           </div>
-          <Btn3D color={C.accent} shadow="#008a91" onClick={() => setPhase('quiz')}>
+          <Btn3D color={C.accent} shadow="#008a91" onClick={() => quiz.length > 0 ? setPhase('quiz') : onComplete(xp)}>
             {quiz.length > 0 ? 'INICIAR QUIZ →' : 'CONCLUÍDO →'}
           </Btn3D>
         </div>
@@ -47,6 +47,18 @@ function M3LessonScreen({ lesson, onComplete, onBack }) {
   }
 
   // Quiz
+  if (phase === 'done' || (phase === 'quiz' && !q)) {
+    // Fase done — renderiza a tela de conclusão
+    return (
+      <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:32 }}>
+        <div style={{ fontSize:64, marginBottom:16 }}>🎉</div>
+        <div style={{ fontFamily:F.display, color:C.text, fontSize:22, fontWeight:900, marginBottom:8, textAlign:'center' }}>{lesson.title} concluída!</div>
+        <div style={{ fontFamily:F.mono, color:C.accent, fontSize:16, fontWeight:700, marginBottom:32 }}>+{xp} DX conquistados</div>
+        <Btn3D color={C.cyan} shadow={C.btn3d_cyan} onClick={() => onComplete(xp)}>CONTINUAR →</Btn3D>
+      </div>
+    );
+  }
+
   if (phase === 'quiz' && q) {
     const isCorrect = selected === q.correct;
 
@@ -131,7 +143,8 @@ function M3LessonScreen({ lesson, onComplete, onBack }) {
   );
 }
 
-export default function M3Screen({ progress, onComplete, onBack }) {
+export default function M3Screen({ progress, onComplete, onBack, lang = 'pt' }) {
+  const { M3_LESSONS, M3_SKIP_CHALLENGE } = useContent(lang);
   const done = progress?.m3 || [];
   const [lessonIdx, setLessonIdx] = useState(null);
   const [showSkip,  setShowSkip]  = useState(false);
