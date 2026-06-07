@@ -21,6 +21,17 @@ export function useProgress({ fbUser, profile }) {
   useEffect(() => {
     if (!fbUser) return;
 
+    // Calcula streak com base no lastPlayed
+    const calcStreak = (data) => {
+      if (!data) return 0;
+      const today     = new Date().toDateString();
+      const yesterday = new Date(Date.now() - 86400000).toDateString();
+      const last      = data.lastPlayed;
+      if (last === today)      return data.streak || 1;  // já jogou hoje
+      if (last === yesterday)  return data.streak || 1;  // jogou ontem — mantém
+      return 0;                                           // quebrou a sequência
+    };
+
     const loadData = async () => {
       try {
         // Tentar Firestore primeiro (sincronizado entre dispositivos)
@@ -28,7 +39,7 @@ export function useProgress({ fbUser, profile }) {
         if (remote?.progress) {
           setProgress(remote.progress);
           setTotalXp(remote.totalXp  || 0);
-          setStreak(remote.streak    || 0);
+          setStreak(calcStreak(remote));
           // Atualizar localStorage com dados do servidor
           try { localStorage.setItem(LS_KEY, JSON.stringify(remote)); } catch {}
           setLoaded(true);
@@ -43,7 +54,7 @@ export function useProgress({ fbUser, profile }) {
           const saved = JSON.parse(raw);
           if (saved.progress) setProgress(saved.progress);
           if (saved.totalXp)  setTotalXp(saved.totalXp);
-          if (saved.streak)   setStreak(saved.streak);
+          setStreak(calcStreak(saved));
         }
       } catch {}
 
@@ -57,7 +68,20 @@ export function useProgress({ fbUser, profile }) {
   useEffect(() => {
     if (!loaded || !profile?.name) return;
 
-    const data = { profile, progress, totalXp, streak, lastPlayed: new Date().toDateString() };
+    // Calcular novo streak ao salvar
+    const today = new Date().toDateString();
+    const prevLastPlayed = (() => {
+      try { return JSON.parse(localStorage.getItem(LS_KEY))?.lastPlayed; } catch { return null; }
+    })();
+    const newStreak = (() => {
+      if (!prevLastPlayed)                                       return 1;
+      if (prevLastPlayed === today)                              return streak; // já salvou hoje
+      const yesterday = new Date(Date.now() - 86400000).toDateString();
+      if (prevLastPlayed === yesterday)                          return streak + 1; // dia seguinte!
+      return 1; // quebrou
+    })();
+    if (newStreak !== streak) setStreak(newStreak);
+    const data = { profile, progress, totalXp, streak: newStreak, lastPlayed: today };
 
     // localStorage imediato (cache local)
     try { localStorage.setItem(LS_KEY, JSON.stringify(data)); } catch {}

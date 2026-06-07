@@ -19,7 +19,8 @@ import M3Screen          from './screens/M3Screen';
 import M4Screen          from './screens/M4Screen';
 import M5Screen          from './screens/M5Screen';
 import M6Screen          from './screens/M6Screen';
-import CelebrationScreen from './screens/CelebrationScreen';
+import CelebrationScreen  from './screens/CelebrationScreen';
+import OnboardingScreen   from './screens/OnboardingScreen';
 
 export default function App() {
   const { fbUser, profile, setProfile, loadingAuth } = useAuth();
@@ -29,11 +30,21 @@ export default function App() {
   const [screen,    setScreen]    = useState('home');
   const [moduleId,  setModuleId]  = useState(null);
   const [setupDone, setSetupDone] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(() => {
+    try { return !localStorage.getItem('secops-quest-onboarding-done'); }
+    catch { return true; }
+  });
 
   if (!loaded || loadingAuth) return <LoadingScreen t={t} />;
   if (!fbUser) return <AuthScreen lang={lang} setLang={setLang} t={t} />;
   if (!profile?.name && !setupDone) {
     return <SetupScreen fbUser={fbUser} onDone={(p) => { setProfile(p); setSetupDone(true); setScreen('home'); }} lang={lang} setLang={setLang} t={t} />;
+  }
+  if (showOnboarding) {
+    return <OnboardingScreen onDone={() => {
+      try { localStorage.setItem('secops-quest-onboarding-done', '1'); } catch {}
+      setShowOnboarding(false);
+    }} />;
   }
 
   const goTo = (s, id = null) => { setScreen(s); if (id !== null) setModuleId(id); };
