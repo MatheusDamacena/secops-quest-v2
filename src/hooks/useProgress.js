@@ -98,3 +98,4 @@ export function useProgress({ fbUser, profile }) {
 
   return { progress, setProgress, totalXp, setTotalXp, streak, setStreak, loaded };
 }
+// rebuild Sun Jun  7 20:14:38 -03 2026
