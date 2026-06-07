@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { getLeaderboard } from '../firebase/db';
 import { FaTrophy, FaMedal, FaBolt, FaFire, FaArrowUp, FaArrowDown } from 'react-icons/fa';
 import { C, F } from '../styles/tokens';
+import Avatar from '../components/Avatar';
 
 export default function LeaderboardScreen({ currentUserId, onBack }) {
   const [entries, setEntries] = useState([]);
@@ -98,7 +99,7 @@ export default function LeaderboardScreen({ currentUserId, onBack }) {
                     <div style={{ fontFamily:F.display, fontSize:rank<=3?22:16, fontWeight:900, color:zone||(isMe?C.accent:C.textDim), minWidth:36, textAlign:'center', flexShrink:0 }}>
                       {rankIcon(rank)}
                     </div>
-                    <div style={{ fontSize:30, lineHeight:1, flexShrink:0 }}>{entry.avatar}</div>
+                    <div style={{ fontSize:30, lineHeight:1, flexShrink:0 }}><Avatar profile={{ avatarId: entry.avatarId, avatarColor: entry.avatarColor }} size={36} /></div>
                     <div style={{ flex:1, minWidth:0 }}>
                       <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:6 }}>
                         <div style={{ fontFamily:F.display, color:isMe?(zone||C.accent):C.text, fontSize:15, fontWeight:800, overflow:'hidden', whiteSpace:'nowrap', textOverflow:'ellipsis' }}>

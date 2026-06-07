@@ -14,7 +14,14 @@ export async function loadUser(uid) {
 }
 
 export async function saveLeaderboard(uid, entry) {
-  try { await setDoc(doc(db, 'leaderboard', uid), { ...entry, updatedAt: Date.now() }, { merge: true }); }
+  try {
+    // Filtrar campos undefined para evitar erro no Firestore
+    const clean = Object.fromEntries(
+      Object.entries({ ...entry, updatedAt: Date.now() })
+        .filter(([_, v]) => v !== undefined && v !== null)
+    );
+    await setDoc(doc(db, 'leaderboard', uid), clean, { merge: true });
+  }
   catch (e) { console.warn('[db] saveLeaderboard failed:', e.message); }
 }
 
