@@ -92,3 +92,5 @@ export default defineConfig({
     sourcemap: false,
   },
 })
+
+// cache-bust: v2
