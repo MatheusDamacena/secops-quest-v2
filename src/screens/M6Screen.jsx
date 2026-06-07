@@ -31,7 +31,7 @@ function useAnimVal(target) {
   return val;
 }
 
-function PuzzleDetail({ puzzle, pIdx, totalPuzzles, onComplete, onBack }) {
+function PuzzleDetail({ puzzle, pIdx, totalPuzzles, nextPuzzle, onComplete, onBack }) {
   const blanks = puzzle.nodes.filter(n => n.blank);
   const [optionsCache] = useState(() =>
     [...blanks.map(b => b.label), ...puzzle.distractors].sort(() => Math.random() - 0.5)
@@ -186,7 +186,7 @@ function PuzzleDetail({ puzzle, pIdx, totalPuzzles, onComplete, onBack }) {
         {pIdx + 1 < totalPuzzles && (
           <button onClick={() => { onComplete(puzzle.xp); onBack('next'); }}
             style={{ background:C.green, color:'#0a0b0c', border:'none', borderRadius:14, padding:'16px', fontFamily:F.display, fontWeight:800, fontSize:18, cursor:'pointer', boxShadow:`0 0 24px ${C.green}44` }}>
-            PRÓXIMO: {M6_PUZZLES[pIdx+1]?.emoji} {M6_PUZZLES[pIdx+1]?.title} →
+            PRÓXIMO: {nextPuzzle?.emoji} {nextPuzzle?.title} →
           </button>
         )}
         <button onClick={() => { onComplete(puzzle.xp); onBack(); }}
@@ -355,6 +355,7 @@ export default function M6Screen({ progress, onComplete, onBack, lang = 'pt', t 
         puzzle={M6_PUZZLES[puzzleId]}
         pIdx={puzzleId}
         totalPuzzles={M6_PUZZLES.length}
+        nextPuzzle={M6_PUZZLES[puzzleId + 1] || null}
         onBack={handleBack}
         onComplete={handleComplete}
       />
