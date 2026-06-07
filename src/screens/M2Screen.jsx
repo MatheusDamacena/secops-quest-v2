@@ -3,9 +3,10 @@ import { useState } from 'react';
 import { C, F } from '../styles/tokens';
 import { FaMicroscope, FaChartBar } from 'react-icons/fa';
 import ModuleScreen from './ModuleScreen';
-import { M2_CHALLENGE } from '../data/content';
+import { useContent } from '../hooks/useContent';
 
-export default function M2Screen({ progress, onComplete, onBack }) {
+export default function M2Screen({ progress, onComplete, onBack, lang = 'pt', t = k => k }) {
+  const { M2_CHALLENGE } = useContent(lang);
   const [started, setStarted] = useState(false);
 
   if (!started) {
@@ -43,6 +44,7 @@ export default function M2Screen({ progress, onComplete, onBack }) {
       lesson={{ title:'UDM — Modelo de Dados', cards:[], challenges: M2_CHALLENGE, icon:'🔬' }}
       onBack={() => setStarted(false)}
       onComplete={(xp) => onComplete({ m2: true }, xp, true)}
+        t={t}
     />
   );
 }

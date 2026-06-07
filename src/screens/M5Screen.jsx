@@ -4,9 +4,10 @@ import { C, F } from '../styles/tokens';
 import ModuleScreen from './ModuleScreen';
 import NodeIcon from '../components/NodeIcon';
 import { FaTrophy } from 'react-icons/fa';
-import { M5_LESSONS, M5_FINAL_CHALLENGE } from '../data/content';
+import { useContent } from '../hooks/useContent';
 
-export default function M5Screen({ progress, onComplete, onBack }) {
+export default function M5Screen({ progress, onComplete, onBack, lang = 'pt', t = k => k }) {
+  const { M5_LESSONS, M5_FINAL_CHALLENGE } = useContent(lang);
   const done = progress?.m5 || [];
   const [lessonIdx, setLessonIdx] = useState(null);
   const [showFinal, setShowFinal] = useState(false);
@@ -69,6 +70,7 @@ export default function M5Screen({ progress, onComplete, onBack }) {
           onComplete({ m5: M5_LESSONS.map((_, i) => i) }, xp, true);
           setShowFinal(false);
         }}
+        t={t}
       />
     );
   }
@@ -82,6 +84,7 @@ export default function M5Screen({ progress, onComplete, onBack }) {
         onComplete({ m5: newDone }, xp, false);
         setLessonIdx(null);
       }}
+        t={t}
     />
   );
 }

@@ -5,9 +5,10 @@ import { Btn3D } from '../components/GameUI';
 import ModuleScreen from './ModuleScreen';
 import NodeIcon from '../components/NodeIcon';
 import { FaTrophy, FaLandmark } from 'react-icons/fa';
-import { M1_LESSONS, M1_FINAL_CHALLENGE } from '../data/content';
+import { useContent } from '../hooks/useContent';
 
-export default function M1Screen({ progress, onComplete, onBack }) {
+export default function M1Screen({ progress, onComplete, onBack, lang = 'pt', t = k => k }) {
+  const { M1_LESSONS, M1_FINAL_CHALLENGE } = useContent(lang);
   const done = progress?.m1 || [];
   const [lessonIdx, setLessonIdx] = useState(null);
   const [showFinal, setShowFinal] = useState(false);
@@ -76,6 +77,7 @@ export default function M1Screen({ progress, onComplete, onBack }) {
           onComplete({ m1: newDone }, xp, false);
           setLessonIdx(null);
         }}
+        t={t}
       />
     );
   }
@@ -91,6 +93,7 @@ export default function M1Screen({ progress, onComplete, onBack }) {
           onComplete({ m1: M1_LESSONS.map((_, i) => i) }, xp, true);
           setShowFinal(false);
         }}
+        t={t}
       />
     );
   }

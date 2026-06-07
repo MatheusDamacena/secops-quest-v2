@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { C, F } from '../styles/tokens';
 import { Btn3D } from '../components/GameUI';
-import { M6_PUZZLES } from '../data/content';
+import { useContent } from '../hooks/useContent';
 import NodeIcon from '../components/NodeIcon';
 import { FaHeartBroken, FaTrophy, FaCrosshairs, FaMapMarkerAlt, FaTimes, FaShieldAlt } from 'react-icons/fa';
 import { Lives } from '../components/GameUI';
@@ -329,7 +329,8 @@ function PuzzleDetail({ puzzle, pIdx, totalPuzzles, onComplete, onBack }) {
   );
 }
 
-export default function M6Screen({ progress, onComplete, onBack }) {
+export default function M6Screen({ progress, onComplete, onBack, lang = 'pt', t = k => k }) {
+  const { M6_PUZZLES } = useContent(lang);
   const done = progress?.m6 || [];
   const [puzzleId,  setPuzzleId]  = useState(null);
   const [xpEarned,  setXpEarned]  = useState(0);

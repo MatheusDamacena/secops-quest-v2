@@ -143,7 +143,7 @@ function M3LessonScreen({ lesson, onComplete, onBack }) {
   );
 }
 
-export default function M3Screen({ progress, onComplete, onBack, lang = 'pt' }) {
+export default function M3Screen({ progress, onComplete, onBack, lang = 'pt', t = k => k }) {
   const { M3_LESSONS, M3_SKIP_CHALLENGE } = useContent(lang);
   const done = progress?.m3 || [];
   const [lessonIdx, setLessonIdx] = useState(null);
@@ -155,6 +155,7 @@ export default function M3Screen({ progress, onComplete, onBack, lang = 'pt' }) 
         lesson={{ title:'Nivelamento YARA-L', cards:[], challenges: M3_SKIP_CHALLENGE, icon:'⚡' }}
         onBack={() => setShowSkip(false)}
         onComplete={(xp) => { onComplete({ m3: M3_LESSONS.map((_, i) => i) }, xp, true); setShowSkip(false); }}
+        t={t}
       />
     );
   }
