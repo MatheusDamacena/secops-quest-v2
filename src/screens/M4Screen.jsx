@@ -244,9 +244,11 @@ function ResultPhase({ mission, score, xpBonus, totalXp, onComplete }) {
       <div style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:14, padding:'16px 20px', maxWidth:480, width:'100%', marginBottom:32 }}>
         <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:13, lineHeight:1.8 }}>{mission.explanation}</div>
       </div>
-      <Btn3D color={C.green} shadow={C.btn3d_green} onClick={() => onComplete(totalXp + xpBonus)}>
-        PRÓXIMA MISSÃO →
-      </Btn3D>
+      <div style={{ maxWidth:480, width:'100%' }}>
+        <Btn3D color={C.green} shadow={C.btn3d_green} onClick={() => onComplete(totalXp + xpBonus)}>
+          PRÓXIMA MISSÃO →
+        </Btn3D>
+      </div>
     </div>
   );
 }
