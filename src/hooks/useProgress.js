@@ -1,7 +1,8 @@
 // ─── useProgress ──────────────────────────────────────────────────────────────
 // Gerencia progresso, XP e streak com persistência automática
+// Fonte de verdade: Firestore. localStorage usado como cache local.
 import { useState, useEffect, useRef } from 'react';
-import { saveUser, saveLeaderboard } from '../firebase/db';
+import { saveUser, saveLeaderboard, loadUser } from '../firebase/db';
 
 const LS_KEY = 'secops-quest-v2';
 
@@ -16,19 +17,41 @@ export function useProgress({ fbUser, profile }) {
   const [loaded,    setLoaded]    = useState(false);
   const saveTimer = useRef(null);
 
-  // Carregar do localStorage na montagem
+  // Carregar dados — Firestore tem prioridade, localStorage é fallback
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(LS_KEY);
-      if (raw) {
-        const saved = JSON.parse(raw);
-        if (saved.progress) setProgress(saved.progress);
-        if (saved.totalXp)  setTotalXp(saved.totalXp);
-        if (saved.streak)   setStreak(saved.streak);
-      }
-    } catch {}
-    setLoaded(true);
-  }, []);
+    if (!fbUser) return;
+
+    const loadData = async () => {
+      try {
+        // Tentar Firestore primeiro (sincronizado entre dispositivos)
+        const remote = await loadUser(fbUser.uid);
+        if (remote?.progress) {
+          setProgress(remote.progress);
+          setTotalXp(remote.totalXp  || 0);
+          setStreak(remote.streak    || 0);
+          // Atualizar localStorage com dados do servidor
+          try { localStorage.setItem(LS_KEY, JSON.stringify(remote)); } catch {}
+          setLoaded(true);
+          return;
+        }
+      } catch {}
+
+      // Fallback: localStorage se Firestore falhou ou está vazio
+      try {
+        const raw = localStorage.getItem(LS_KEY);
+        if (raw) {
+          const saved = JSON.parse(raw);
+          if (saved.progress) setProgress(saved.progress);
+          if (saved.totalXp)  setTotalXp(saved.totalXp);
+          if (saved.streak)   setStreak(saved.streak);
+        }
+      } catch {}
+
+      setLoaded(true);
+    };
+
+    loadData();
+  }, [fbUser?.uid]);
 
   // Auto-save com debounce quando progresso muda
   useEffect(() => {
@@ -36,7 +59,7 @@ export function useProgress({ fbUser, profile }) {
 
     const data = { profile, progress, totalXp, streak, lastPlayed: new Date().toDateString() };
 
-    // localStorage imediato
+    // localStorage imediato (cache local)
     try { localStorage.setItem(LS_KEY, JSON.stringify(data)); } catch {}
 
     // Firestore com debounce de 500ms
