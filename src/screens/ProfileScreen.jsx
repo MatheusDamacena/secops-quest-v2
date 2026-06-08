@@ -15,7 +15,7 @@ export default function ProfileScreen({ profile, setProfile, totalXp, streak, pr
     (progress?.m1||[]).length >= 7 &&
     (progress?.m2 === true || progress?.m2 === 100) &&
     (progress?.m3||[]).length >= 4 &&
-    (progress?.m4||[]).length >= 15 &&
+    (progress?.m4||[]).length >= 16 &&
     (progress?.m5||[]).length >= 7 &&
     (progress?.m6||[]).length >= 8
   );
@@ -48,7 +48,7 @@ export default function ProfileScreen({ profile, setProfile, totalXp, streak, pr
       case 1: return (p.m0 === true || p.m0 === 100) ? 100 : 0;
       case 2: return p.m2 ? 100 : 0;
       case 3: return Math.round(((p.m3||[]).length / 4) * 100);
-      case 4: return Math.round(((p.m4||[]).length / 15) * 100);
+      case 4: return Math.round(((p.m4||[]).length / 16) * 100);
       case 5: return Math.round(((p.m5||[]).length / 7) * 100);
       case 6: return Math.round(((p.m6||[]).length / 8) * 100);
       default: return 0;

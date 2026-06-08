@@ -54,7 +54,7 @@ export default function App() {
            (p?.m1||[]).length >= 7 &&
            (p?.m2 === true || p?.m2 === 100) &&
            (p?.m3||[]).length >= 4 &&
-           (p?.m4||[]).length >= 15 &&
+           (p?.m4||[]).length >= 16 &&
            (p?.m5||[]).length >= 7 &&
            (p?.m6||[]).length >= 8;
   };
