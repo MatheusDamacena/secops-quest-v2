@@ -21,7 +21,11 @@ export function useProgress({ fbUser, profile }) {
   const saveTimer = useRef(null);
 
   useEffect(() => {
-    if (!fbUser) return;
+    // Sem usuário: marca como carregado para nao travar a tela
+    if (!fbUser) {
+      setLoaded(true);
+      return;
+    }
 
     // Carregar localStorage imediatamente
     try {
@@ -47,10 +51,9 @@ export function useProgress({ fbUser, profile }) {
   }, [fbUser?.uid]);
 
   useEffect(() => {
-    if (!loaded || !profile?.name) return;
+    if (!loaded || !profile?.name || !fbUser) return;
     const data = { profile, progress, totalXp, streak, lastPlayed: new Date().toDateString() };
     try { localStorage.setItem(LS_KEY, JSON.stringify(data)); } catch {}
-    if (!fbUser) return;
     clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => {
       saveUser(fbUser.uid, data);
