@@ -920,6 +920,40 @@ const MISSIONS = [
     ],
     explanation:'LLM-as-C2 é uma técnica emergente: malware envia dados no prompt e recebe comandos na resposta — tráfego parece legítimo para um firewall. A chave é excluir browsers (re.regex + not) e detectar processos incomuns batendo em AI APIs com frequência de beaconing (>60/15min).',
   },
+  // ─── CLOUD 1: GCP Storage Bucket Público ───────────────────────────────────
+  { id:16,cat:"CLOUD",emoji:"🪣",title:"GCP Storage Bucket Público",tag:"GCP STORAGE",tagColor:"#4285F4",xp:200,mitre:"T1562",
+    story:"Um bucket do Cloud Storage foi aberto para a internet ao adicionar 'allUsers' na policy IAM. Detecte mudanças de permissão que expõem buckets publicamente.",
+    steps:[
+      {id:"meta",label:"META",color:"#fbbf24",icon:"🏷",instruction:"Metadados da regra",multi:true,minCorrect:2,options:[
+        {id:"a",text:'rule_name = "gcp_storage_bucket_public"',correct:true},
+        {id:"b",text:'rule_name = "bucket_ok"',correct:false},
+        {id:"c",text:'severity = "HIGH"',correct:true},
+        {id:"d",text:'severity = "INFO"',correct:false}]},
+      {id:"events",label:"EVENTS",color:"#00c4cc",icon:"📡",instruction:"Filtre eventos IAM em Storage buckets",multi:true,minCorrect:4,options:[
+        {id:"a",text:'$gcp.metadata.event_type = "USER_RESOURCE_UPDATE_PERMISSIONS"',correct:true},
+        {id:"b",text:'$gcp.metadata.event_type = "USER_LOGIN"',correct:false},
+        {id:"c",text:'$gcp.metadata.product_name = "Google Cloud Storage"',correct:true},
+        {id:"d",text:'$gcp.target.resource.resource_type = "STORAGE_BUCKET"',correct:true},
+        {id:"e",text:'$gcp.target.resource.resource_type = "VM_INSTANCE"',correct:false},
+        {id:"f",text:'$gcp.target.resource.attribute.labels["ser_binding_deltas_member"] = /allUsers|allAuthenticatedUsers/',correct:true}]},
+      {id:"match",label:"MATCH",color:"#a78bfa",icon:"🔗",instruction:"Agrupe pelo nome do bucket em 1h",multi:false,minCorrect:1,options:[
+        {id:"a",text:"$bucket over 1h",correct:true},
+        {id:"b",text:"$ip over 30d",correct:false},
+        {id:"c",text:"$user over 1s",correct:false}]},
+      {id:"condition",label:"CONDITION",color:"#22d3a0",icon:"⚡",instruction:"Dispare em qualquer ocorrência",multi:false,minCorrect:1,options:[
+        {id:"a",text:"#gcp >= 1",correct:true},
+        {id:"b",text:"#gcp > 1000",correct:false},
+        {id:"c",text:"#gcp < 0",correct:false}]},
+    ],
+    logs:[
+      {id:1,icon:"🪣",desc:"prod-backups",detail:"setIamPermissions · ADD allUsers · roles/storage.objectViewer",alert:true},
+      {id:2,icon:"✅",desc:"team-shared",detail:"setIamPermissions · ADD user:ana@empresa.com",alert:false},
+      {id:3,icon:"🪣",desc:"customer-data",detail:"setIamPermissions · ADD allAuthenticatedUsers · roles/storage.admin",alert:true},
+      {id:4,icon:"✅",desc:"logs-archive",detail:"setIamPermissions · REMOVE allUsers",alert:false},
+    ],
+    explanation:'A regra real do Google detecta storage.setIamPermissions com ADD de allUsers ou allAuthenticatedUsers em STORAGE_BUCKET. Esses dois membros expõem o bucket à internet inteira — MITRE T1562 (Impair Defenses). Adicionar usuário nomeado (log 2) ou remover acesso público (log 4) são operações legítimas.',
+  },
+
 ];
 
 export {
