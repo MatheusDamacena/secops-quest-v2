@@ -1092,6 +1092,75 @@ const MISSIONS = [
     explanation:'Esta regra combina dois eventos de fontes diferentes usando uma variável de join ($ip): o log real do Cloud Audit (GCP_CLOUDAUDIT) e o GCTI Feed de nós Tor do Google. Só alerta quando o MESMO IP aparece em ambos simultaneamente. O DENY (log 4) não alerta porque security_result.action deve ser ALLOW — chamada bloqueada não representa acesso real. MITRE T1090.003 (Proxy: Multi-hop Proxy).',
   },
 
+  // ─── CLOUD 6: GCP API Key Exposta (Gemini) ─────────────────────────────────
+  { id:21,cat:"CLOUD",emoji:"🗝️",title:"GCP API Key Exposta",tag:"CREDENTIAL ACCESS",tagColor:"#FF5722",xp:300,mitre:"T1555",
+    story:"Alguém recuperou o valor de uma API Key do GCP — o mesmo tipo de chave usada para autenticar na Gemini API. Esse evento GetKeyString indica que a chave foi lida e pode ter sido exfiltrada. Detecte antes que ela vaze.",
+    steps:[
+      {id:"meta",label:"META",color:"#fbbf24",icon:"🏷",instruction:"Metadados da regra",multi:true,minCorrect:2,options:[
+        {id:"a",text:'rule_name = "gcp_api_key_retrieved"',correct:true},
+        {id:"b",text:'rule_name = "api_key_ok"',correct:false},
+        {id:"c",text:'severity = "HIGH"',correct:true},
+        {id:"d",text:'severity = "INFO"',correct:false}]},
+      {id:"events",label:"EVENTS",color:"#00c4cc",icon:"📡",instruction:"Filtre a recuperação de API Key via Cloud Audit",multi:true,minCorrect:5,options:[
+        {id:"a",text:'$gcp.metadata.log_type = "GCP_CLOUDAUDIT"',correct:true},
+        {id:"b",text:'$gcp.metadata.log_type = "WINEVTLOG"',correct:false},
+        {id:"c",text:'$gcp.metadata.product_event_type = "google.api.apikeys.v2.ApiKeys.GetKeyString"',correct:true},
+        {id:"d",text:'$gcp.metadata.product_event_type = "google.api.apikeys.v2.ApiKeys.CreateKey"',correct:false},
+        {id:"e",text:'$gcp.target.application = "apikeys.googleapis.com"',correct:true},
+        {id:"f",text:'$gcp.security_result.action = "ALLOW"',correct:true},
+        {id:"g",text:'$gcp.principal.user.userid = $userid',correct:true}]},
+      {id:"match",label:"MATCH",color:"#a78bfa",icon:"🔗",instruction:"Agrupe por usuário em 1 hora",multi:false,minCorrect:1,options:[
+        {id:"a",text:"$userid over 1h",correct:true},
+        {id:"b",text:"$key over 30d",correct:false},
+        {id:"c",text:"$ip over 5m",correct:false}]},
+      {id:"condition",label:"CONDITION",color:"#22d3a0",icon:"⚡",instruction:"Dispare em qualquer ocorrência",multi:false,minCorrect:1,options:[
+        {id:"a",text:"#gcp >= 1",correct:true},
+        {id:"b",text:"#gcp > 50",correct:false},
+        {id:"c",text:"#gcp < 0",correct:false}]},
+    ],
+    logs:[
+      {id:1,icon:"🗝️",desc:"dev@empresa.com",detail:"GetKeyString · apikeys.googleapis.com · ALLOW · key: prod-gemini-key",alert:true},
+      {id:2,icon:"✅",desc:"terraform@proj.iam",detail:"CreateKey · apikeys.googleapis.com · ALLOW · nova chave criada automaticamente",alert:false},
+      {id:3,icon:"🗝️",desc:"ext-user@gmail.com",detail:"GetKeyString · apikeys.googleapis.com · ALLOW · key: api-key-unrestricted",alert:true},
+      {id:4,icon:"✅",desc:"monitoring@proj.iam",detail:"ListKeys · apikeys.googleapis.com · ALLOW · apenas listagem sem expor valor",alert:false},
+    ],
+    explanation:'A regra detecta google.api.apikeys.v2.ApiKeys.GetKeyString — o único evento que expõe o VALOR da chave, não apenas os metadados. ListKeys (log 4) lista chaves mas não expõe o valor. CreateKey (log 2) cria mas não expõe. O GetKeyString com ALLOW significa que alguém leu a chave real — o vetor de exfiltração da Gemini API key. Match por $userid over 1h agrupa múltiplas leituras do mesmo usuário. MITRE T1555 (Credentials from Password Stores).',
+  },
+
+  // ─── CLOUD 7: Gemini API Key Vazada no GitHub ──────────────────────────────
+  { id:22,cat:"CLOUD",emoji:"🐙",title:"API Key Vazada no GitHub",tag:"SECRET SCANNING",tagColor:"#24292E",xp:275,mitre:"T1552",
+    story:"O GitHub Secret Scanning detectou uma credencial exposta num repositório — pode ser uma Gemini API Key, OAuth token ou service account key commitada por acidente. Detecte esse alerta antes que o segredo seja explorado.",
+    steps:[
+      {id:"meta",label:"META",color:"#fbbf24",icon:"🏷",instruction:"Metadados da regra",multi:true,minCorrect:2,options:[
+        {id:"a",text:'rule_name = "github_secret_scanning_alert"',correct:true},
+        {id:"b",text:'rule_name = "github_commit_ok"',correct:false},
+        {id:"c",text:'severity = "HIGH"',correct:true},
+        {id:"d",text:'severity = "LOW"',correct:false}]},
+      {id:"events",label:"EVENTS",color:"#00c4cc",icon:"📡",instruction:"Filtre o alerta de secret scanning do GitHub",multi:true,minCorrect:3,options:[
+        {id:"a",text:'$github.metadata.vendor_name = "GITHUB" nocase',correct:true},
+        {id:"b",text:'$github.metadata.vendor_name = "Google Workspace"',correct:false},
+        {id:"c",text:'$github.metadata.product_name = "GITHUB"',correct:true},
+        {id:"d",text:'$github.metadata.product_event_type = "secret_scanning_alert.create"',correct:true},
+        {id:"e",text:'$github.metadata.product_event_type = "push"',correct:false},
+        {id:"f",text:'$github.metadata.product_event_type = "secret_scanning_alert.resolved"',correct:false}]},
+      {id:"match",label:"MATCH",color:"#a78bfa",icon:"🔗",instruction:"Sem agrupamento — cada alerta é crítico individualmente",multi:false,minCorrect:1,options:[
+        {id:"a",text:"(sem cláusula match — dispara por evento individual)",correct:true},
+        {id:"b",text:"$repo over 1h",correct:false},
+        {id:"c",text:"$user over 24h",correct:false}]},
+      {id:"condition",label:"CONDITION",color:"#22d3a0",icon:"⚡",instruction:"Dispare em qualquer ocorrência",multi:false,minCorrect:1,options:[
+        {id:"a",text:"#github >= 1",correct:true},
+        {id:"b",text:"#github > 10",correct:false},
+        {id:"c",text:"#github = 0",correct:false}]},
+    ],
+    logs:[
+      {id:1,icon:"🐙",desc:"org/app-backend",detail:"secret_scanning_alert.create · type=google_api_key · branch=main · EXPOSED",alert:true},
+      {id:2,icon:"✅",desc:"org/app-backend",detail:"secret_scanning_alert.resolved · type=google_api_key · revoked=true",alert:false},
+      {id:3,icon:"🐙",desc:"org/ml-project",detail:"secret_scanning_alert.create · type=google_cloud_private_key · branch=dev",alert:true},
+      {id:4,icon:"✅",desc:"org/infra",detail:"push · 3 commits · branch=feature/fix · nenhum segredo detectado",alert:false},
+    ],
+    explanation:'O GitHub Secret Scanning analisa automaticamente todos os commits e cria um alerta (secret_scanning_alert.create) quando detecta padrões de credenciais conhecidas — incluindo Google API Keys (prefixo AIzaSy...), chaves privadas de service account e OAuth tokens. O evento resolved (log 2) indica que o segredo já foi revogado e é legítimo. Um push sem alerta (log 4) é operação normal. Sem match porque cada novo segredo exposto exige resposta imediata. MITRE T1552 (Unsecured Credentials).',
+  },
+
 ];
 
 export {
