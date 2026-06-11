@@ -658,7 +658,7 @@ const MISSIONS = [
   },
 
   // REGRAS COMPORTAMENTAIS
-  { id:7,cat:"COMPORTAMENTAL",emoji:"🌙",title:"Acesso Fora do Horário",tag:"COMPORTAMENTAL",tagColor:"#818cf8",xp:300,mitre:"T1078 — Valid Accounts",
+  { id:7,cat:"COMPORTAMENTAL",emoji:"🌙",title:"Acesso Fora do Horário",tag:"COMPORTAMENTAL",tagColor:"#818cf8",xp:300,mitre:"T1078",
     story:"Analistas legítimos não acessam sistemas sensíveis às 3h da manhã. Detecte USER_LOGIN com ALLOW fora do horário comercial (antes das 8h ou depois das 20h) usando a função timestamp.get_hour().",
     steps:[
       {id:"meta",label:"META",color:"#fbbf24",icon:"🏷",instruction:"Metadados da regra comportamental",multi:true,minCorrect:2,options:[
@@ -685,7 +685,7 @@ const MISSIONS = [
     ],
     explanation:'timestamp.get_hour() é função nativa YARA-L 2.0. Usar timezone correto ("America/Sao_Paulo") é crítico — UTC pode criar falsos negativos. BLOCK não interessa — só logins bem-sucedidos fora do horário.',
   },
-  { id:8,cat:"COMPORTAMENTAL",emoji:"✈️",title:"Impossible Travel",tag:"COMPORTAMENTAL",tagColor:"#ec4899",xp:350,mitre:"T1078 — Valid Accounts",
+  { id:8,cat:"COMPORTAMENTAL",emoji:"✈️",title:"Impossible Travel",tag:"COMPORTAMENTAL",tagColor:"#ec4899",xp:350,mitre:"T1078",
     story:"Mesmo usuário logou em São Paulo e 10 minutos depois em Moscou. Fisicamente impossível. Detecte dois USER_LOGIN ALLOW de países diferentes do mesmo usuário em 30 minutos.",
     steps:[
       {id:"meta",label:"META",color:"#fbbf24",icon:"🏷",instruction:"Metadados",multi:true,minCorrect:2,options:[
@@ -764,7 +764,7 @@ const MISSIONS = [
     ],
     explanation:'Porta 3389 é RDP. Agrupando por $src detecta um host se movendo para múltiplos destinos. Threshold baixo (>3) porque 3 saltos RDP em 15min é claramente anômalo. Em regras multi-evento, garanta ordem cronológica com $e1.metadata.event_timestamp.seconds < $e2.metadata.event_timestamp.seconds.',
   },
-  { id:11,cat:"COMPORTAMENTAL",emoji:"👁",title:"Privilege Escalation",tag:"IDENTIDADE",tagColor:"#a78bfa",xp:450,mitre:"T1078 — Valid Accounts",
+  { id:11,cat:"COMPORTAMENTAL",emoji:"👁",title:"Privilege Escalation",tag:"IDENTIDADE",tagColor:"#a78bfa",xp:450,mitre:"T1078",
     story:"Usuário comum ganhou role de 'admin' em múltiplos sistemas. Detecte USER_RESOURCE_UPDATE_PERMISSIONS com role = admin para qualquer usuário.",
     steps:[
       {id:"meta",label:"META",color:"#fbbf24",icon:"🏷",instruction:"Metadados",multi:true,minCorrect:2,options:[
@@ -790,7 +790,7 @@ const MISSIONS = [
     ],
     explanation:'USER_RESOURCE_UPDATE_PERMISSIONS é o event_type real do UDM para mudança de roles. target.user.attribute.roles.name é o campo exato da documentação Google SecOps.',
   },
-  { id:12,cat:"COMPORTAMENTAL",emoji:"🗂",title:"Mass File Deletion",tag:"INSIDER THREAT",tagColor:"#ff4d4d",xp:500,mitre:"T1485 — Data Destruction",
+  { id:12,cat:"COMPORTAMENTAL",emoji:"🗂",title:"Mass File Deletion",tag:"INSIDER THREAT",tagColor:"#ff4d4d",xp:500,mitre:"T1485",
     story:"Funcionário demitido está deletando arquivos críticos antes de sair. Detecte mais de 50 FILE_DELETION em 5 minutos pelo mesmo usuário.",
     steps:[
       {id:"meta",label:"META",color:"#fbbf24",icon:"🏷",instruction:"Metadados",multi:true,minCorrect:2,options:[
@@ -818,7 +818,7 @@ const MISSIONS = [
   },
 
   // RISCOS DE IA
-  { id:13,cat:"IA",emoji:"🤖",title:"Shadow AI",tag:"AI RISK",tagColor:"#a78bfa",xp:300,mitre:"T1567 — Exfil Over Web Service",
+  { id:13,cat:"IA",emoji:"🤖",title:"Shadow AI",tag:"AI RISK",tagColor:"#a78bfa",xp:300,mitre:"T1567",
     story:"Política corporativa proíbe o uso de serviços de IA externos não aprovados. Detecte funcionários acessando ChatGPT, Claude, Gemini ou similares usando a reference list %unauthorized_ai_services — mais de 5 conexões em 1 hora dispara alerta.",
     steps:[
       {id:"meta",label:"META",color:"#fbbf24",icon:"🏷",instruction:"Metadados da regra",multi:true,minCorrect:2,options:[
@@ -852,7 +852,7 @@ const MISSIONS = [
     explanation:'Reference lists (%unauthorized_ai_services) são listas mantidas centralmente no Google SecOps — muito mais flexíveis que hardcodar domínios. Ao adicionar um novo serviço de IA à lista, todas as regras que a referenciam passam a detectá-lo automaticamente.',
   },
 
-  { id:14,cat:"IA",emoji:"🧠",title:"Exfiltração de Modelo ML",tag:"AI RISK",tagColor:"#a78bfa",xp:450,mitre:"T1048 — Exfiltration Over Alternative Protocol",
+  { id:14,cat:"IA",emoji:"🧠",title:"Exfiltração de Modelo ML",tag:"AI RISK",tagColor:"#a78bfa",xp:450,mitre:"T1048",
     story:"Pesquisador de ML está enviando um modelo proprietário treinado internamente para um servidor externo. Arquivos .safetensors, .onnx ou .pkl acima de 1 GB enviados para fora da rede são sinal claro de roubo de propriedade intelectual de IA.",
     steps:[
       {id:"meta",label:"META",color:"#fbbf24",icon:"🏷",instruction:"Metadados da regra",multi:true,minCorrect:2,options:[
@@ -886,7 +886,7 @@ const MISSIONS = [
     explanation:'1073741824 bytes = 1 GB. Modelos de IA modernos (LLaMA, Stable Diffusion etc.) pesam vários GB — muito acima de transferências normais. re.regex() no processo (python/jupyter/pytorch) reduz falsos positivos: exfiltração de modelo é quase sempre feita via ferramentas ML.',
   },
 
-  { id:15,cat:"IA",emoji:"👾",title:"LLM como Canal C2",tag:"AI RISK",tagColor:"#a78bfa",xp:550,mitre:"T1102 — Web Service as C2",
+  { id:15,cat:"IA",emoji:"👾",title:"LLM como Canal C2",tag:"AI RISK",tagColor:"#a78bfa",xp:550,mitre:"T1102",
     story:"Malware avançado usa APIs de LLMs (OpenAI, Anthropic) como canal de C2 — os comandos chegam disfarçados de respostas do chatbot. Detecte um processo não-browser fazendo beaconing regular para endpoints conhecidos de IA mais de 60 vezes em 15 minutos.",
     steps:[
       {id:"meta",label:"META",color:"#fbbf24",icon:"🏷",instruction:"Metadados da regra",multi:true,minCorrect:2,options:[

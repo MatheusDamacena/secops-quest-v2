@@ -307,6 +307,11 @@ const MITRE_MAP = {
   'T1003.001':{ tactic:'Credential Access',   tech:'OS Credential Dumping: LSASS Memory' },
   'T1070.001':{ tactic:'Defense Evasion',     tech:'Indicator Removal: Clear Windows Event Logs' },
   'T1110.003':{ tactic:'Credential Access',   tech:'Password Spraying' },
+  'T1102':    { tactic:'C2',                 tech:'Web Service' },
+  'T1114.003':{ tactic:'Collection',         tech:'Email Forwarding Rule' },
+  'T1021.001':{ tactic:'Lateral Movement',   tech:'Remote Desktop Protocol' },
+  'T1485':    { tactic:'Impact',             tech:'Data Destruction' },
+  'T1567':    { tactic:'Exfiltration',       tech:'Exfiltration Over Web Service' },
 };
 
 // ── Lista de missões ──────────────────────────────────────────────────────────
@@ -347,7 +352,7 @@ export default function M4Screen({ progress, onComplete, onBack, lang = 'pt' }) 
         {['Todas', ...cats].map(c => (
           <button key={c} onClick={() => setCatFilter(c)}
             style={{ background: catFilter===c ? C.accent : C.surface2, border:`1px solid ${catFilter===c ? C.accent : C.border}`, borderRadius:20, padding:'5px 12px', fontFamily:F.mono, color: catFilter===c ? '#fff' : C.textDim, fontSize:11, cursor:'pointer', whiteSpace:'nowrap', flexShrink:0 }}>
-            {c}
+            {c}{c !== 'Todas' ? ` · ${MISSIONS.filter(m=>m.cat===c).length}` : ''}
           </button>
         ))}
       </div>
@@ -361,7 +366,7 @@ export default function M4Screen({ progress, onComplete, onBack, lang = 'pt' }) 
               const idx    = MISSIONS.indexOf(m);
               const isDone = done.includes(idx);
               return (
-                <div key={m.id} onClick={() => setMissionId(idx)}
+                <div key={m.id} onClick={() => setMissionId(idx)} title={isDone ? 'Clique para revisar' : 'Clique para jogar'}
                   style={{ background:C.surface, border:`1.5px solid ${isDone ? C.green+'44' : C.border}`,
                     borderBottom:`4px solid ${isDone ? C.green+'44' : C.cardDepth}`,
                     borderRadius:16, padding:'16px', marginBottom:10, cursor:'pointer',
@@ -401,10 +406,10 @@ export default function M4Screen({ progress, onComplete, onBack, lang = 'pt' }) 
               <div>Tática: <span style={{color:C.text}}>{mitreMod.tactic}</span></div>
               <div>Técnica: <span style={{color:C.text}}>{mitreMod.tech}</span></div>
             </div>
-            <a href={`https://attack.mitre.org/techniques/${mitreMod.code.replace('.','/')}/`} target="_blank" rel="noopener noreferrer"
-              style={{ display:'block', textAlign:'center', background:'#fbbf24', color:'#0a0b0c', borderRadius:12, padding:'12px', fontFamily:F.display, fontWeight:800, fontSize:14, cursor:'pointer', textDecoration:'none', marginTop:20 }}>
+            <button onClick={() => window.open(`https://attack.mitre.org/techniques/${mitreMod.code.replace('.','/')}/`, '_blank')}
+              style={{ display:'block', width:'100%', textAlign:'center', background:'#fbbf24', color:'#0a0b0c', border:'none', borderRadius:12, padding:'12px', fontFamily:F.display, fontWeight:800, fontSize:14, cursor:'pointer', marginTop:20 }}>
               Ver no MITRE ATT&CK ↗
-            </a>
+            </button>
             <button onClick={() => setMitreMod(null)}
               style={{ marginTop:8, width:'100%', background:'transparent', color:C.textDim, border:`1px solid ${C.border}`, borderRadius:12, padding:'10px', fontFamily:F.mono, fontSize:12, cursor:'pointer' }}>
               Fechar
