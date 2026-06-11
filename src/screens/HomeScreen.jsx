@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FaBrain, FaBook, FaGamepad, FaTrophy, FaUser, FaBolt, FaFire, FaLock, FaCheckCircle } from 'react-icons/fa';
 import Avatar from '../components/Avatar';
 import ModuleIcon from '../components/ModuleIcon';
@@ -34,6 +34,7 @@ const NAV = [
 export default function HomeScreen({ profile, totalXp, streak, progress, onNavigate, lang = 'pt' }) {
   const { MISSIONS } = useContent(lang);
   const [activeNav, setActiveNav] = useState('home');
+  // Sem hook de resize — usar clamp() CSS para responsividade pura
 
   const getModuleProgress = (id) => {
     const p = progress || {};
@@ -102,7 +103,7 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
         <div style={{ flex: 1, minWidth: 0 }}>
           {/* Label de status */}
           <div style={{
-            fontFamily: MONO, fontSize: 9, fontWeight: 700, letterSpacing: 2,
+            fontFamily: MONO, fontSize: 18, fontWeight: 700, letterSpacing: 2,
             color: done ? GREEN : active ? ACCENT : TEXT3,
             marginBottom: 3,
           }}>
@@ -111,7 +112,7 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
 
           {/* Título */}
           <div style={{
-            fontFamily: SANS, fontSize: 15, fontWeight: 800,
+            fontFamily: SANS, fontSize: 18, fontWeight: 800,
             color: locked ? TEXT3 : TEXT,
             marginBottom: active ? 8 : 2,
             letterSpacing: -0.2,
@@ -121,7 +122,7 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
 
           {/* Sub — só em locked/done */}
           {!active && (
-            <div style={{ fontFamily: MONO, color: TEXT3, fontSize: 10 }}>{mod.sub}</div>
+            <div style={{ fontFamily: MONO, color: TEXT3, fontSize: 13 }}>{mod.sub}</div>
           )}
 
           {/* Barra de progresso — só em active */}
@@ -137,7 +138,7 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
                   <div style={{ position:'absolute', top:1, left:4, right:8, height:3, background:'rgba(255,255,255,0.3)', borderRadius:2 }} />
                 </div>
               </div>
-              <div style={{ fontFamily: MONO, color: ACCENT, fontSize: 10, marginTop: 4, fontWeight: 700 }}>{pct}%</div>
+              <div style={{ fontFamily: MONO, color: ACCENT, fontSize: 13, marginTop: 4, fontWeight: 700 }}>{pct}%</div>
             </div>
           )}
         </div>
@@ -147,7 +148,7 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
           ? <FaCheckCircle size={20} color={GREEN} style={{ flexShrink: 0 }} />
           : locked
             ? <FaLock size={14} color={TEXT3} style={{ flexShrink: 0 }} />
-            : <div style={{ color: active ? ACCENT : TEXT3, fontSize: 22, flexShrink: 0 }}>›</div>
+            : <div style={{ color: active ? ACCENT : TEXT3, fontSize: 27, flexShrink: 0 }}>›</div>
         }
       </div>
     );
@@ -163,25 +164,25 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         flexShrink: 0,
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <Avatar profile={profile} size={30} />
-          <div>
-            <div style={{ fontFamily: SANS, color: TEXT, fontSize: 15, fontWeight: 800, letterSpacing: -0.2 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0, flex: 1 }}>
+          <Avatar profile={profile} size={26} />
+          <div style={{ minWidth: 0, flex: 1 }}>
+            <div style={{ fontFamily: SANS, color: TEXT, fontSize: 'clamp(13px, 3vw, 15px)', fontWeight: 800, letterSpacing: -0.2, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>
               {profile?.name}
             </div>
-            <div style={{ fontFamily: MONO, color: TEXT3, fontSize: 9, letterSpacing: 1.5 }}>
-              GOOGLE SECOPS ANALYST
+            <div style={{ fontFamily: MONO, color: TEXT3, fontSize: 'clamp(8px, 1.8vw, 11px)', letterSpacing: 1, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>
+              SECOPS ANALYST
             </div>
           </div>
         </div>
 
         {/* Stats — sem borda, só fundo */}
-        <div style={{ display: 'flex', gap: 6 }}>
-          <div style={{ background: 'rgba(255,200,0,0.1)', borderRadius: 12, padding: '6px 11px', display: 'flex', alignItems: 'center', gap: 5 }}>
+        <div style={{ display: 'flex', gap: 4, flexShrink: 0 }}>
+          <div style={{ background: 'rgba(255,200,0,0.1)', borderRadius: 10, padding: '4px 8px', display: 'flex', alignItems: 'center', gap: 4 }}>
             <FaFire size={13} color={AMBER} />
             <span style={{ fontFamily: MONO, color: AMBER, fontSize: 13, fontWeight: 800 }}>{streak}</span>
           </div>
-          <div style={{ background: 'rgba(255,75,122,0.1)', borderRadius: 12, padding: '6px 11px', display: 'flex', alignItems: 'center', gap: 5 }}>
+          <div style={{ background: 'rgba(255,75,122,0.1)', borderRadius: 10, padding: '4px 8px', display: 'flex', alignItems: 'center', gap: 4 }}>
             <FaBolt size={13} color={ACCENT} />
             <span style={{ fontFamily: MONO, color: ACCENT, fontSize: 13, fontWeight: 800 }}>{totalXp}</span>
           </div>
@@ -195,15 +196,15 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
         <div style={{ marginBottom: 24 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 10 }}>
             <div>
-              <div style={{ fontFamily: SANS, fontSize: 22, fontWeight: 900, color: TEXT, letterSpacing: -0.5 }}>
+              <div style={{ fontFamily: SANS, fontSize: 27, fontWeight: 900, color: TEXT, letterSpacing: -0.5 }}>
                 Olá, {profile?.name?.split(' ')[0]}!
               </div>
-              <div style={{ fontFamily: MONO, color: TEXT2, fontSize: 11, marginTop: 2 }}>
+              <div style={{ fontFamily: MONO, color: TEXT2, fontSize: 18, marginTop: 2 }}>
                 {completedMods} de {modules.length} módulos completos
               </div>
             </div>
-            <div style={{ fontFamily: MONO, fontSize: 24, fontWeight: 900, color: TEXT, lineHeight: 1 }}>
-              {overallPct}<span style={{ fontSize: 14, color: TEXT3 }}>%</span>
+            <div style={{ fontFamily: MONO, fontSize: 'clamp(22px, 6.1vw + 20px, 27px)', fontWeight: 900, color: TEXT, lineHeight: 1 }}>
+              {overallPct}<span style={{ fontSize: 17, color: TEXT3 }}>%</span>
             </div>
           </div>
 
@@ -230,7 +231,7 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
               border: 'none',
               borderBottom: `4px solid ${ACCENT3D}`,
               borderRadius: 16, padding: '16px 20px',
-              fontFamily: SANS, fontWeight: 900, fontSize: 16,
+              fontFamily: SANS, fontWeight: 900, fontSize: 19,
               color: '#fff', cursor: 'pointer', marginBottom: 24,
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
               letterSpacing: 0.2,
@@ -251,7 +252,7 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
               width: '100%', background: AMBER,
               border: 'none', borderBottom: `4px solid ${AMBER3D}`,
               borderRadius: 16, padding: '14px 20px',
-              fontFamily: SANS, fontWeight: 900, fontSize: 15,
+              fontFamily: SANS, fontWeight: 900, fontSize: 'clamp(15px, 4.1vw + 13px, 18px)',
               color: '#0a0b0c', cursor: 'pointer', marginBottom: 24,
             }}>
             🔄 Revisar — modo Grandmaster
@@ -261,7 +262,7 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
         {/* ── Em progresso ───────────────────────────────────────────────────── */}
         {inProgressMods.length > 0 && (
           <div style={{ marginBottom: 20 }}>
-            <div style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, color: TEXT3, letterSpacing: 2.5, marginBottom: 12 }}>
+            <div style={{ fontFamily: MONO, fontSize: 13, fontWeight: 700, color: TEXT3, letterSpacing: 2.5, marginBottom: 12 }}>
               EM PROGRESSO
             </div>
             {inProgressMods.map(mod => <ModCard key={mod.id} mod={mod} />)}
@@ -271,7 +272,7 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
         {/* ── Concluídos ─────────────────────────────────────────────────────── */}
         {doneMods.length > 0 && (
           <div style={{ marginBottom: 20 }}>
-            <div style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, color: TEXT3, letterSpacing: 2.5, marginBottom: 12 }}>
+            <div style={{ fontFamily: MONO, fontSize: 13, fontWeight: 700, color: TEXT3, letterSpacing: 2.5, marginBottom: 12 }}>
               CONCLUÍDOS
             </div>
             {doneMods.map(mod => <ModCard key={mod.id} mod={mod} />)}
@@ -281,7 +282,7 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
         {/* ── Próximos ───────────────────────────────────────────────────────── */}
         {nextMods.length > 0 && (
           <div>
-            <div style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, color: TEXT3, letterSpacing: 2.5, marginBottom: 12 }}>
+            <div style={{ fontFamily: MONO, fontSize: 13, fontWeight: 700, color: TEXT3, letterSpacing: 2.5, marginBottom: 12 }}>
               PRÓXIMOS
             </div>
             {nextMods.map(mod => <ModCard key={mod.id} mod={mod} />)}
@@ -295,7 +296,7 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
         background: SURFACE,
         borderTop: `1px solid ${BORDER}`,
         display: 'flex', justifyContent: 'space-around',
-        padding: '8px 0 max(12px, env(safe-area-inset-bottom))',
+        padding: '6px 0 max(10px, env(safe-area-inset-bottom))',
         zIndex: 50,
       }}>
         {NAV.map(({ icon: Icon, label, screen }) => {
@@ -305,21 +306,23 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
               onClick={() => handleNav(screen)}
               style={{
                 background: 'none', border: 'none', cursor: 'pointer',
-                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
-                flex: 1, padding: '4px 0',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
+                flex: 1, padding: '4px 0', minWidth: 0,
               }}>
               {/* Pill de fundo para item ativo */}
               <div style={{
-                width: 44, height: 32, borderRadius: 10,
+                width: 36, height: 28, borderRadius: 8,
                 background: screen === 'home' ? 'rgba(255,75,122,0.12)' : 'transparent',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 transition: 'background .2s',
               }}>
-                <Icon size={20} color={screen === 'home' ? ACCENT : TEXT3} />
+                <Icon size={18} color={screen === 'home' ? ACCENT : TEXT3} />
               </div>
               <div style={{
-                fontFamily: MONO, fontSize: 9, fontWeight: 700, letterSpacing: 1,
+                fontFamily: MONO, fontSize: 9, fontWeight: 700, letterSpacing: 0,
                 color: screen === 'home' ? ACCENT : TEXT3,
+                whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                maxWidth: '100%',
               }}>
                 {label}
               </div>

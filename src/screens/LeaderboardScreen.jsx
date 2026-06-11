@@ -32,9 +32,9 @@ export default function LeaderboardScreen({ currentUserId, onBack }) {
   };
 
   return (
-    <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column' }}>
+    <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
       {/* Header */}
-      <div style={{ background:C.surface, borderBottom:`1px solid ${C.border}`, padding:'14px 20px', display:'flex', alignItems:'center', gap:12 }}>
+      <div style={{ background:'#1c2b32', borderBottom:'1px solid rgba(255,255,255,0.06)', padding:'14px 20px', display:'flex', alignItems:'center', gap:12 }}>
         <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:29, cursor:'pointer', minWidth:44, minHeight:44 }}>‹</button>
         <div style={{ flex:1 }}>
           <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:2 }}>RANKING GLOBAL</div>
@@ -91,13 +91,13 @@ export default function LeaderboardScreen({ currentUserId, onBack }) {
                   )}
                   <div style={{
                     margin:'0 16px 10px',
-                    background: isMe ? (zone ? zone+'18' : C.accent+'18') : C.surface,
-                    border:`2px solid ${isMe ? (zone||C.accent)+'88' : zone ? zone+'55' : C.border}`,
-                    borderBottom:`4px solid ${isMe ? (zone||C.accent) : zone ? zone+'88' : C.cardDepth}`,
+                    background: isMe ? (zone ? zone+'18' : 'rgba(255,75,122,0.1)') : '#1c2b32',
+                    border:`1.5px solid ${isMe ? 'rgba(255,75,122,0.3)' : zone ? zone+'33' : 'rgba(255,255,255,0.06)'}`,
+                    borderLeft:`4px solid ${isMe ? '#ff4b7a' : zone || 'rgba(255,255,255,0.1)'}`,
                     borderRadius:16, padding:'14px 16px',
                     display:'flex', alignItems:'center', gap:14, transition:'all .12s',
                   }}>
-                    <div style={{ fontFamily:F.display, fontSize:rank<=3?22:16, fontWeight:900, color:zone||(isMe?C.accent:C.textDim), minWidth:36, textAlign:'center', flexShrink:0 }}>
+                    <div style={{ fontFamily:"'Roboto Mono',monospace", fontSize:rank<=3?20:15, fontWeight:900, color:zone||(isMe?'#ff4b7a':'rgba(255,255,255,0.3)'), minWidth:32, textAlign:'center', flexShrink:0 }}>
                       {rankIcon(rank, entry.grandmaster)}
                     </div>
                     <div style={{ fontSize:30, lineHeight:1, flexShrink:0 }}><Avatar profile={{ avatarId: entry.avatarId, avatarColor: entry.avatarColor }} size={36} /></div>

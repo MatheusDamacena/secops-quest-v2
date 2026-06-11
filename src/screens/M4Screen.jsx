@@ -42,7 +42,7 @@ function StepsPhase({ mission, onDone, onBack }) {
   };
 
   return (
-    <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column' }}>
+    <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
       <ProgressHeader current={stepIdx} total={totalSteps + 2} onBack={onBack} xpEarned={xp} />
       <div style={{ flex:1, padding:'20px 16px 120px', maxWidth:600, width:'100%', margin:'0 auto' }}>
         {/* Story */}
@@ -117,8 +117,8 @@ function ReviewPhase({ mission, answers, xp, onExecute }) {
   const colors   = { meta:'#fbbf24', events:'#00c4cc', match:'#a78bfa', condition:'#22d3a0' };
 
   return (
-    <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column' }}>
-      <div style={{ background:C.surface, borderBottom:`1px solid ${C.border}`, padding:'14px 20px', display:'flex', alignItems:'center', gap:8 }}>
+    <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
+      <div style={{ background:'#1c2b32', borderBottom:'1px solid rgba(255,255,255,0.06)', padding:'14px 20px', display:'flex', alignItems:'center', gap:8 }}>
         <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:2 }}>REVISÃO</div>
         <div style={{ fontFamily:F.display, color:C.text, fontSize:17, fontWeight:900 }}>· {mission.title}</div>
       </div>
@@ -170,8 +170,8 @@ function SimulatePhase({ mission, onResult }) {
   };
 
   return (
-    <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column' }}>
-      <div style={{ background:C.surface, borderBottom:`1px solid ${C.border}`, padding:'14px 20px' }}>
+    <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
+      <div style={{ background:'#1c2b32', borderBottom:'1px solid rgba(255,255,255,0.06)', padding:'14px 20px' }}>
         <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:2 }}>SIMULAÇÃO · LOGS UDM</div>
         <div style={{ fontFamily:F.display, color:C.text, fontSize:17, fontWeight:900 }}>Testando sua regra...</div>
       </div>
@@ -336,22 +336,22 @@ export default function M4Screen({ progress, onComplete, onBack, lang = 'pt' }) 
 
   const cats = [...new Set(MISSIONS.map(m => m.cat))];
   return (
-    <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column' }}>
-      <div style={{ background:C.surface, borderBottom:`1px solid ${C.border}`, padding:'14px 20px', display:'flex', alignItems:'center', gap:12 }}>
+    <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
+      <div style={{ background:'#1c2b32', borderBottom:'1px solid rgba(255,255,255,0.06)', padding:'14px 20px', display:'flex', alignItems:'center', gap:12 }}>
         <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:29, cursor:'pointer' }}>‹</button>
         <div>
-          <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:2 }}>MÓDULO 4</div>
+          <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:13, letterSpacing:2 }}>MÓDULO 4</div>
           <div style={{ fontFamily:F.display, color:C.text, fontSize:18, fontWeight:900 }}>🎮 Missões de Detecção</div>
         </div>
-        <div style={{ marginLeft:'auto', fontFamily:F.mono, color:C.textDim, fontSize:12 }}>
+        <div style={{ marginLeft:'auto', fontFamily:F.mono, color:C.textDim, fontSize:16 }}>
           <FaBolt size={11} color={C.amber} style={{ marginRight:4 }} />{done.length}/{MISSIONS.length}
         </div>
       </div>
       {/* Filtro */}
-      <div style={{ display:'flex', gap:6, padding:'8px 16px', background:C.surface, borderBottom:`1px solid ${C.border}`, overflowX:'auto', flexShrink:0 }}>
+      <div style={{ display:'flex', gap:6, padding:'8px 16px', background:'#1c2b32', borderBottom:'1px solid rgba(255,255,255,0.06)', overflowX:'auto', flexShrink:0, padding:'8px 16px' }}>
         {['Todas', ...cats].map(c => (
           <button key={c} onClick={() => setCatFilter(c)}
-            style={{ background: catFilter===c ? C.accent : C.surface2, border:`1px solid ${catFilter===c ? C.accent : C.border}`, borderRadius:20, padding:'5px 12px', fontFamily:F.mono, color: catFilter===c ? '#fff' : C.textDim, fontSize:11, cursor:'pointer', whiteSpace:'nowrap', flexShrink:0 }}>
+            style={{ background: catFilter===c ? '#ff4b7a' : 'rgba(255,255,255,0.05)', border:'none', borderRadius:20, padding:'6px 14px', fontFamily:"'Roboto Mono',monospace", color: catFilter===c ? '#fff' : 'rgba(255,255,255,0.4)', fontSize:16, fontWeight:700, cursor:'pointer', whiteSpace:'nowrap', flexShrink:0, letterSpacing:0.5, transition:'background .15s' }}>
             {c}{c !== 'Todas' ? ` · ${MISSIONS.filter(m=>m.cat===c).length}` : ''}
           </button>
         ))}
@@ -359,7 +359,7 @@ export default function M4Screen({ progress, onComplete, onBack, lang = 'pt' }) 
       <div style={{ flex:1, overflowY:'auto', padding:'16px 16px 80px', maxWidth:600, width:'100%', margin:'0 auto' }}>
         {cats.filter(c => catFilter === 'Todas' || c === catFilter).map(cat => (
           <div key={cat} style={{ marginBottom:24 }}>
-            <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:2, marginBottom:12 }}>
+            <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:13, letterSpacing:2, marginBottom:12 }}>
               {cat} · {MISSIONS.filter(m => m.cat === cat).length}
             </div>
             {MISSIONS.filter(m => m.cat === cat).map((m) => {
@@ -377,20 +377,24 @@ export default function M4Screen({ progress, onComplete, onBack, lang = 'pt' }) 
                     display:'flex', alignItems:'center', gap:14 }}>
                   <div style={{ fontSize:28, flexShrink:0 }}>{m.emoji}</div>
                   <div style={{ flex:1 }}>
-                    <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:4 }}>
-                      <div style={{ background:m.tagColor+'22', border:`1px solid ${m.tagColor}66`,
-                        borderRadius:6, padding:'2px 8px', fontFamily:F.mono, color:m.tagColor, fontSize:10 }}>{m.tag}</div>
-                      <div style={{ background:getDifficulty(m.xp).color+'22', borderRadius:6, padding:'2px 8px', fontFamily:F.mono, color:getDifficulty(m.xp).color, fontSize:10 }}>{getDifficulty(m.xp).label}</div>
-                      {isDone && <div style={{ fontFamily:F.mono, color:C.green, fontSize:10 }}>✓ COMPLETO</div>}
+                    <div style={{ display:'flex', alignItems:'center', gap:4, marginBottom:4, overflow:'hidden', flexWrap:'nowrap' }}>
+                      <div style={{ background:m.tagColor+'18', border:'none',
+                        borderRadius:20, padding:'3px 10px', fontFamily:"'Roboto Mono',monospace", color:m.tagColor, fontSize:10, fontWeight:700, letterSpacing:0, whiteSpace:'nowrap' }}>{m.tag}</div>
+                      <div style={{ background:getDifficulty(m.xp).color+'18', border:'none', borderRadius:20, padding:'3px 10px', fontFamily:"'Roboto Mono',monospace", color:getDifficulty(m.xp).color, fontSize:13, fontWeight:700, letterSpacing:0.5 }}>{getDifficulty(m.xp).label}</div>
+                      {isDone && (
+                      <div style={{ width:22, height:22, borderRadius:'50%', background:'rgba(88,204,2,0.15)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                        <span style={{ color:'#58cc02', fontSize:13, lineHeight:1 }}>✓</span>
+                      </div>
+                    )}
                     </div>
-                    <div style={{ fontFamily:F.display, color:C.text, fontSize:15, fontWeight:800 }}>{m.title}</div>
+                    <div style={{ fontFamily:F.display, color:C.text, fontSize:17, fontWeight:800, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{m.title}</div>
                     <div style={{ display:'flex', alignItems:'center', gap:8, marginTop:2, flexWrap:'wrap' }}>
-                      <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11 }}>+{m.xp} DX</div>
-                      <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:10, opacity:0.6 }}>
+                      <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:13 }}>+{m.xp} DX</div>
+                      <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:16, opacity:0.6 }}>
                         ~{m.xp <= 200 ? '3' : m.xp <= 300 ? '5' : '7'} min
                       </div>
                       <button onClick={(e) => { e.stopPropagation(); const info = MITRE_MAP[m.mitre]; setMitreMod({ code:m.mitre, ...(info || { tactic:'', tech:m.mitre }) }); }}
-                        style={{ fontFamily:F.mono, fontSize:10, color:'#fbbf24', background:'#fbbf2422', border:'1px solid #fbbf2444', borderRadius:6, padding:'1px 7px', cursor:'pointer' }}>
+                        style={{ fontFamily:"'Roboto Mono',monospace", fontSize:13, color:'#ffc800', background:'rgba(255,200,0,0.1)', border:'none', borderRadius:20, padding:'3px 9px', cursor:'pointer', fontWeight:700 }}>
                         {m.mitre} ↗
                       </button>
                     </div>
@@ -407,18 +411,18 @@ export default function M4Screen({ progress, onComplete, onBack, lang = 'pt' }) 
       {mitreMod && (
         <div onClick={() => setMitreMod(null)} style={{ position:'fixed', inset:0, background:'#000b', zIndex:999, display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}>
           <div onClick={e => e.stopPropagation()} style={{ background:C.surface, border:`1px solid #fbbf2466`, borderRadius:20, padding:24, maxWidth:380, width:'100%' }}>
-            <div style={{ fontFamily:F.mono, color:'#fbbf24', fontSize:10, letterSpacing:2, marginBottom:4 }}>MITRE ATT&CK</div>
+            <div style={{ fontFamily:F.mono, color:'#fbbf24', fontSize:16, letterSpacing:2, marginBottom:4 }}>MITRE ATT&CK</div>
             <div style={{ fontFamily:F.display, color:C.text, fontSize:24, fontWeight:900, marginBottom:8 }}>{mitreMod.code}</div>
-            <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:12, lineHeight:1.8 }}>
+            <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:16, lineHeight:1.8 }}>
               <div>Tática: <span style={{color:C.text}}>{mitreMod.tactic}</span></div>
               <div>Técnica: <span style={{color:C.text}}>{mitreMod.tech}</span></div>
             </div>
             <button onClick={() => window.open(`https://attack.mitre.org/techniques/${mitreMod.code.replace('.','/')}/`, '_blank')}
-              style={{ display:'block', width:'100%', textAlign:'center', background:'#fbbf24', color:'#0a0b0c', border:'none', borderRadius:12, padding:'12px', fontFamily:F.display, fontWeight:800, fontSize:14, cursor:'pointer', marginTop:20 }}>
+              style={{ display:'block', width:'100%', textAlign:'center', background:'#fbbf24', color:'#0a0b0c', border:'none', borderRadius:12, padding:'12px', fontFamily:F.display, fontWeight:800, fontSize:16, cursor:'pointer', marginTop:20 }}>
               Ver no MITRE ATT&CK ↗
             </button>
             <button onClick={() => setMitreMod(null)}
-              style={{ marginTop:8, width:'100%', background:'transparent', color:C.textDim, border:`1px solid ${C.border}`, borderRadius:12, padding:'10px', fontFamily:F.mono, fontSize:12, cursor:'pointer' }}>
+              style={{ marginTop:8, width:'100%', background:'transparent', color:C.textDim, border:`1px solid ${C.border}`, borderRadius:12, padding:'10px', fontFamily:F.mono, fontSize:16, cursor:'pointer' }}>
               Fechar
             </button>
           </div>
