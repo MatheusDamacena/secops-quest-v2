@@ -1023,6 +1023,40 @@ const MISSIONS = [
     explanation:'A regra detecta CreateServiceAccountKey OU UploadServiceAccountKey com ALLOW no Cloud IAM. Chaves de service account são credenciais de longa duração — atacantes as criam para manter acesso mesmo após remoção do usuário comprometido. Deleção (log 4) é legítima. O match por $sa_key_id over 30m agrupa eventos da mesma chave. MITRE T1098.001 (Account Manipulation: Additional Cloud Credentials).',
   },
 
+  // ─── CLOUD 4: Google Workspace MFA Desativado ──────────────────────────────
+  { id:19,cat:"CLOUD",emoji:"🔓",title:"Workspace MFA Desativado",tag:"WORKSPACE",tagColor:"#34A853",xp:275,mitre:"T1556",
+    story:"Um administrador desativou o MFA obrigatório na organização do Google Workspace. Sem MFA, qualquer senha comprometida vira acesso total. Detecte essa mudança crítica de configuração.",
+    steps:[
+      {id:"meta",label:"META",color:"#fbbf24",icon:"🏷",instruction:"Metadados da regra",multi:true,minCorrect:2,options:[
+        {id:"a",text:'rule_name = "workspace_mfa_disabled"',correct:true},
+        {id:"b",text:'rule_name = "mfa_ok"',correct:false},
+        {id:"c",text:'severity = "HIGH"',correct:true},
+        {id:"d",text:'severity = "LOW"',correct:false}]},
+      {id:"events",label:"EVENTS",color:"#00c4cc",icon:"📡",instruction:"Filtre eventos de desativação de MFA no Workspace",multi:true,minCorrect:4,options:[
+        {id:"a",text:'$ws.metadata.vendor_name = "Google Workspace"',correct:true},
+        {id:"b",text:'$ws.metadata.vendor_name = "Google Cloud Platform"',correct:false},
+        {id:"c",text:'$ws.metadata.product_name = "admin"',correct:true},
+        {id:"d",text:'$ws.metadata.product_event_type = "ENFORCE_STRONG_AUTHENTICATION"',correct:true},
+        {id:"e",text:'$ws.metadata.product_event_type = "CREATE_USER"',correct:false},
+        {id:"f",text:'$ws.target.labels["new_value"] = "false"',correct:true}]},
+      {id:"match",label:"MATCH",color:"#a78bfa",icon:"🔗",instruction:"Sem agrupamento — disparar por evento",multi:false,minCorrect:1,options:[
+        {id:"a",text:"(sem cláusula match — dispara por evento individual)",correct:true},
+        {id:"b",text:"$admin over 1h",correct:false},
+        {id:"c",text:"$org over 24h",correct:false}]},
+      {id:"condition",label:"CONDITION",color:"#22d3a0",icon:"⚡",instruction:"Dispare em qualquer ocorrência",multi:false,minCorrect:1,options:[
+        {id:"a",text:"#ws >= 1",correct:true},
+        {id:"b",text:"#ws > 10",correct:false},
+        {id:"c",text:"#ws = 0",correct:false}]},
+    ],
+    logs:[
+      {id:1,icon:"🔓",desc:"admin@empresa.com",detail:"ENFORCE_STRONG_AUTHENTICATION · new_value=false · org=empresa.com",alert:true},
+      {id:2,icon:"✅",desc:"admin@empresa.com",detail:"ENFORCE_STRONG_AUTHENTICATION · new_value=true · MFA reativado",alert:false},
+      {id:3,icon:"🔓",desc:"superadmin@corp.com",detail:"ALLOW_STRONG_AUTHENTICATION · new_value=false · org=corp.com",alert:true},
+      {id:4,icon:"✅",desc:"it@empresa.com",detail:"CREATE_USER · new_user=joao@empresa.com · MFA não alterado",alert:false},
+    ],
+    explanation:'A regra real do Google detecta ENFORCE_STRONG_AUTHENTICATION ou ALLOW_STRONG_AUTHENTICATION com new_value=false no log de admin do Workspace. Ativar MFA (new_value=true, log 2) é legítimo. Criar usuário (log 4) não altera MFA. Sem match porque cada evento de desativação é crítico individualmente. MITRE T1556 (Modify Authentication Process).',
+  },
+
 ];
 
 export {
