@@ -228,5 +228,75 @@
     "term": "Asset Aliasing",
     "cat": "UDM",
     "def": "Enriquecimento automático: DHCP → hostname → usuário. O SecOps correlaciona IPs com logs DHCP para adicionar contexto automaticamente, sem join manual em YARA-L."
+  },
+  {
+    "term": "Cloud Audit Log",
+    "cat": "Cloud",
+    "def": "Log de auditoria do GCP que registra todas as chamadas de API feitas na plataforma. Dividido em Admin Activity (quem mudou o quê) e Data Access (quem leu o quê). Fonte primária das regras de detecção GCP no SecOps."
+  },
+  {
+    "term": "Service Account",
+    "cat": "Cloud",
+    "def": "Identidade não-humana do GCP usada por aplicações, VMs e workflows para autenticar em APIs. Pode ter chaves de longa duração (JSON keys) que são vetores de persistência se comprometidas."
+  },
+  {
+    "term": "IAM Policy",
+    "cat": "Cloud",
+    "def": "Política de controle de acesso do GCP que define quem (principal) pode fazer o quê (role) em qual recurso. Mudanças de IAM Policy geram USER_RESOURCE_UPDATE_PERMISSIONS no UDM."
+  },
+  {
+    "term": "API Key",
+    "cat": "Cloud",
+    "def": "Credencial de autenticação simples para APIs do GCP — incluindo Gemini API. Diferente de OAuth, não tem scopes granulares. Chaves irrestritas são críticas pois dão acesso total à API."
+  },
+  {
+    "term": "Secret Manager",
+    "cat": "Cloud",
+    "def": "Serviço do GCP para armazenar e acessar segredos (passwords, API keys, certificados) de forma segura. Alternativa correta para não deixar credenciais hardcoded no código."
+  },
+  {
+    "term": "GCTI Feed",
+    "cat": "Cloud",
+    "def": "Google Cloud Threat Intelligence Feed — fonte de inteligência de ameaças integrada nativamente ao Google SecOps. Inclui listas de IPs Tor, domínios maliciosos, hashes de malware e muito mais, atualizadas em tempo real."
+  },
+  {
+    "term": "GCP Firewall",
+    "cat": "Cloud",
+    "def": "Regras de controle de tráfego de rede das VMs no Compute Engine. Regras com source_ranges=0.0.0.0/0 e protocol=all expõem a VM à internet inteira — vetor clássico de comprometimento."
+  },
+  {
+    "term": "Secret Scanning",
+    "cat": "Cloud",
+    "def": "Feature do GitHub que detecta automaticamente credenciais conhecidas (API Keys, tokens OAuth, chaves privadas) em commits. Gera um alerta (secret_scanning_alert.create) quando encontra um padrão."
+  },
+  {
+    "term": "PROCESS_LAUNCH",
+    "cat": "Endpoint",
+    "def": "Event type UDM para criação de processos no Windows — equivale ao Sysmon Event ID 1 e Windows Security Event ID 4688. Contém o command_line completo, processo pai e processo filho. Base das detecções de malware em endpoint."
+  },
+  {
+    "term": "PROCESS_OPEN",
+    "cat": "Endpoint",
+    "def": "Event type UDM para abertura de um processo por outro — equivale ao Sysmon Event ID 10. Usado para detectar acesso a processos sensíveis como lsass.exe. Contém CallTrace mostrando qual DLL fez o acesso."
+  },
+  {
+    "term": "LSASS",
+    "cat": "Endpoint",
+    "def": "Local Security Authority Subsystem Service — processo do Windows que armazena credenciais (hashes, tokens Kerberos) na memória. Principal alvo de ferramentas como Mimikatz. Regras de proteção detectam qualquer processo inesperado abrindo o lsass.exe."
+  },
+  {
+    "term": "Living-off-the-Land",
+    "cat": "Endpoint",
+    "def": "Técnica onde atacantes usam ferramentas legítimas do próprio sistema operacional (rundll32.exe, certutil.exe, wevtutil.exe) para executar ações maliciosas — evitando AV/EDR que bloqueiam ferramentas externas."
+  },
+  {
+    "term": "Sysmon",
+    "cat": "Endpoint",
+    "def": "System Monitor — ferramenta gratuita da Microsoft que registra atividades detalhadas de processos, rede e arquivos no Windows. Fonte de telemetria muito usada com Google SecOps para detecção em endpoint."
+  },
+  {
+    "term": "CallTrace",
+    "cat": "Endpoint",
+    "def": "Campo do Sysmon Event ID 10 que mostra a pilha de chamadas (DLLs) que levaram ao acesso de um processo. Usado para identificar técnicas como MiniDump via comsvcs.dll (dump do LSASS)."
   }
 ]

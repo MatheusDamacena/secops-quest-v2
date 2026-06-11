@@ -282,11 +282,40 @@ function MissionDetail({ mission, onComplete, onBack }) {
   );
 }
 
+const getDifficulty = (xp) => {
+  if (xp <= 200) return { label:'INICIANTE',     color:'#22d3a0' };
+  if (xp <= 300) return { label:'INTERMEDIÁRIO', color:'#fbbf24' };
+  return             { label:'AVANÇADO',         color:'#ff4d4d' };
+};
+
+const MITRE_MAP = {
+  'T1110':    { tactic:'Credential Access',   tech:'Brute Force' },
+  'T1048':    { tactic:'Exfiltration',        tech:'Exfiltration Over Alternative Protocol' },
+  'T1071.004':{ tactic:'C2',                 tech:'Application Layer Protocol: DNS' },
+  'T1055':    { tactic:'Defense Evasion',     tech:'Process Injection' },
+  'T1486':    { tactic:'Impact',              tech:'Data Encrypted for Impact' },
+  'T1071':    { tactic:'C2',                 tech:'Application Layer Protocol' },
+  'T1078':    { tactic:'Defense Evasion',     tech:'Valid Accounts' },
+  'T1059.001':{ tactic:'Execution',           tech:'PowerShell' },
+  'T1566':    { tactic:'Initial Access',      tech:'Phishing' },
+  'T1562':    { tactic:'Defense Evasion',     tech:'Impair Defenses' },
+  'T1098.001':{ tactic:'Persistence',         tech:'Account Manipulation: Additional Cloud Credentials' },
+  'T1556':    { tactic:'Persistence',         tech:'Modify Authentication Process' },
+  'T1090.003':{ tactic:'C2',                 tech:'Proxy: Multi-hop Proxy' },
+  'T1555':    { tactic:'Credential Access',   tech:'Credentials from Password Stores' },
+  'T1552':    { tactic:'Credential Access',   tech:'Unsecured Credentials' },
+  'T1003.001':{ tactic:'Credential Access',   tech:'OS Credential Dumping: LSASS Memory' },
+  'T1070.001':{ tactic:'Defense Evasion',     tech:'Indicator Removal: Clear Windows Event Logs' },
+  'T1110.003':{ tactic:'Credential Access',   tech:'Password Spraying' },
+};
+
 // ── Lista de missões ──────────────────────────────────────────────────────────
 export default function M4Screen({ progress, onComplete, onBack, lang = 'pt' }) {
   const { MISSIONS } = useContent(lang);
   const done = progress?.m4 || [];
   const [missionId, setMissionId] = useState(null);
+  const [catFilter, setCatFilter] = useState('Todas');
+  const [mitreMod,  setMitreMod]  = useState(null);
 
   if (missionId !== null) {
     const mission = MISSIONS[missionId];
@@ -313,8 +342,17 @@ export default function M4Screen({ progress, onComplete, onBack, lang = 'pt' }) 
           <FaBolt size={11} color={C.amber} style={{ marginRight:4 }} />{done.length}/{MISSIONS.length}
         </div>
       </div>
+      {/* Filtro */}
+      <div style={{ display:'flex', gap:6, padding:'8px 16px', background:C.surface, borderBottom:`1px solid ${C.border}`, overflowX:'auto', flexShrink:0 }}>
+        {['Todas', ...cats].map(c => (
+          <button key={c} onClick={() => setCatFilter(c)}
+            style={{ background: catFilter===c ? C.accent : C.surface2, border:`1px solid ${catFilter===c ? C.accent : C.border}`, borderRadius:20, padding:'5px 12px', fontFamily:F.mono, color: catFilter===c ? '#fff' : C.textDim, fontSize:11, cursor:'pointer', whiteSpace:'nowrap', flexShrink:0 }}>
+            {c}
+          </button>
+        ))}
+      </div>
       <div style={{ flex:1, overflowY:'auto', padding:'16px 16px 80px', maxWidth:600, width:'100%', margin:'0 auto' }}>
-        {cats.map(cat => (
+        {cats.filter(c => catFilter === 'Todas' || c === catFilter).map(cat => (
           <div key={cat} style={{ marginBottom:24 }}>
             <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:2, marginBottom:12 }}>
               {cat} · {MISSIONS.filter(m => m.cat === cat).length}
@@ -333,10 +371,17 @@ export default function M4Screen({ progress, onComplete, onBack, lang = 'pt' }) 
                     <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:4 }}>
                       <div style={{ background:m.tagColor+'22', border:`1px solid ${m.tagColor}66`,
                         borderRadius:6, padding:'2px 8px', fontFamily:F.mono, color:m.tagColor, fontSize:10 }}>{m.tag}</div>
+                      <div style={{ background:getDifficulty(m.xp).color+'22', borderRadius:6, padding:'2px 8px', fontFamily:F.mono, color:getDifficulty(m.xp).color, fontSize:10 }}>{getDifficulty(m.xp).label}</div>
                       {isDone && <div style={{ fontFamily:F.mono, color:C.green, fontSize:10 }}>✓ COMPLETO</div>}
                     </div>
                     <div style={{ fontFamily:F.display, color:C.text, fontSize:15, fontWeight:800 }}>{m.title}</div>
-                    <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, marginTop:2 }}>+{m.xp} DX · MITRE {m.mitre}</div>
+                    <div style={{ display:'flex', alignItems:'center', gap:8, marginTop:2 }}>
+                      <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11 }}>+{m.xp} DX</div>
+                      <button onClick={(e) => { e.stopPropagation(); const info = MITRE_MAP[m.mitre]; setMitreMod({ code:m.mitre, ...(info || { tactic:'', tech:m.mitre }) }); }}
+                        style={{ fontFamily:F.mono, fontSize:10, color:'#fbbf24', background:'#fbbf2422', border:'1px solid #fbbf2444', borderRadius:6, padding:'1px 7px', cursor:'pointer' }}>
+                        {m.mitre} ↗
+                      </button>
+                    </div>
                   </div>
                   <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:18 }}>›</div>
                 </div>
@@ -345,6 +390,28 @@ export default function M4Screen({ progress, onComplete, onBack, lang = 'pt' }) 
           </div>
         ))}
       </div>
+
+      {/* Modal MITRE */}
+      {mitreMod && (
+        <div onClick={() => setMitreMod(null)} style={{ position:'fixed', inset:0, background:'#000b', zIndex:999, display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}>
+          <div onClick={e => e.stopPropagation()} style={{ background:C.surface, border:`1px solid #fbbf2466`, borderRadius:20, padding:24, maxWidth:380, width:'100%' }}>
+            <div style={{ fontFamily:F.mono, color:'#fbbf24', fontSize:10, letterSpacing:2, marginBottom:4 }}>MITRE ATT&CK</div>
+            <div style={{ fontFamily:F.display, color:C.text, fontSize:24, fontWeight:900, marginBottom:8 }}>{mitreMod.code}</div>
+            <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:12, lineHeight:1.8 }}>
+              <div>Tática: <span style={{color:C.text}}>{mitreMod.tactic}</span></div>
+              <div>Técnica: <span style={{color:C.text}}>{mitreMod.tech}</span></div>
+            </div>
+            <a href={`https://attack.mitre.org/techniques/${mitreMod.code.replace('.','/')}/`} target="_blank" rel="noopener noreferrer"
+              style={{ display:'block', textAlign:'center', background:'#fbbf24', color:'#0a0b0c', borderRadius:12, padding:'12px', fontFamily:F.display, fontWeight:800, fontSize:14, cursor:'pointer', textDecoration:'none', marginTop:20 }}>
+              Ver no MITRE ATT&CK ↗
+            </a>
+            <button onClick={() => setMitreMod(null)}
+              style={{ marginTop:8, width:'100%', background:'transparent', color:C.textDim, border:`1px solid ${C.border}`, borderRadius:12, padding:'10px', fontFamily:F.mono, fontSize:12, cursor:'pointer' }}>
+              Fechar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

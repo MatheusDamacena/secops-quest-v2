@@ -3,7 +3,7 @@ import { C, F } from '../styles/tokens';
 import { FaBook } from 'react-icons/fa';
 import glossary from '../data/glossary.json';
 
-const CATS = ['Todos', 'Arquitetura', 'UDM', 'YARA-L', 'Ingestão', 'Operações', 'Admin'];
+const CATS = ['Todos', 'Arquitetura', 'UDM', 'YARA-L', 'Ingestão', 'Cloud', 'Endpoint', 'Operações', 'Admin'];
 
 export default function GlossaryScreen({ onBack }) {
   const [search, setSearch] = useState('');

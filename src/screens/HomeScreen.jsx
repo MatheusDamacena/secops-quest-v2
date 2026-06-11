@@ -23,6 +23,7 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
   const inProgressMods = modules.filter(m => { const p = getModuleProgress(m.id); return p > 0 && p < 100; });
   const nextMods       = modules.filter(m => getModuleProgress(m.id) === 0);
   const continueModule = inProgressMods[0] || nextMods[0];
+  const isGrandmaster  = completedMods === modules.length;
 
   const NAV = [
     { Icon: FaBrain,   label: 'Aprender',  screen: 'home' },
@@ -114,6 +115,12 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
               <button onClick={() => onNavigate('module', continueModule.id)}
                 style={{ background:C.accent, border:'none', borderBottom:`4px solid ${C.btn3d_pink}`, borderRadius:14, padding:'12px 18px', fontFamily:F.display, fontWeight:900, fontSize:14, color:'#fff', cursor:'pointer', flexShrink:0 }}>
                 ▶ Continuar
+              </button>
+            )}
+            {isGrandmaster && (
+              <button onClick={() => onNavigate('missions')}
+                style={{ background:'linear-gradient(135deg,#FFD700,#fbbf24)', border:'none', borderBottom:'3px solid #a06000', borderRadius:12, padding:'10px 18px', fontFamily:F.display, fontWeight:900, fontSize:13, color:'#0a0b0c', cursor:'pointer', flexShrink:0 }}>
+                🔄 Revisar
               </button>
             )}
           </div>
