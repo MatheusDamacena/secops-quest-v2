@@ -54,7 +54,7 @@ function StepsPhase({ mission, onDone, onBack }) {
           <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:6 }}>
             <NodeIcon icon={step.icon} color={step.color} size={20} />
             <div style={{ fontFamily:F.display, color:step.color, fontSize:15, fontWeight:800 }}>{step.label}</div>
-            {step.multi && <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:10, background:C.surface2, borderRadius:6, padding:'2px 8px' }}>múltipla escolha</div>}
+            {step.multi && <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:10, background:'#243540', borderRadius:6, padding:'2px 8px' }}>múltipla escolha</div>}
           </div>
           <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:12, lineHeight:1.6 }}>{step.instruction}</div>
         </div>
@@ -92,7 +92,7 @@ function StepsPhase({ mission, onDone, onBack }) {
           );
         })}
       </div>
-      <div style={{ position:'fixed', bottom:0, left:0, right:0, padding:'16px 20px 32px', background:C.bg }}>
+      <div style={{ position:'fixed', bottom:0, left:0, right:0, padding:'16px 20px 32px', background:'#131f24' }}>
         <button onClick={handleNext} disabled={!canProceed} style={{
           display:'block', margin:'0 auto', width:'100%', maxWidth:480,
           background: canProceed ? C.amber : C.surface2,
@@ -134,7 +134,7 @@ function ReviewPhase({ mission, answers, xp, onExecute }) {
           <div style={{ color:C.textDim }}>{'}'}</div>
         </div>
       </div>
-      <div style={{ position:'fixed', bottom:0, left:0, right:0, padding:'16px 20px 32px', background:C.bg }}>
+      <div style={{ position:'fixed', bottom:0, left:0, right:0, padding:'16px 20px 32px', background:'#131f24' }}>
         <div style={{ maxWidth:480, margin:'0 auto', width:'100%' }}>
           <Btn3D color={C.cyan} shadow={C.btn3d_cyan} onClick={onExecute}>⚡ EXECUTAR NOS LOGS</Btn3D>
         </div>
@@ -194,7 +194,7 @@ function SimulatePhase({ mission, onResult }) {
               borderRadius:14, padding:'14px 16px', marginBottom:12,
               display:'flex', alignItems:'center', gap:12,
             }}>
-              <div style={{ fontSize:28, flexShrink:0 }}>{log.icon}</div>
+              <div style={{ flexShrink:0, width:28, display:'flex', alignItems:'center', justifyContent:'center' }}><NodeIcon icon={log.icon} size={20} /></div>
               <div style={{ flex:1 }}>
                 <div style={{ fontFamily:F.display, color:C.text, fontSize:15, fontWeight:800 }}>{log.desc}</div>
                 <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, marginTop:2 }}>{log.detail}</div>
@@ -217,7 +217,7 @@ function SimulatePhase({ mission, onResult }) {
           );
         })}
       </div>
-      <div style={{ position:'fixed', bottom:0, left:0, right:0, padding:'16px 20px 32px', background:C.bg }}>
+      <div style={{ position:'fixed', bottom:0, left:0, right:0, padding:'16px 20px 32px', background:'#131f24' }}>
         <button onClick={handleResult} disabled={!done} style={{
           display:'block', margin:'0 auto', width:'100%', maxWidth:480,
           background: done ? C.green : C.surface2,
@@ -236,7 +236,7 @@ function SimulatePhase({ mission, onResult }) {
 function ResultPhase({ mission, score, xpBonus, totalXp, onComplete }) {
   const approved = score >= 75;
   return (
-    <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:32 }}>
+    <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:32 }}>
       <div style={{ fontSize:64, marginBottom:16 }}>{approved ? '🎯' : '💡'}</div>
       <div style={{ fontFamily:F.display, color: approved ? C.green : C.amber, fontSize:24, fontWeight:900, marginBottom:8, textAlign:'center' }}>
         {approved ? 'REGRA APROVADA!' : 'QUASE LÁ!'}
@@ -341,7 +341,7 @@ export default function M4Screen({ progress, onComplete, onBack, lang = 'pt' }) 
         <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:29, cursor:'pointer' }}>‹</button>
         <div>
           <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:13, letterSpacing:2 }}>MÓDULO 4</div>
-          <div style={{ fontFamily:F.display, color:C.text, fontSize:18, fontWeight:900 }}>🎮 Missões de Detecção</div>
+          <div style={{ fontFamily:F.display, color:C.text, fontSize:18, fontWeight:900 }}>Missões de Detecção</div>
         </div>
         <div style={{ marginLeft:'auto', fontFamily:F.mono, color:C.textDim, fontSize:16 }}>
           <FaBolt size={11} color={C.amber} style={{ marginRight:4 }} />{done.length}/{MISSIONS.length}
@@ -375,7 +375,7 @@ export default function M4Screen({ progress, onComplete, onBack, lang = 'pt' }) 
                     transition:'transform .15s, box-shadow .15s',
                     boxShadow:`0 2px 8px rgba(0,0,0,0.2)`,
                     display:'flex', alignItems:'center', gap:14 }}>
-                  <div style={{ fontSize:28, flexShrink:0 }}>{m.emoji}</div>
+                  <div style={{ flexShrink:0, width:28, display:'flex', alignItems:'center', justifyContent:'center' }}><NodeIcon icon={m.emoji} size={22} /></div>
                   <div style={{ flex:1 }}>
                     <div style={{ display:'flex', alignItems:'center', gap:4, marginBottom:4, overflow:'hidden', flexWrap:'nowrap' }}>
                       <div style={{ background:m.tagColor+'18', border:'none',

@@ -25,16 +25,16 @@ function M3LessonScreen({ lesson, onComplete, onBack }) {
   // Tela de conteúdo
   if (phase === 'content') {
     return (
-      <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column' }}>
+      <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
         <ProgressHeader current={0} total={totalSteps} onBack={onBack} xpEarned={xp} />
         <div style={{ flex:1, padding:'20px 20px 40px', maxWidth:660, width:'100%', margin:'0 auto', overflowY:'auto' }}>
           <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:20 }}>
-            <div style={{ fontSize:36 }}>{lesson.icon}</div>
-            <div style={{ fontFamily:F.display, color:C.text, fontSize:20, fontWeight:900 }}>{lesson.title}</div>
+            <div style={{ fontSize:'clamp(28px, 7vw, 38px)' }}>{lesson.icon}</div>
+            <div style={{ fontFamily:F.display, color:C.text, fontSize:'clamp(18px, 4vw, 22px)', fontWeight:900 }}>{lesson.title}</div>
           </div>
-          <div style={{ background:C.surface, border:`2px solid ${C.border}`, borderBottom:`4px solid ${C.cardDepth}`,
+          <div style={{ background:'#1c2b32', border:`2px solid ${C.border}`, borderBottom:`4px solid ${C.cardDepth}`,
             borderRadius:16, padding:'20px', marginBottom:24 }}>
-            <pre style={{ fontFamily:F.mono, color:C.textDim, fontSize:13, lineHeight:1.8, whiteSpace:'pre-wrap', margin:0 }}>
+            <pre style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(15px, 2.8vw, 17px)', lineHeight:1.8, whiteSpace:'pre-wrap', margin:0 }}>
               {lesson.content}
             </pre>
           </div>
@@ -50,10 +50,10 @@ function M3LessonScreen({ lesson, onComplete, onBack }) {
   if (phase === 'done' || (phase === 'quiz' && !q)) {
     // Fase done — renderiza a tela de conclusão
     return (
-      <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:32 }}>
-        <div style={{ fontSize:64, marginBottom:16 }}>🎉</div>
-        <div style={{ fontFamily:F.display, color:C.text, fontSize:22, fontWeight:900, marginBottom:8, textAlign:'center' }}>{lesson.title} concluída!</div>
-        <div style={{ fontFamily:F.mono, color:C.accent, fontSize:16, fontWeight:700, marginBottom:32 }}>+{xp} DX conquistados</div>
+      <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:32 }}>
+        <div style={{ fontSize:'clamp(48px, 12vw, 64px)', marginBottom:16, color:'#ffc800' }}>★</div>
+        <div style={{ fontFamily:F.display, color:C.text, fontSize:'clamp(20px, 4.5vw, 24px)', fontWeight:900, marginBottom:8, textAlign:'center' }}>{lesson.title} concluída!</div>
+        <div style={{ fontFamily:F.mono, color:C.accent, fontSize:'clamp(16px, 3vw, 18px)', fontWeight:700, marginBottom:32 }}>+{xp} DX conquistados</div>
         <Btn3D color={C.cyan} shadow={C.btn3d_cyan} onClick={() => onComplete(xp)}>CONTINUAR →</Btn3D>
       </div>
     );
@@ -81,26 +81,26 @@ function M3LessonScreen({ lesson, onComplete, onBack }) {
     };
 
     if (failed) return (
-      <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:32 }}>
+      <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:32 }}>
         <FaSkull size={64} color='#ff4d4d' style={{ marginBottom:16 }} />
-        <div style={{ fontFamily:F.display, color:C.red, fontSize:22, fontWeight:900, marginBottom:8, textAlign:'center' }}>Sem vidas!</div>
-        <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:14, marginBottom:32, textAlign:'center' }}>Você perdeu todas as tentativas.<br/>Tente o quiz novamente.</div>
+        <div style={{ fontFamily:F.display, color:C.red, fontSize:'clamp(20px, 4.5vw, 24px)', fontWeight:900, marginBottom:8, textAlign:'center' }}>Sem vidas!</div>
+        <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(14px, 2.5vw, 16px)', marginBottom:32, textAlign:'center' }}>Você perdeu todas as tentativas.<br/>Tente o quiz novamente.</div>
         <button onClick={() => { setFailed(false); setQuizIdx(0); setChecked(false); setSelected(null); setLives(3); }}
-          style={{ background:C.accent, border:'none', borderBottom:'4px solid #008a91', borderRadius:14, padding:'14px 32px', fontFamily:F.display, fontWeight:900, fontSize:16, color:'#fff', cursor:'pointer' }}>
+          style={{ background:C.accent, border:'none', borderBottom:'4px solid #008a91', borderRadius:14, padding:'14px 32px', fontFamily:F.display, fontWeight:900, fontSize:'clamp(16px, 3vw, 18px)', color:'#fff', cursor:'pointer' }}>
           <><FaSyncAlt size={14} style={{marginRight:6}} /> TENTAR NOVAMENTE</>
         </button>
       </div>
     );
 
     return (
-      <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column' }}>
+      <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
         <ProgressHeader current={1 + quizIdx} total={totalSteps} onBack={() => { setPhase('content'); setQuizIdx(0); setSelected(null); setChecked(false); }} xpEarned={xp} />
         <div style={{ flex:1, padding:'20px 16px 120px', maxWidth:660, width:'100%', margin:'0 auto' }}>
           <div style={{ display:'flex', gap:6, marginBottom:12 }}>
             <Lives count={lives} />
           </div>
-          <div style={{ background:C.surface, border:`2px solid ${C.border}`, borderRadius:14, padding:'18px 16px', marginBottom:24 }}>
-            <div style={{ fontFamily:F.display, color:C.text, fontSize:16, fontWeight:800, lineHeight:1.5 }}>{q.q}</div>
+          <div style={{ background:'#1c2b32', border:`2px solid ${C.border}`, borderRadius:14, padding:'18px 16px', marginBottom:24 }}>
+            <div style={{ fontFamily:F.display, color:C.text, fontSize:'clamp(16px, 3vw, 18px)', fontWeight:800, lineHeight:1.5 }}>{q.q}</div>
           </div>
           {q.opts.map((opt, i) => {
             const isSel   = selected === i;
@@ -113,7 +113,7 @@ function M3LessonScreen({ lesson, onComplete, onBack }) {
                   borderBottom:`4px solid ${isCorr ? C.btn3d_green : isWrong ? C.btn3d_red : isSel ? C.accent : C.cardDepth}`,
                   borderRadius:14, padding:'14px 16px', marginBottom:10, cursor: checked ? 'default' : 'pointer',
                   fontFamily:F.display, color: isCorr ? C.correct : isWrong ? C.wrong : isSel ? C.accent : C.text,
-                  fontSize:15, fontWeight:700 }}>
+                  fontSize:'clamp(15px, 2.8vw, 17px)', fontWeight:700 }}>
                 {opt}
               </div>
             );
@@ -121,7 +121,7 @@ function M3LessonScreen({ lesson, onComplete, onBack }) {
         </div>
 
         {!checked ? (
-          <div style={{ position:'fixed', bottom:0, left:0, right:0, padding:'16px 20px 32px', background:C.bg }}>
+          <div style={{ position:'fixed', bottom:0, left:0, right:0, padding:'16px 20px 32px', background:'#131f24' }}>
             <Btn3D color={C.cyan} shadow={C.btn3d_cyan} disabled={selected === null} onClick={handleVerify}>VERIFICAR</Btn3D>
           </div>
         ) : (
@@ -134,10 +134,10 @@ function M3LessonScreen({ lesson, onComplete, onBack }) {
 
   // Concluído
   return (
-    <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:32 }}>
+    <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:32 }}>
       <GiPartyPopper size={64} color='#22d3a0' style={{ marginBottom:16 }} />
-      <div style={{ fontFamily:F.display, color:C.text, fontSize:22, fontWeight:900, marginBottom:8, textAlign:'center' }}>{lesson.title} concluída!</div>
-      <div style={{ fontFamily:F.mono, color:C.accent, fontSize:16, fontWeight:700, marginBottom:32 }}>+{xp} DX conquistados</div>
+      <div style={{ fontFamily:F.display, color:C.text, fontSize:'clamp(20px, 4.5vw, 24px)', fontWeight:900, marginBottom:8, textAlign:'center' }}>{lesson.title} concluída!</div>
+      <div style={{ fontFamily:F.mono, color:C.accent, fontSize:'clamp(16px, 3vw, 18px)', fontWeight:700, marginBottom:32 }}>+{xp} DX conquistados</div>
       <Btn3D color={C.cyan} shadow={C.btn3d_cyan} onClick={() => onComplete(xp)}>CONTINUAR →</Btn3D>
     </div>
   );
@@ -175,12 +175,12 @@ export default function M3Screen({ progress, onComplete, onBack, lang = 'pt', t 
   }
 
   return (
-    <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column' }}>
-      <div style={{ background:C.surface, borderBottom:`1px solid ${C.border}`, padding:'14px 20px', display:'flex', alignItems:'center', gap:12 }}>
-        <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:29, cursor:'pointer' }}>‹</button>
+    <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
+      <div style={{ background:'#1c2b32', borderBottom:"1px solid rgba(255,255,255,0.06)", padding:'14px 20px', display:'flex', alignItems:'center', gap:12 }}>
+        <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:'clamp(24px, 5vw, 30px)', cursor:'pointer' }}>‹</button>
         <div>
-          <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:2 }}>MÓDULO 3</div>
-          <div style={{ fontFamily:F.display, color:C.text, fontSize:20, fontWeight:900 }}>📐 YARA-L Básico</div>
+          <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(15px, 2.8vw, 17px)', letterSpacing:2 }}>MÓDULO 3</div>
+          <div style={{ fontFamily:F.display, color:C.text, fontSize:'clamp(18px, 4vw, 22px)', fontWeight:900 }}>YARA-L Básico</div>
         </div>
       </div>
       <div style={{ flex:1, overflowY:'auto', padding:'16px 16px 80px', maxWidth:600, width:'100%', margin:'0 auto' }}>
@@ -190,28 +190,28 @@ export default function M3Screen({ progress, onComplete, onBack, lang = 'pt', t 
             borderRadius:16, padding:'14px 16px', marginBottom:16, cursor:'pointer', display:'flex', alignItems:'center', gap:12 }}>
           <FaBolt size={28} color={C.amber} />
           <div style={{ flex:1 }}>
-            <div style={{ fontFamily:F.display, color:C.amber, fontSize:14, fontWeight:800 }}>Já conheço YARA-L?</div>
-            <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, marginTop:2 }}>Faça o teste de nivelamento e pule as lições</div>
+            <div style={{ fontFamily:F.display, color:C.amber, fontSize:'clamp(14px, 2.5vw, 16px)', fontWeight:800 }}>Já conheço YARA-L?</div>
+            <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(15px, 2.8vw, 17px)', marginTop:2 }}>Faça o teste de nivelamento e pule as lições</div>
           </div>
-          <div style={{ color:C.textDim, fontSize:20 }}>›</div>
+          <div style={{ color:C.textDim, fontSize:'clamp(18px, 4vw, 22px)' }}>›</div>
         </div>
 
         {M3_LESSONS.map((lesson, idx) => {
           const isDone = done.includes(idx);
           return (
             <div key={idx} onClick={() => setLessonIdx(idx)}
-              style={{ background:C.surface, border:`2px solid ${isDone ? C.green+'55' : C.border}`,
+              style={{ background:'#1c2b32', border:`2px solid ${isDone ? C.green+'55' : C.border}`,
                 borderBottom:`4px solid ${isDone ? C.btn3d_green : C.cardDepth}`,
                 borderRadius:16, padding:'14px 16px', marginBottom:12,
                 display:'flex', alignItems:'center', gap:14, cursor:'pointer' }}>
               <div style={{ width:32, height:32, display:'flex', alignItems:'center', justifyContent:'center' }}>{isDone ? <NodeIcon icon='✅' size={24} /> : <NodeIcon icon={lesson.icon} size={24} />}</div>
               <div style={{ flex:1 }}>
-                <div style={{ fontFamily:F.display, color:C.text, fontSize:15, fontWeight:800 }}>{lesson.title}</div>
-                <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, marginTop:2 }}>
+                <div style={{ fontFamily:F.display, color:C.text, fontSize:'clamp(15px, 2.8vw, 17px)', fontWeight:800 }}>{lesson.title}</div>
+                <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(15px, 2.8vw, 17px)', marginTop:2 }}>
                   Conteúdo + {lesson.quiz?.length || 0} questões
                 </div>
               </div>
-              <div style={{ color:C.textDim, fontSize:20 }}>›</div>
+              <div style={{ color:C.textDim, fontSize:'clamp(18px, 4vw, 22px)' }}>›</div>
             </div>
           );
         })}

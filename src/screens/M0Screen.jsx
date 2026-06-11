@@ -90,12 +90,12 @@ export default function M0Screen({ onComplete, onBack }) {
 
   // ── SEM VIDAS ──
   if (lives <= 0) return (
-    <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:32, textAlign:'center' }}>
+    <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:32, textAlign:'center' }}>
       <style>{STYLE}</style>
       <FaHeartBroken size={56} color='#ff4d4d' style={{ marginBottom:16 }} />
-      <div style={{ fontFamily:F.display, color:C.red, fontSize:26, fontWeight:800, marginBottom:8 }}>Sem vidas!</div>
+      <div style={{ fontFamily:F.display, color:C.red, fontSize:'clamp(22px, 5vw, 28px)', fontWeight:800, marginBottom:8 }}>Sem vidas!</div>
       <button onClick={() => { setPlaced({}); setUsedBank([]); setSelected(null); setErrors({}); setLives(3); setPhase('build'); setAnimStep(-1); }}
-        style={{ background:C.accent, color:'#0a0b0c', border:'none', borderRadius:14, padding:'16px 32px', fontFamily:F.display, fontWeight:800, fontSize:18, cursor:'pointer' }}>
+        style={{ background:C.accent, color:'#0a0b0c', border:'none', borderRadius:14, padding:'16px 32px', fontFamily:F.display, fontWeight:800, fontSize:'clamp(17px, 3.5vw, 20px)', cursor:'pointer' }}>
         ↺ TENTAR NOVAMENTE
       </button>
     </div>
@@ -107,19 +107,19 @@ export default function M0Screen({ onComplete, onBack }) {
     const isLast = explainIdx >= expls.length - 1;
     const exp = expls[explainIdx];
     return (
-      <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column' }}>
+      <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
         <style>{STYLE}</style>
-        <div style={{ background:C.surface, borderBottom:`1px solid ${C.border}`, padding:'13px 18px', display:'flex', alignItems:'center', gap:10 }}>
-          <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:22, cursor:'pointer' }}>‹</button>
+        <div style={{ background:'#1c2b32', borderBottom:"1px solid rgba(255,255,255,0.06)", padding:'13px 18px', display:'flex', alignItems:'center', gap:10 }}>
+          <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:'clamp(20px, 4.5vw, 24px)', cursor:'pointer' }}>‹</button>
           <div style={{ flex:1 }}>
-            <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:3 }}>MÓDULO 1 · ARQUITETURA SECOPS</div>
-            <div style={{ fontFamily:F.display, color:C.text, fontSize:20, fontWeight:700 }}>Explicação do Fluxo</div>
+            <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(15px, 2.8vw, 17px)', letterSpacing:3 }}>MÓDULO 1 · ARQUITETURA SECOPS</div>
+            <div style={{ fontFamily:F.display, color:C.text, fontSize:'clamp(18px, 4vw, 22px)', fontWeight:700 }}>Explicação do Fluxo</div>
           </div>
-          <span style={{ fontFamily:F.mono, color:C.textDim, fontSize:14 }}>{explainIdx+1}/{expls.length}</span>
+          <span style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(14px, 2.5vw, 16px)' }}>{explainIdx+1}/{expls.length}</span>
         </div>
 
         {/* Fluxo horizontal */}
-        <div style={{ padding:'8px 18px', overflowX:'auto', background:C.surface, borderBottom:`1px solid ${C.border}`, flexShrink:0 }}>
+        <div style={{ padding:'8px 18px', overflowX:'auto', background:'#1c2b32', borderBottom:"1px solid rgba(255,255,255,0.06)", flexShrink:0 }}>
           <div style={{ display:'flex', alignItems:'center', gap:0, minWidth:'max-content' }}>
             {M0_PUZZLE.nodes.map((node, i) => {
               const label = placed[node.id] || node.label;
@@ -128,7 +128,7 @@ export default function M0Screen({ onComplete, onBack }) {
                 <div key={node.id} style={{ display:'flex', alignItems:'center' }}>
                   <div style={{ background: isActive ? node.color+'33' : C.surface2, border:`1px solid ${isActive ? node.color : C.border}`, borderRadius:7, padding:'4px 8px', textAlign:'center', minWidth:55, transition:'all .3s' }}>
                     <NodeIcon icon={node.icon} color={node.color} size={16} />
-                    <div style={{ fontFamily:F.mono, color: isActive ? node.color : C.textDim, fontSize:10, marginTop:1, whiteSpace:'nowrap' }}>
+                    <div style={{ fontFamily:F.mono, color: isActive ? node.color : C.textDim, fontSize:'clamp(14px, 2.5vw, 16px)', marginTop:1, whiteSpace:'nowrap' }}>
                       {label.split(' ')[0]}
                     </div>
                   </div>
@@ -141,16 +141,16 @@ export default function M0Screen({ onComplete, onBack }) {
 
         <div style={{ flex:1, padding:'16px 18px 120px', overflowY:'auto' }}>
           <div style={{ background:C.accent+'16', border:`1px solid ${C.accent}44`, borderRadius:14, padding:20 }}>
-            <div style={{ fontFamily:F.mono, color:C.accent, fontSize:11, letterSpacing:2, marginBottom:10 }}><><FaMapMarkerAlt size={11} style={{marginRight:4}} />{exp.node}</></div>
-            <div style={{ fontFamily:F.mono, color:C.text, fontSize:14, lineHeight:1.9 }}>{exp.info}</div>
+            <div style={{ fontFamily:F.mono, color:C.accent, fontSize:'clamp(15px, 2.8vw, 17px)', letterSpacing:2, marginBottom:10 }}><><FaMapMarkerAlt size={11} style={{marginRight:4}} />{exp.node}</></div>
+            <div style={{ fontFamily:F.mono, color:C.text, fontSize:'clamp(14px, 2.5vw, 16px)', lineHeight:1.9 }}>{exp.info}</div>
           </div>
         </div>
 
-        <div style={{ position:'fixed', bottom:0, left:0, right:0, padding:'16px 18px 32px', background:C.bg, borderTop:`1px solid ${C.border}` }}>
+        <div style={{ position:'fixed', bottom:0, left:0, right:0, padding:'16px 18px 32px', background:'#131f24', borderTop:`1px solid ${C.border}` }}>
           <button onClick={() => {
             if (isLast) { onComplete({ m0: true }, totalXp, true); setPhase('done'); }
             else setExplainIdx(i => i + 1);
-          }} style={{ width:'100%', background: isLast ? C.green : C.accent, color:'#0a0b0c', border:'none', borderRadius:14, padding:'16px', fontFamily:F.display, fontWeight:800, fontSize:18, cursor:'pointer', boxShadow:`0 0 24px ${isLast ? C.green : C.accent}44` }}>
+          }} style={{ width:'100%', background: isLast ? C.green : C.accent, color:'#0a0b0c', border:'none', borderRadius:14, padding:'16px', fontFamily:F.display, fontWeight:800, fontSize:'clamp(17px, 3.5vw, 20px)', cursor:'pointer', boxShadow:`0 0 24px ${isLast ? C.green : C.accent}44` }}>
             {isLast ? <><FaTrophy size={14} style={{marginRight:6}} /> CONCLUIR MÓDULO</> : 'PRÓXIMA ETAPA →'}
           </button>
         </div>
@@ -160,13 +160,13 @@ export default function M0Screen({ onComplete, onBack }) {
 
   // ── CONCLUÍDO ──
   if (phase === 'done') return (
-    <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:32, textAlign:'center' }}>
+    <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:32, textAlign:'center' }}>
       <style>{STYLE}</style>
       <FaCrosshairs size={64} color='#22d3a0' style={{ marginBottom:12 }} />
-      <div style={{ fontFamily:F.display, fontSize:26, fontWeight:800, color:C.green, marginBottom:6 }}>FLUXO COMPLETO!</div>
-      <div style={{ fontFamily:F.display, fontSize:32, color:C.yellow, marginBottom:28 }}>+{animXp} DX</div>
+      <div style={{ fontFamily:F.display, fontSize:'clamp(22px, 5vw, 28px)', fontWeight:800, color:C.green, marginBottom:6 }}>FLUXO COMPLETO!</div>
+      <div style={{ fontFamily:F.display, fontSize:'clamp(26px, 6vw, 34px)', color:C.yellow, marginBottom:28 }}>+{animXp} DX</div>
       <button onClick={onBack}
-        style={{ background:C.green, color:'#0a0b0c', border:'none', borderRadius:14, padding:'16px 40px', fontFamily:F.display, fontWeight:800, fontSize:18, cursor:'pointer', boxShadow:`0 0 24px ${C.green}44` }}>
+        style={{ background:C.green, color:'#0a0b0c', border:'none', borderRadius:14, padding:'16px 40px', fontFamily:F.display, fontWeight:800, fontSize:'clamp(17px, 3.5vw, 20px)', cursor:'pointer', boxShadow:`0 0 24px ${C.green}44` }}>
         ← VOLTAR AO INÍCIO
       </button>
     </div>
@@ -174,26 +174,26 @@ export default function M0Screen({ onComplete, onBack }) {
 
   // ── BUILD ──
   return (
-    <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column' }}>
+    <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
       <style>{STYLE}</style>
 
-      <div style={{ background:C.surface, borderBottom:`1px solid ${C.border}`, padding:'13px 18px', display:'flex', alignItems:'center', gap:10 }}>
-        <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:22, cursor:'pointer' }}>‹</button>
+      <div style={{ background:'#1c2b32', borderBottom:"1px solid rgba(255,255,255,0.06)", padding:'13px 18px', display:'flex', alignItems:'center', gap:10 }}>
+        <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:'clamp(20px, 4.5vw, 24px)', cursor:'pointer' }}>‹</button>
         <div style={{ flex:1 }}>
-          <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:3 }}>MÓDULO 1 · INTRODUÇÃO</div>
-          <div style={{ fontFamily:F.display, color:C.text, fontSize:20, fontWeight:700 }}>Arquitetura SecOps</div>
+          <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(15px, 2.8vw, 17px)', letterSpacing:3 }}>MÓDULO 1 · INTRODUÇÃO</div>
+          <div style={{ fontFamily:F.display, color:C.text, fontSize:'clamp(18px, 4vw, 22px)', fontWeight:700 }}>Arquitetura SecOps</div>
         </div>
         <div style={{ display:'flex', gap:3 }}>
           <Lives count={lives} />
         </div>
       </div>
 
-      <div style={{ padding:'10px 18px', background:C.surface, borderBottom:`1px solid ${C.border}`, flexShrink:0 }}>
-        <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:13, lineHeight:1.7 }}>
+      <div style={{ padding:'10px 18px', background:'#1c2b32', borderBottom:"1px solid rgba(255,255,255,0.06)", flexShrink:0 }}>
+        <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(15px, 2.8vw, 17px)', lineHeight:1.7 }}>
           Monte o fluxo genérico do Google SecOps — do dado bruto até a resposta automática.
         </div>
         {selected && (
-          <div style={{ fontFamily:F.mono, color:C.accent, fontSize:14, marginTop:6 }}>
+          <div style={{ fontFamily:F.mono, color:C.accent, fontSize:'clamp(14px, 2.5vw, 16px)', marginTop:6 }}>
             ✦ "{selected}" — toque num slot vazio
           </div>
         )}
@@ -227,15 +227,15 @@ export default function M0Screen({ onComplete, onBack }) {
                     <>
                       <NodeIcon icon={node.icon} color={node.color} size={18} />
                       <div style={{ flex:1 }}>
-                        <div style={{ fontFamily:F.display, color:node.color, fontSize:18, fontWeight:700 }}>{hasPlaced}</div>
-                        <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:12, marginTop:1 }}>{node.sub}</div>
+                        <div style={{ fontFamily:F.display, color:node.color, fontSize:'clamp(17px, 3.5vw, 20px)', fontWeight:700 }}>{hasPlaced}</div>
+                        <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(14px, 2.5vw, 16px)', marginTop:1 }}>{node.sub}</div>
                       </div>
                       <FaTimes size={14} color={C.textDim} />
                     </>
                   ) : (
                     <>
                       <div style={{ width:20, height:20, borderRadius:5, border:`2px dashed ${selected ? C.accent : C.textDim}`, flexShrink:0 }}/>
-                      <div style={{ fontFamily:F.mono, color: selected ? C.accent : C.textDim, fontSize:14 }}>
+                      <div style={{ fontFamily:F.mono, color: selected ? C.accent : C.textDim, fontSize:'clamp(14px, 2.5vw, 16px)' }}>
                         {selected ? '← toque para colocar' : '← slot vazio'}
                       </div>
                     </>
@@ -252,8 +252,8 @@ export default function M0Screen({ onComplete, onBack }) {
                 }}>
                   <NodeIcon icon={node.icon} color={node.color} size={18} />
                   <div style={{ flex:1 }}>
-                    <div style={{ fontFamily:F.display, color: anim ? node.color : C.text, fontSize:18, fontWeight:700, transition:'color .3s' }}>{node.label}</div>
-                    <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:12, marginTop:1 }}>{node.sub}</div>
+                    <div style={{ fontFamily:F.display, color: anim ? node.color : C.text, fontSize:'clamp(17px, 3.5vw, 20px)', fontWeight:700, transition:'color .3s' }}>{node.label}</div>
+                    <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(14px, 2.5vw, 16px)', marginTop:1 }}>{node.sub}</div>
                   </div>
                   {anim && <div style={{ width:7, height:7, borderRadius:'50%', background:node.color, boxShadow:`0 0 7px ${node.color}`, animation:'glow 1s infinite' }}/>}
                 </div>
@@ -266,15 +266,15 @@ export default function M0Screen({ onComplete, onBack }) {
 
       {/* Banco */}
       {phase === 'build' && (
-        <div style={{ position:'fixed', bottom:0, left:0, right:0, background:C.surface, borderTop:`1px solid ${C.border}`, padding:'12px 18px 28px' }}>
+        <div style={{ position:'fixed', bottom:0, left:0, right:0, background:'#1c2b32', borderTop:`1px solid ${C.border}`, padding:'12px 18px 28px' }}>
           {bankAvailable.length === 0 && allPlaced ? (
             <button onClick={() => { setPhase('animate'); setAnimStep(0); }}
-              style={{ width:'100%', background:C.accent, color:'#0a0b0c', border:'none', borderRadius:14, padding:'16px', fontFamily:F.display, fontWeight:800, fontSize:18, cursor:'pointer', boxShadow:`0 0 24px ${C.accent}44`, marginBottom:8 }}>
+              style={{ width:'100%', background:C.accent, color:'#0a0b0c', border:'none', borderRadius:14, padding:'16px', fontFamily:F.display, fontWeight:800, fontSize:'clamp(17px, 3.5vw, 20px)', cursor:'pointer', boxShadow:`0 0 24px ${C.accent}44`, marginBottom:8 }}>
               <><FaTrophy size={14} style={{marginRight:6}} /> VER RESULTADO</>
             </button>
           ) : (
             <>
-              <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:2, marginBottom:8 }}>
+              <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(15px, 2.8vw, 17px)', letterSpacing:2, marginBottom:8 }}>
                 BANCO DE PEÇAS · {Object.keys(placed).length}/{blanks.length} colocados
               </div>
               <div style={{ display:'flex', flexWrap:'wrap', gap:7 }}>
@@ -285,7 +285,7 @@ export default function M0Screen({ onComplete, onBack }) {
                       border: `2px solid ${selected === opt ? C.accent : C.border}`,
                       borderRadius:9, padding:'7px 13px',
                       fontFamily:F.mono, color: selected === opt ? C.accent : C.textDim,
-                      fontSize:13, cursor:'pointer', transition:'all .15s',
+                      fontSize:'clamp(15px, 2.8vw, 17px)', cursor:'pointer', transition:'all .15s',
                     }}>
                     {opt}
                   </button>

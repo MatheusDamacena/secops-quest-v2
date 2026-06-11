@@ -35,14 +35,14 @@ export default function ModuleScreen({ lesson, onComplete, onBack, xpPerChalleng
   // ── FLASHCARDS ──
   if (phase === 'cards') {
     return (
-      <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column' }}>
+      <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
         <ProgressHeader current={cardIdx} total={totalSteps} onBack={onBack} xpEarned={xp} />
 
         {/* Conteúdo centralizado */}
         <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'24px 20px', gap:20 }}>
 
           {/* Label da lição */}
-          <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:3, textAlign:'center' }}>
+          <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(13px, 2.5vw, 15px)', letterSpacing:3, textAlign:'center' }}>
             {lesson.title?.toUpperCase()}
           </div>
 
@@ -53,10 +53,10 @@ export default function ModuleScreen({ lesson, onComplete, onBack, xpPerChalleng
               borderRadius:20, padding:'28px 24px', width:'100%', maxWidth:440, minHeight:200,
               display:'flex', flexDirection:'column', justifyContent:'center',
               cursor:'pointer', transition:'all .3s' }}>
-            <div style={{ fontFamily:F.mono, color: flipped ? C.cyan : C.textDim, fontSize:9, letterSpacing:3, marginBottom:12 }}>
+            <div style={{ fontFamily:F.mono, color: flipped ? C.cyan : C.textDim, fontSize:'clamp(10px, 1.8vw, 11px)', letterSpacing:3, marginBottom:12 }}>
               {flipped ? t('card_answer') : <><FaHandPointer size={13} style={{marginRight:6}} /> {t('card_tap')}</>}
             </div>
-            <div style={{ fontFamily:F.mono, color: flipped ? C.text : C.textMid, fontSize:14, lineHeight:1.9, whiteSpace:'pre-wrap' }}>
+            <div style={{ fontFamily:F.mono, color: flipped ? C.text : C.textMid, fontSize:'clamp(14px, 2.5vw, 16px)', lineHeight:1.9, whiteSpace:'pre-wrap' }}>
               {flipped ? card.a : card.q}
             </div>
           </div>
@@ -76,19 +76,19 @@ export default function ModuleScreen({ lesson, onComplete, onBack, xpPerChalleng
         <div style={{ padding:'12px 20px 32px', display:'flex', gap:10, maxWidth:460, width:'100%', margin:'0 auto' }}>
           {isLast ? (
             <button onClick={() => { setChalIdx(0); setLives(3); setPhase('challenges'); }}
-              style={{ flex:1, background:C.cyan, border:'none', borderBottom:'4px solid #008a91', borderRadius:14, padding:'16px', fontFamily:F.display, fontWeight:800, fontSize:15, color:'#fff', cursor:'pointer' }}>
+              style={{ flex:1, background:C.cyan, border:'none', borderBottom:'4px solid #008a91', borderRadius:14, padding:'16px', fontFamily:F.display, fontWeight:800, fontSize:'clamp(15px, 2.8vw, 17px)', color:'#fff', cursor:'pointer' }}>
               {t('card_challenges')}
             </button>
           ) : (
             <>
               {cardIdx > 0 && (
                 <button onClick={() => { setCardIdx(i => i-1); setFlipped(false); }}
-                  style={{ background:C.surface, color:C.textMid, border:`1px solid ${C.border}`, borderRadius:14, padding:'16px 20px', fontFamily:F.display, fontWeight:700, fontSize:15, cursor:'pointer' }}>
+                  style={{ background:'#1c2b32', color:C.textMid, border:"1px solid rgba(255,255,255,0.06)", borderRadius:14, padding:'16px 20px', fontFamily:F.display, fontWeight:700, fontSize:'clamp(15px, 2.8vw, 17px)', cursor:'pointer' }}>
                   ‹
                 </button>
               )}
               <button onClick={() => { setCardIdx(i => i+1); setFlipped(false); }}
-                style={{ flex:1, background:C.cyan, border:'none', borderBottom:'4px solid #008a91', borderRadius:14, padding:'16px', fontFamily:F.display, fontWeight:800, fontSize:15, color:'#fff', cursor:'pointer' }}>
+                style={{ flex:1, background:C.cyan, border:'none', borderBottom:'4px solid #008a91', borderRadius:14, padding:'16px', fontFamily:F.display, fontWeight:800, fontSize:'clamp(15px, 2.8vw, 17px)', color:'#fff', cursor:'pointer' }}>
                 {t('card_next')}
               </button>
             </>
@@ -100,12 +100,12 @@ export default function ModuleScreen({ lesson, onComplete, onBack, xpPerChalleng
 
   // ── FALHA ──
   if (failed) return (
-    <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:32 }}>
+    <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:32 }}>
       <FaSkull size={64} color='#ff4d4d' style={{ marginBottom:16 }} />
-      <div style={{ fontFamily:F.display, color:C.red, fontSize:22, fontWeight:900, marginBottom:8, textAlign:'center' }}>{t('chal_no_lives')}</div>
-      <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:14, marginBottom:32, textAlign:'center' }}>Tente os exercícios novamente.</div>
+      <div style={{ fontFamily:F.display, color:C.red, fontSize:'clamp(20px, 4.5vw, 24px)', fontWeight:900, marginBottom:8, textAlign:'center' }}>{t('chal_no_lives')}</div>
+      <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(14px, 2.5vw, 16px)', marginBottom:32, textAlign:'center' }}>Tente os exercícios novamente.</div>
       <button onClick={() => { setFailed(false); setChalIdx(0); setAnswered(false); setSelected(null); setTfAnswer(null); setLives(3); }}
-        style={{ background:C.cyan, border:'none', borderBottom:'4px solid #008a91', borderRadius:14, padding:'14px 32px', fontFamily:F.display, fontWeight:900, fontSize:16, color:'#fff', cursor:'pointer' }}>
+        style={{ background:C.cyan, border:'none', borderBottom:'4px solid #008a91', borderRadius:14, padding:'14px 32px', fontFamily:F.display, fontWeight:900, fontSize:'clamp(16px, 3vw, 18px)', color:'#fff', cursor:'pointer' }}>
         <><FaSyncAlt size={14} style={{marginRight:6}} /> TENTAR NOVAMENTE</>
       </button>
     </div>
@@ -140,22 +140,22 @@ export default function ModuleScreen({ lesson, onComplete, onBack, xpPerChalleng
     const currentStep = cards.length + chalIdx;
 
     return (
-      <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column' }}>
+      <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
         <ProgressHeader current={currentStep} total={totalSteps} onBack={cards.length > 0 ? () => { setCardIdx(cards.length-1); setFlipped(false); setPhase('cards'); } : onBack} xpEarned={xp}
           right={<Lives count={lives} />}
         />
         <div style={{ flex:1, padding:'20px 20px 120px', maxWidth:600, width:'100%', margin:'0 auto' }}>
 
           {/* Tipo de exercício */}
-          <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:2, marginBottom:16 }}>
+          <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(13px, 2.5vw, 15px)', letterSpacing:2, marginBottom:16 }}>
             {chal.type === 'truefalse' ? t('chal_truefalse') : t('chal_complete')}
           </div>
 
           {/* Complete */}
           {chal.type === 'complete' && (
             <>
-              <div style={{ background:C.surface, border:`2px solid ${C.border}`, borderRadius:14, padding:'18px 16px', marginBottom:24 }}>
-                <div style={{ fontFamily:F.display, color:C.text, fontSize:16, fontWeight:700, lineHeight:1.6 }}>
+              <div style={{ background:'#1c2b32', border:`2px solid ${C.border}`, borderRadius:14, padding:'18px 16px', marginBottom:24 }}>
+                <div style={{ fontFamily:F.display, color:C.text, fontSize:'clamp(16px, 3vw, 18px)', fontWeight:700, lineHeight:1.6 }}>
                   {chal.sentence.replace(chal.blank, '').split('____').map((part, i, arr) => (
                     <span key={i}>
                       {part}
@@ -179,7 +179,7 @@ export default function ModuleScreen({ lesson, onComplete, onBack, xpPerChalleng
                     borderRadius:14, padding:'14px 16px', marginBottom:10,
                     cursor: answered ? 'default' : 'pointer',
                     fontFamily:F.display, color: answered && opt === chal.blank ? C.correct : answered && selected === opt && opt !== chal.blank ? C.wrong : !answered && selected === opt ? C.cyan : C.text,
-                    fontSize:15, fontWeight:700 }}>
+                    fontSize:'clamp(15px, 2.8vw, 17px)', fontWeight:700 }}>
                   {opt}
                 </div>
               ))}
@@ -189,8 +189,8 @@ export default function ModuleScreen({ lesson, onComplete, onBack, xpPerChalleng
           {/* True/False */}
           {chal.type === 'truefalse' && (
             <>
-              <div style={{ background:C.surface, border:`2px solid ${C.border}`, borderRadius:14, padding:'20px 16px', marginBottom:24 }}>
-                <div style={{ fontFamily:F.display, color:C.text, fontSize:16, fontWeight:700, lineHeight:1.5 }}>
+              <div style={{ background:'#1c2b32', border:`2px solid ${C.border}`, borderRadius:14, padding:'20px 16px', marginBottom:24 }}>
+                <div style={{ fontFamily:F.display, color:C.text, fontSize:'clamp(16px, 3vw, 18px)', fontWeight:700, lineHeight:1.5 }}>
                   {chal.statement}
                 </div>
               </div>
@@ -212,10 +212,10 @@ export default function ModuleScreen({ lesson, onComplete, onBack, xpPerChalleng
                       <div style={{ width:52, height:52, borderRadius:'50%',
                         background: isCorr ? C.correct : isWrong ? C.wrong : isSel ? C.cyan : opt.iconBg,
                         display:'flex', alignItems:'center', justifyContent:'center',
-                        fontSize:26, fontWeight:900, color: opt.iconColor }}>
+                        fontSize:'clamp(22px, 5vw, 28px)', fontWeight:900, color: opt.iconColor }}>
                         {opt.icon}
                       </div>
-                      <div style={{ fontFamily:F.display, fontWeight:800, fontSize:16,
+                      <div style={{ fontFamily:F.display, fontWeight:800, fontSize:'clamp(16px, 3vw, 18px)',
                         color: isCorr ? C.correct : isWrong ? C.wrong : isSel ? C.cyan : C.text }}>
                         {opt.label}
                       </div>
@@ -229,12 +229,12 @@ export default function ModuleScreen({ lesson, onComplete, onBack, xpPerChalleng
 
         {/* Botão verificar */}
         {!answered && (
-          <div style={{ position:'fixed', bottom:0, left:0, right:0, padding:'12px 20px 32px', background:C.bg }}>
+          <div style={{ position:'fixed', bottom:0, left:0, right:0, padding:'12px 20px 32px', background:'#131f24' }}>
             <button onClick={handleAnswer} disabled={selected === null && tfAnswer === null}
               style={{ width:'100%', maxWidth:520, display:'block', margin:'0 auto',
                 background: (selected !== null || tfAnswer !== null) ? C.cyan : C.surface2,
                 border:'none', borderBottom:`4px solid ${(selected !== null || tfAnswer !== null) ? '#008a91' : C.cardDepth}`,
-                borderRadius:14, padding:'16px', fontFamily:F.display, fontWeight:800, fontSize:16,
+                borderRadius:14, padding:'16px', fontFamily:F.display, fontWeight:800, fontSize:'clamp(16px, 3vw, 18px)',
                 color: (selected !== null || tfAnswer !== null) ? '#fff' : C.textDim,
                 cursor: (selected !== null || tfAnswer !== null) ? 'pointer' : 'not-allowed' }}>
               {t('chal_verify')}
@@ -253,16 +253,16 @@ export default function ModuleScreen({ lesson, onComplete, onBack, xpPerChalleng
 
   // ── CONCLUSÃO ──
   return (
-    <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:32 }}>
+    <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:32 }}>
       <GiPartyPopper size={64} color='#22d3a0' style={{ marginBottom:16 }} />
-      <div style={{ fontFamily:F.display, color:C.text, fontSize:24, fontWeight:900, marginBottom:8, textAlign:'center' }}>
+      <div style={{ fontFamily:F.display, color:C.text, fontSize:'clamp(22px, 5vw, 26px)', fontWeight:900, marginBottom:8, textAlign:'center' }}>
         {lesson.title} {t('completed')}
       </div>
-      <div style={{ fontFamily:F.mono, color:C.cyan, fontSize:18, fontWeight:700, marginBottom:32 }}>
+      <div style={{ fontFamily:F.mono, color:C.cyan, fontSize:'clamp(17px, 3.5vw, 20px)', fontWeight:700, marginBottom:32 }}>
         +{xp} {t('dx_earned')}
       </div>
       <button onClick={() => onComplete(xp)}
-        style={{ background:C.cyan, border:'none', borderBottom:'4px solid #008a91', borderRadius:14, padding:'16px 40px', fontFamily:F.display, fontWeight:900, fontSize:16, color:'#fff', cursor:'pointer' }}>
+        style={{ background:C.cyan, border:'none', borderBottom:'4px solid #008a91', borderRadius:14, padding:'16px 40px', fontFamily:F.display, fontWeight:900, fontSize:'clamp(16px, 3vw, 18px)', color:'#fff', cursor:'pointer' }}>
         {t('btn_continue')}
       </button>
     </div>

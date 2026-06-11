@@ -96,17 +96,17 @@ function PuzzleDetail({ puzzle, pIdx, totalPuzzles, nextPuzzle, onComplete, onBa
 
   // ── SEM VIDAS ──
   if (lives <= 0) return (
-    <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:32, textAlign:'center' }}>
+    <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:32, textAlign:'center' }}>
       <style>{STYLE}</style>
       <FaHeartBroken size={56} color='#ff4d4d' style={{ marginBottom:16 }} />
-      <div style={{ fontFamily:F.display, color:C.red, fontSize:26, fontWeight:800, marginBottom:8 }}>Sem vidas!</div>
-      <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:14, marginBottom:24 }}>Tente o puzzle novamente.</div>
+      <div style={{ fontFamily:F.display, color:C.red, fontSize:'clamp(22px, 5vw, 28px)', fontWeight:800, marginBottom:8 }}>Sem vidas!</div>
+      <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(14px, 2.5vw, 16px)', marginBottom:24 }}>Tente o puzzle novamente.</div>
       <button onClick={() => { setPlaced({}); setUsedBank([]); setSelected(null); setErrors({}); setLives(3); setPhase('build'); setAnimStep(-1); }}
-        style={{ background:puzzle.color||C.accent, color:'#0a0b0c', border:'none', borderRadius:14, padding:'16px 32px', fontFamily:F.display, fontWeight:800, fontSize:18, cursor:'pointer', marginBottom:12 }}>
+        style={{ background:puzzle.color||C.accent, color:'#0a0b0c', border:'none', borderRadius:14, padding:'16px 32px', fontFamily:F.display, fontWeight:800, fontSize:'clamp(17px, 3.5vw, 20px)', cursor:'pointer', marginBottom:12 }}>
         ↺ TENTAR NOVAMENTE
       </button>
       <button onClick={onBack}
-        style={{ background:'transparent', color:C.textDim, border:`1px solid ${C.border}`, borderRadius:14, padding:'13px 32px', fontFamily:F.display, fontWeight:700, fontSize:16, cursor:'pointer' }}>
+        style={{ background:'transparent', color:C.textDim, border:"1px solid rgba(255,255,255,0.06)", borderRadius:14, padding:'13px 32px', fontFamily:F.display, fontWeight:700, fontSize:'clamp(16px, 3vw, 18px)', cursor:'pointer' }}>
         ← LISTA
       </button>
     </div>
@@ -118,20 +118,20 @@ function PuzzleDetail({ puzzle, pIdx, totalPuzzles, nextPuzzle, onComplete, onBa
     const isLast = explainIdx >= expls.length - 1;
     const exp = expls[explainIdx];
     return (
-      <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column' }}>
+      <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
         <style>{STYLE}</style>
         {/* Header */}
-        <div style={{ background:C.surface, borderBottom:`1px solid ${C.border}`, padding:'13px 18px', display:'flex', alignItems:'center', gap:10 }}>
-          <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:22, cursor:'pointer' }}>‹</button>
+        <div style={{ background:'#1c2b32', borderBottom:"1px solid rgba(255,255,255,0.06)", padding:'13px 18px', display:'flex', alignItems:'center', gap:10 }}>
+          <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:'clamp(20px, 4.5vw, 24px)', cursor:'pointer' }}>‹</button>
           <div style={{ flex:1 }}>
-            <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:3 }}>M6 · {puzzle.title.toUpperCase()}</div>
-            <div style={{ fontFamily:F.display, color:C.text, fontSize:20, fontWeight:700 }}>Explicação do Fluxo</div>
+            <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(15px, 2.8vw, 17px)', letterSpacing:3 }}>M6 · {puzzle.title.toUpperCase()}</div>
+            <div style={{ fontFamily:F.display, color:C.text, fontSize:'clamp(18px, 4vw, 22px)', fontWeight:700 }}>Explicação do Fluxo</div>
           </div>
-          <span style={{ fontFamily:F.mono, color:C.textDim, fontSize:14 }}>{explainIdx+1}/{expls.length}</span>
+          <span style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(14px, 2.5vw, 16px)' }}>{explainIdx+1}/{expls.length}</span>
         </div>
 
         {/* Fluxo horizontal animado */}
-        <div style={{ padding:'8px 18px', overflowX:'auto', background:C.surface, borderBottom:`1px solid ${C.border}`, flexShrink:0 }}>
+        <div style={{ padding:'8px 18px', overflowX:'auto', background:'#1c2b32', borderBottom:"1px solid rgba(255,255,255,0.06)", flexShrink:0 }}>
           <div style={{ display:'flex', alignItems:'center', gap:0, minWidth:'max-content' }}>
             {puzzle.nodes.map((node, i) => {
               const label = placed[node.id] || node.label;
@@ -140,7 +140,7 @@ function PuzzleDetail({ puzzle, pIdx, totalPuzzles, nextPuzzle, onComplete, onBa
                 <div key={node.id} style={{ display:'flex', alignItems:'center' }}>
                   <div style={{ background: isActive ? node.color+'33' : C.surface2, border:`1px solid ${isActive ? node.color : C.border}`, borderRadius:7, padding:'4px 8px', textAlign:'center', minWidth:55, transition:'all .3s' }}>
                     <NodeIcon icon={node.icon} color={node.color} size={16} />
-                    <div style={{ fontFamily:F.mono, color: isActive ? node.color : C.textDim, fontSize:10, marginTop:1, whiteSpace:'nowrap' }}>
+                    <div style={{ fontFamily:F.mono, color: isActive ? node.color : C.textDim, fontSize:'clamp(14px, 2.5vw, 16px)', marginTop:1, whiteSpace:'nowrap' }}>
                       {label.split(' ')[0]}
                     </div>
                   </div>
@@ -156,17 +156,17 @@ function PuzzleDetail({ puzzle, pIdx, totalPuzzles, nextPuzzle, onComplete, onBa
         {/* Explicação */}
         <div style={{ flex:1, padding:'16px 18px 120px', overflowY:'auto' }}>
           <div style={{ background:(puzzle.color||C.accent)+'16', border:`1px solid ${(puzzle.color||C.accent)}44`, borderRadius:14, padding:20 }}>
-            <div style={{ fontFamily:F.mono, color:puzzle.color||C.accent, fontSize:11, letterSpacing:2, marginBottom:10 }}><><FaMapMarkerAlt size={11} style={{marginRight:4}} />{exp.node}</></div>
-            <div style={{ fontFamily:F.mono, color:C.text, fontSize:14, lineHeight:1.9 }}>{exp.info}</div>
+            <div style={{ fontFamily:F.mono, color:puzzle.color||C.accent, fontSize:'clamp(15px, 2.8vw, 17px)', letterSpacing:2, marginBottom:10 }}><><FaMapMarkerAlt size={11} style={{marginRight:4}} />{exp.node}</></div>
+            <div style={{ fontFamily:F.mono, color:C.text, fontSize:'clamp(14px, 2.5vw, 16px)', lineHeight:1.9 }}>{exp.info}</div>
           </div>
         </div>
 
         {/* Botão */}
-        <div style={{ position:'fixed', bottom:0, left:0, right:0, padding:'16px 18px 32px', background:C.bg, borderTop:`1px solid ${C.border}` }}>
+        <div style={{ position:'fixed', bottom:0, left:0, right:0, padding:'16px 18px 32px', background:'#131f24', borderTop:`1px solid ${C.border}` }}>
           <button onClick={() => {
             if (isLast) { onComplete(puzzle.xp); setPhase('done'); }
             else setExplainIdx(i => i + 1);
-          }} style={{ width:'100%', background: isLast ? C.green : (puzzle.color||C.accent), color:'#0a0b0c', border:'none', borderRadius:14, padding:'16px', fontFamily:F.display, fontWeight:800, fontSize:18, cursor:'pointer', boxShadow:`0 0 24px ${isLast ? C.green : (puzzle.color||C.accent)}44` }}>
+          }} style={{ width:'100%', background: isLast ? C.green : (puzzle.color||C.accent), color:'#0a0b0c', border:'none', borderRadius:14, padding:'16px', fontFamily:F.display, fontWeight:800, fontSize:'clamp(17px, 3.5vw, 20px)', cursor:'pointer', boxShadow:`0 0 24px ${isLast ? C.green : (puzzle.color||C.accent)}44` }}>
             {isLast ? <><FaTrophy size={14} style={{marginRight:6}} /> CONCLUIR PUZZLE</> : 'PRÓXIMA ETAPA →'}
           </button>
         </div>
@@ -176,18 +176,18 @@ function PuzzleDetail({ puzzle, pIdx, totalPuzzles, nextPuzzle, onComplete, onBa
 
   // ── CONCLUÍDO ──
   if (phase === 'done') return (
-    <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:32, textAlign:'center' }}>
+    <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:32, textAlign:'center' }}>
       <style>{STYLE}</style>
       <FaCrosshairs size={64} color='#22d3a0' style={{ marginBottom:12 }} />
-      <div style={{ fontFamily:F.display, fontSize:26, fontWeight:800, color:C.green, marginBottom:6 }}>FLUXO COMPLETO!</div>
-      <div style={{ fontFamily:F.display, fontSize:32, color:C.yellow, marginBottom:4 }}>+{animXp} DX</div>
-      <div style={{ fontFamily:F.mono, color:puzzle.color||C.accent, fontSize:11, letterSpacing:2, marginBottom:32 }}>{puzzle.tag}</div>
+      <div style={{ fontFamily:F.display, fontSize:'clamp(22px, 5vw, 28px)', fontWeight:800, color:C.green, marginBottom:6 }}>FLUXO COMPLETO!</div>
+      <div style={{ fontFamily:F.display, fontSize:'clamp(26px, 6vw, 34px)', color:C.yellow, marginBottom:4 }}>+{animXp} DX</div>
+      <div style={{ fontFamily:F.mono, color:puzzle.color||C.accent, fontSize:'clamp(15px, 2.8vw, 17px)', letterSpacing:2, marginBottom:32 }}>{puzzle.tag}</div>
       <div style={{ width:'100%', maxWidth:400 }}>
         <button onClick={() => onBack()}
           style={{ width:'100%', background:C.green, color:'#fff', border:'none',
             borderBottom:`4px solid ${C.btn3d_green}`, borderRadius:14,
             padding:'16px', fontFamily:F.display, fontWeight:900,
-            fontSize:18, cursor:'pointer' }}>
+            fontSize:'clamp(17px, 3.5vw, 20px)', cursor:'pointer' }}>
           CONCLUÍDO →
         </button>
       </div>
@@ -196,15 +196,15 @@ function PuzzleDetail({ puzzle, pIdx, totalPuzzles, nextPuzzle, onComplete, onBa
 
   // ── BUILD (puzzle principal) ──
   return (
-    <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column' }}>
+    <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
       <style>{STYLE}</style>
 
       {/* Header */}
-      <div style={{ background:C.surface, borderBottom:`1px solid ${C.border}`, padding:'13px 18px', display:'flex', alignItems:'center', gap:10 }}>
-        <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:22, cursor:'pointer' }}>‹</button>
+      <div style={{ background:'#1c2b32', borderBottom:"1px solid rgba(255,255,255,0.06)", padding:'13px 18px', display:'flex', alignItems:'center', gap:10 }}>
+        <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:'clamp(20px, 4.5vw, 24px)', cursor:'pointer' }}>‹</button>
         <div style={{ flex:1 }}>
-          <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:3 }}>M6 · {(puzzle.tag||'').toUpperCase()}</div>
-          <div style={{ fontFamily:F.display, color:C.text, fontSize:20, fontWeight:700 }}>{puzzle.title}</div>
+          <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(15px, 2.8vw, 17px)', letterSpacing:3 }}>M6 · {(puzzle.tag||'').toUpperCase()}</div>
+          <div style={{ fontFamily:F.display, color:C.text, fontSize:'clamp(18px, 4vw, 22px)', fontWeight:700 }}>{puzzle.title}</div>
         </div>
         {/* Vidas */}
         <div style={{ display:'flex', gap:3 }}>
@@ -213,10 +213,10 @@ function PuzzleDetail({ puzzle, pIdx, totalPuzzles, nextPuzzle, onComplete, onBa
       </div>
 
       {/* Story + instrução */}
-      <div style={{ padding:'10px 18px', background:C.surface, borderBottom:`1px solid ${C.border}`, flexShrink:0 }}>
-        <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:13, lineHeight:1.7 }}>{puzzle.story}</div>
+      <div style={{ padding:'10px 18px', background:'#1c2b32', borderBottom:"1px solid rgba(255,255,255,0.06)", flexShrink:0 }}>
+        <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(15px, 2.8vw, 17px)', lineHeight:1.7 }}>{puzzle.story}</div>
         {selected && (
-          <div style={{ fontFamily:F.mono, color:puzzle.color||C.accent, fontSize:14, marginTop:6 }}>
+          <div style={{ fontFamily:F.mono, color:puzzle.color||C.accent, fontSize:'clamp(14px, 2.5vw, 16px)', marginTop:6 }}>
             ✦ "{selected}" — toque num slot
           </div>
         )}
@@ -253,15 +253,15 @@ function PuzzleDetail({ puzzle, pIdx, totalPuzzles, nextPuzzle, onComplete, onBa
                     <>
                       <NodeIcon icon={node.icon} color={node.color} size={18} />
                       <div style={{ flex:1 }}>
-                        <div style={{ fontFamily:F.display, color:node.color, fontSize:18, fontWeight:700 }}>{hasPlaced}</div>
-                        <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:12, marginTop:1 }}>{node.sub}</div>
+                        <div style={{ fontFamily:F.display, color:node.color, fontSize:'clamp(17px, 3.5vw, 20px)', fontWeight:700 }}>{hasPlaced}</div>
+                        <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(14px, 2.5vw, 16px)', marginTop:1 }}>{node.sub}</div>
                       </div>
                       <FaTimes size={14} color={C.textDim} />
                     </>
                   ) : (
                     <>
                       <div style={{ width:20, height:20, borderRadius:5, border:`2px dashed ${selected ? (puzzle.color||C.accent) : C.textDim}`, flexShrink:0 }}/>
-                      <div style={{ fontFamily:F.mono, color: selected ? (puzzle.color||C.accent) : C.textDim, fontSize:14 }}>
+                      <div style={{ fontFamily:F.mono, color: selected ? (puzzle.color||C.accent) : C.textDim, fontSize:'clamp(14px, 2.5vw, 16px)' }}>
                         {selected ? '← toque para colocar' : '← slot vazio'}
                       </div>
                     </>
@@ -279,8 +279,8 @@ function PuzzleDetail({ puzzle, pIdx, totalPuzzles, nextPuzzle, onComplete, onBa
                 }}>
                   <NodeIcon icon={node.icon} color={node.color} size={18} />
                   <div style={{ flex:1 }}>
-                    <div style={{ fontFamily:F.display, color: anim ? node.color : C.text, fontSize:18, fontWeight:700, transition:'color .3s' }}>{node.label}</div>
-                    <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:12, marginTop:1 }}>{node.sub}</div>
+                    <div style={{ fontFamily:F.display, color: anim ? node.color : C.text, fontSize:'clamp(17px, 3.5vw, 20px)', fontWeight:700, transition:'color .3s' }}>{node.label}</div>
+                    <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(14px, 2.5vw, 16px)', marginTop:1 }}>{node.sub}</div>
                   </div>
                   {anim && <div style={{ width:7, height:7, borderRadius:'50%', background:node.color, boxShadow:`0 0 7px ${node.color}`, animation:'glow 1s infinite' }}/>}
                 </div>
@@ -293,15 +293,15 @@ function PuzzleDetail({ puzzle, pIdx, totalPuzzles, nextPuzzle, onComplete, onBa
 
       {/* Banco de peças */}
       {phase === 'build' && (
-        <div style={{ position:'fixed', bottom:0, left:0, right:0, background:C.surface, borderTop:`1px solid ${C.border}`, padding:'12px 18px 28px' }}>
+        <div style={{ position:'fixed', bottom:0, left:0, right:0, background:'#1c2b32', borderTop:`1px solid ${C.border}`, padding:'12px 18px 28px' }}>
           {bankAvailable.length === 0 && allPlaced ? (
             <button onClick={() => { setPhase('animate'); setAnimStep(0); }}
-              style={{ width:'100%', background:puzzle.color||C.accent, color:'#0a0b0c', border:'none', borderRadius:14, padding:'16px', fontFamily:F.display, fontWeight:800, fontSize:18, cursor:'pointer', boxShadow:`0 0 24px ${puzzle.color||C.accent}44`, marginBottom:8 }}>
+              style={{ width:'100%', background:puzzle.color||C.accent, color:'#0a0b0c', border:'none', borderRadius:14, padding:'16px', fontFamily:F.display, fontWeight:800, fontSize:'clamp(17px, 3.5vw, 20px)', cursor:'pointer', boxShadow:`0 0 24px ${puzzle.color||C.accent}44`, marginBottom:8 }}>
               <><FaTrophy size={14} style={{marginRight:6}} /> VER RESULTADO</>
             </button>
           ) : (
             <>
-              <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:2, marginBottom:8 }}>
+              <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(15px, 2.8vw, 17px)', letterSpacing:2, marginBottom:8 }}>
                 BANCO DE PEÇAS · {Object.keys(placed).length}/{blanks.length} colocados
               </div>
               <div style={{ display:'flex', flexWrap:'wrap', gap:7 }}>
@@ -312,7 +312,7 @@ function PuzzleDetail({ puzzle, pIdx, totalPuzzles, nextPuzzle, onComplete, onBa
                       border: `2px solid ${selected === opt ? (puzzle.color||C.accent) : C.border}`,
                       borderRadius:9, padding:'7px 13px',
                       fontFamily:F.mono, color: selected === opt ? (puzzle.color||C.accent) : C.textDim,
-                      fontSize:13, cursor:'pointer', transition:'all .15s',
+                      fontSize:'clamp(15px, 2.8vw, 17px)', cursor:'pointer', transition:'all .15s',
                     }}>
                     {opt}
                   </button>
@@ -361,38 +361,38 @@ export default function M6Screen({ progress, onComplete, onBack, lang = 'pt', t 
   }
 
   return (
-    <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column' }}>
+    <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
       {/* Header */}
-      <div style={{ background:C.surface, borderBottom:`1px solid ${C.border}`, padding:'13px 18px', display:'flex', alignItems:'center', gap:10 }}>
-        <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:22, cursor:'pointer' }}>‹</button>
+      <div style={{ background:'#1c2b32', borderBottom:"1px solid rgba(255,255,255,0.06)", padding:'13px 18px', display:'flex', alignItems:'center', gap:10 }}>
+        <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:'clamp(20px, 4.5vw, 24px)', cursor:'pointer' }}>‹</button>
         <div style={{ flex:1 }}>
-          <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:3 }}>MÓDULO 6</div>
-          <div style={{ fontFamily:F.display, color:C.text, fontSize:20, fontWeight:700 }}>Fluxos por Fonte de Log</div>
+          <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(15px, 2.8vw, 17px)', letterSpacing:3 }}>MÓDULO 6</div>
+          <div style={{ fontFamily:F.display, color:C.text, fontSize:'clamp(18px, 4vw, 22px)', fontWeight:700 }}>Fluxos por Fonte de Log</div>
         </div>
-        <span style={{ fontFamily:F.mono, color:C.orange, fontSize:12, background:C.orange+'18', border:`1px solid ${C.orange}44`, borderRadius:20, padding:'3px 10px' }}>
+        <span style={{ fontFamily:F.mono, color:C.orange, fontSize:'clamp(14px, 2.5vw, 16px)', background:C.orange+'18', border:`1px solid ${C.orange}44`, borderRadius:20, padding:'3px 10px' }}>
           {done.length}/{M6_PUZZLES.length}
         </span>
       </div>
 
       {/* Intro */}
       <div style={{ flex:1, overflowY:'auto', padding:'16px max(16px, calc((100% - 568px) / 2)) 40px' }}>
-        <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:13, lineHeight:1.8, marginBottom:16, background:C.surface, border:`1px solid ${C.border}`, borderRadius:12, padding:'12px 14px' }}>
+        <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(15px, 2.8vw, 17px)', lineHeight:1.8, marginBottom:16, background:'#1c2b32', border:"1px solid rgba(255,255,255,0.06)", borderRadius:12, padding:'12px 14px' }}>
           Agora que você domina UDM, YARA-L e as missões de detecção, monte os fluxos reais de cada tipo de fonte — com todos os detalhes técnicos.
         </div>
         {M6_PUZZLES.map((puzzle, idx) => {
           const isDone = done.includes(idx);
           return (
             <div key={puzzle.id} onClick={() => setPuzzleId(idx)}
-              style={{ background: C.surface, border:`1px solid ${isDone ? (puzzle.color||C.accent)+'55' : C.border}`, borderRadius:14, padding:'14px 16px', marginBottom:10, display:'flex', alignItems:'center', gap:14, cursor:'pointer' }}>
+              style={{ background:'#1c2b32', border:`1px solid ${isDone ? (puzzle.color||C.accent)+'55' : C.border}`, borderRadius:14, padding:'14px 16px', marginBottom:10, display:'flex', alignItems:'center', gap:14, cursor:'pointer' }}>
               <div style={{ width:18, height:18, display:'flex', alignItems:'center', justifyContent:'center' }}><NodeIcon icon={isDone ? '✅' : puzzle.emoji} size={16} /></div>
               <div style={{ flex:1 }}>
-                <div style={{ fontFamily:F.display, color:C.text, fontSize:18, fontWeight:700 }}>{puzzle.title}</div>
-                <div style={{ fontFamily:F.mono, color:puzzle.color||C.accent, fontSize:12, marginTop:2, letterSpacing:1 }}>{puzzle.tag}</div>
-                <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:12, marginTop:2 }}>
+                <div style={{ fontFamily:F.display, color:C.text, fontSize:'clamp(17px, 3.5vw, 20px)', fontWeight:700 }}>{puzzle.title}</div>
+                <div style={{ fontFamily:F.mono, color:puzzle.color||C.accent, fontSize:'clamp(14px, 2.5vw, 16px)', marginTop:2, letterSpacing:1 }}>{puzzle.tag}</div>
+                <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(14px, 2.5vw, 16px)', marginTop:2 }}>
                   {isDone ? `✓ +${puzzle.xp} DX` : `${puzzle.nodes.filter(n=>n.blank).length} etapas · +${puzzle.xp} DX`}
                 </div>
               </div>
-              <div style={{ color:C.textDim, fontSize:18 }}>›</div>
+              <div style={{ color:C.textDim, fontSize:'clamp(17px, 3.5vw, 20px)' }}>›</div>
             </div>
           );
         })}

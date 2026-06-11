@@ -14,7 +14,9 @@ import {
   FaPlane, FaEnvelope, FaDoorOpen, FaCrown, FaLockOpen,
   FaNetworkWired, FaBrain, FaSkull, FaBiohazard, FaSyringe,
   FaSpinner, FaRocket, FaIdCard, FaUserSecret, FaVirus,
+  FaHdd, FaGithub, FaTrash, FaUnlock,
 } from 'react-icons/fa';
+import { MdOutlineStorefront } from 'react-icons/md';
 import { GiCircuitry, GiPoison, GiSpiralBottle } from 'react-icons/gi';
 import { MdOutlineDevices } from 'react-icons/md';
 
@@ -97,6 +99,14 @@ const MAP = {
   '✅':  { Icon: FaCheckCircle,      color: '#22d3a0' },
   '🚪':  { Icon: FaDoorOpen,         color: '#f59e0b' },
   '🧠':  { Icon: FaBrain,            color: '#a78bfa' },
+
+  // ── Adicionais missões ──
+  '💾':  { Icon: FaHdd,             color: '#a78bfa' },  // LSASS dump
+  '🐙':  { Icon: FaGithub,          color: '#ffffff' },  // GitHub
+  '🗝️': { Icon: FaKey,             color: '#fbbf24' },  // API Key
+  '🗑️': { Icon: FaTrash,           color: '#ff4d4d' },  // Event log cleared
+  '🔓':  { Icon: FaUnlock,          color: '#ff4d4d' },  // MFA desativado
+  '🪣':  { Icon: FaDatabase,        color: '#4285F4' },  // GCS Bucket
 };
 
 export default function NodeIcon({ icon, color, size = 18 }) {

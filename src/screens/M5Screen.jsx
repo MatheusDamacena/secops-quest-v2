@@ -15,12 +15,12 @@ export default function M5Screen({ progress, onComplete, onBack, lang = 'pt', t 
   if (lessonIdx === null && !showFinal) {
     const allDone = done.length >= M5_LESSONS.length;
     return (
-      <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column' }}>
-        <div style={{ background:C.surface, borderBottom:`1px solid ${C.border}`, padding:'14px 20px', display:'flex', alignItems:'center', gap:12 }}>
-          <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:29, cursor:'pointer' }}>‹</button>
+      <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
+        <div style={{ background:'#1c2b32', borderBottom:"1px solid rgba(255,255,255,0.06)", padding:'14px 20px', display:'flex', alignItems:'center', gap:12 }}>
+          <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:'clamp(24px, 5vw, 30px)', cursor:'pointer' }}>‹</button>
           <div>
-            <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:2 }}>MÓDULO 5</div>
-            <div style={{ fontFamily:F.display, color:C.text, fontSize:20, fontWeight:900, display:'flex', alignItems:'center', gap:8 }}><FaTrophy size={18} color={C.yellow} /> YARA-L Avançado</div>
+            <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(15px, 2.8vw, 17px)', letterSpacing:2 }}>MÓDULO 5</div>
+            <div style={{ fontFamily:F.display, color:C.text, fontSize:'clamp(18px, 4vw, 22px)', fontWeight:900, display:'flex', alignItems:'center', gap:8 }}><FaTrophy size={18} color={C.yellow} /> YARA-L Avançado</div>
           </div>
         </div>
         <div style={{ flex:1, overflowY:'auto', padding:'16px 16px 80px', maxWidth:600, width:'100%', margin:'0 auto' }}>
@@ -28,18 +28,18 @@ export default function M5Screen({ progress, onComplete, onBack, lang = 'pt', t 
             const isDone = done.includes(idx);
             return (
               <div key={idx} onClick={() => setLessonIdx(idx)}
-                style={{ background:C.surface, border:`2px solid ${isDone ? C.purple+'55' : C.border}`,
+                style={{ background:'#1c2b32', border:`2px solid ${isDone ? C.purple+'55' : C.border}`,
                   borderBottom:`4px solid ${isDone ? C.purple : C.cardDepth}`,
                   borderRadius:16, padding:'14px 16px', marginBottom:12,
                   display:'flex', alignItems:'center', gap:14, cursor:'pointer' }}>
                 <div style={{ width:32, height:32, display:'flex', alignItems:'center', justifyContent:'center' }}>{isDone ? <NodeIcon icon='✅' size={24} /> : <NodeIcon icon={lesson.icon} size={24} />}</div>
                 <div style={{ flex:1 }}>
-                  <div style={{ fontFamily:F.display, color:C.text, fontSize:15, fontWeight:800 }}>{lesson.title}</div>
-                  <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, marginTop:2 }}>
+                  <div style={{ fontFamily:F.display, color:C.text, fontSize:'clamp(15px, 2.8vw, 17px)', fontWeight:800 }}>{lesson.title}</div>
+                  <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(15px, 2.8vw, 17px)', marginTop:2 }}>
                     {lesson.cards.length} flashcards · {lesson.challenges.length} exercícios
                   </div>
                 </div>
-                <div style={{ color:C.textDim, fontSize:20 }}>›</div>
+                <div style={{ color:C.textDim, fontSize:'clamp(18px, 4vw, 22px)' }}>›</div>
               </div>
             );
           })}
@@ -50,10 +50,10 @@ export default function M5Screen({ progress, onComplete, onBack, lang = 'pt', t 
                 borderRadius:16, padding:'14px 16px', marginTop:8, display:'flex', alignItems:'center', gap:14, cursor:'pointer' }}>
               <FaTrophy size={32} color={C.yellow} />
               <div style={{ flex:1 }}>
-                <div style={{ fontFamily:F.display, color:C.purple, fontSize:15, fontWeight:800 }}>Desafio Final</div>
-                <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, marginTop:2 }}>YARA-L Avançado · desbloqueado!</div>
+                <div style={{ fontFamily:F.display, color:C.purple, fontSize:'clamp(15px, 2.8vw, 17px)', fontWeight:800 }}>Desafio Final</div>
+                <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(15px, 2.8vw, 17px)', marginTop:2 }}>YARA-L Avançado · desbloqueado!</div>
               </div>
-              <div style={{ color:C.textDim, fontSize:20 }}>›</div>
+              <div style={{ color:C.textDim, fontSize:'clamp(18px, 4vw, 22px)' }}>›</div>
             </div>
           )}
         </div>
