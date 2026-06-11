@@ -6,6 +6,8 @@ import { useLanguage } from './hooks/useLanguage';
 
 import LoadingScreen     from './screens/LoadingScreen';
 import IOSInstallBanner  from './components/IOSInstallBanner';
+import DesktopLayout    from './components/DesktopLayout';
+import modules          from './data/modules.json';
 import AuthScreen        from './screens/AuthScreen';
 import SetupScreen       from './screens/SetupScreen';
 import HomeScreen        from './screens/HomeScreen';
@@ -81,19 +83,31 @@ export default function App() {
     if (moduleId === 6) return <M6Screen {...moduleProps} />;
   }
 
+  // Calcular módulos concluídos para o DesktopLayout
+  const getModPct = (id) => {
+    const p = progress || {};
+    const m = { 0:(p.m1||[]).length/7, 1:p.m0?1:0, 2:p.m2?1:0, 3:(p.m3||[]).length/4,
+                4:0.5, 5:(p.m5||[]).length/7, 6:(p.m6||[]).length/8 };
+    return (m[id]||0) >= 1 ? 1 : (m[id]||0);
+  };
+  const completedMods = modules.filter(m => getModPct(m.id) >= 1).length;
+
   const commonProps = { profile, totalXp, streak, progress, onNavigate: goTo, lang, setLang, t };
 
   return (
     <>
       <style>{`@keyframes sqFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}`}</style>
-      <div key={screen} style={{ animation:'sqFade .18s ease-out' }}>
-        {screen === 'home'        && <HomeScreen        {...commonProps} />}
-        {screen === 'celebration'  && <CelebrationScreen profile={profile} totalXp={totalXp} streak={streak} onContinue={() => goTo('profile')} />}
-        {screen === 'glossary'    && <GlossaryScreen    onBack={() => goTo('home')} t={t} />}
-        {screen === 'leaderboard' && <LeaderboardScreen currentUserId={profile?.userId} onBack={() => goTo('home')} />}
-        {screen === 'profile'     && <ProfileScreen     {...commonProps} setProfile={setProfile} fbUser={fbUser} onBack={() => goTo('home')} />}
-        {screen === 'missions'    && <M4Screen          {...moduleProps} />}
-      </div>
+      <DesktopLayout screen={screen} onNavigate={goTo} profile={profile}
+        totalXp={totalXp} streak={streak} completedMods={completedMods} totalMods={modules.length}>
+        <div key={screen} style={{ animation:'sqFade .18s ease-out' }}>
+          {screen === 'home'        && <HomeScreen        {...commonProps} />}
+          {screen === 'celebration'  && <CelebrationScreen profile={profile} totalXp={totalXp} streak={streak} onContinue={() => goTo('profile')} />}
+          {screen === 'glossary'    && <GlossaryScreen    onBack={() => goTo('home')} t={t} />}
+          {screen === 'leaderboard' && <LeaderboardScreen currentUserId={profile?.userId} onBack={() => goTo('home')} />}
+          {screen === 'profile'     && <ProfileScreen     {...commonProps} setProfile={setProfile} fbUser={fbUser} onBack={() => goTo('home')} />}
+          {screen === 'missions'    && <M4Screen          {...moduleProps} />}
+        </div>
+      </DesktopLayout>
       <IOSInstallBanner />
     </>
   );

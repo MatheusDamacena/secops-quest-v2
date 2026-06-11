@@ -137,10 +137,10 @@ export default function ProfileScreen({ profile, setProfile, totalXp, streak, pr
   };
 
   return (
-    <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
+    <div className='sq-module-root' style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
 
       {/* Header */}
-      <div style={{ background:C.surface, borderBottom:`1px solid ${C.border}`, padding:'12px 20px', display:'flex', alignItems:'center', gap:12, flexShrink:0 }}>
+      <div className="sq-mobile-only" style={{ background:C.surface, borderBottom:`1px solid ${C.border}`, padding:'12px 20px', display:'flex', alignItems:'center', gap:12, flexShrink:0 }}>
         <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:24, cursor:'pointer', padding:'4px 8px', marginLeft:-8 }}>‹</button>
         <span style={{ fontFamily:F.display, color:C.text, fontSize:17, fontWeight:800 }}>Perfil</span>
       </div>

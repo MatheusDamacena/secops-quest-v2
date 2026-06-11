@@ -42,7 +42,7 @@ function StepsPhase({ mission, onDone, onBack }) {
   };
 
   return (
-    <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
+    <div className='sq-module-root' style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
       <ProgressHeader current={stepIdx} total={totalSteps + 2} onBack={onBack} xpEarned={xp} />
       <div style={{ flex:1, padding:'20px 16px 120px', maxWidth:600, width:'100%', margin:'0 auto' }}>
         {/* Story */}
@@ -118,7 +118,7 @@ function ReviewPhase({ mission, answers, xp, onExecute }) {
 
   return (
     <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
-      <div style={{ background:'#1c2b32', borderBottom:'1px solid rgba(255,255,255,0.06)', padding:'14px 20px', display:'flex', alignItems:'center', gap:8 }}>
+      <div className="sq-mobile-only" style={{ background:'transparent', borderBottom:'none', padding:'14px 20px', display:'flex', alignItems:'center', gap:8 }}>
         <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:2 }}>REVISÃO</div>
         <div style={{ fontFamily:F.display, color:C.text, fontSize:17, fontWeight:900 }}>· {mission.title}</div>
       </div>
@@ -171,7 +171,7 @@ function SimulatePhase({ mission, onResult }) {
 
   return (
     <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
-      <div style={{ background:'#1c2b32', borderBottom:'1px solid rgba(255,255,255,0.06)', padding:'14px 20px' }}>
+      <div style={{ background:'transparent', borderBottom:'none', padding:'14px 20px' }}>
         <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:2 }}>SIMULAÇÃO · LOGS UDM</div>
         <div style={{ fontFamily:F.display, color:C.text, fontSize:17, fontWeight:900 }}>Testando sua regra...</div>
       </div>
@@ -337,18 +337,28 @@ export default function M4Screen({ progress, onComplete, onBack, lang = 'pt' }) 
   const cats = [...new Set(MISSIONS.map(m => m.cat))];
   return (
     <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
-      <div style={{ background:'#1c2b32', borderBottom:'1px solid rgba(255,255,255,0.06)', padding:'14px 20px', display:'flex', alignItems:'center', gap:12 }}>
+      {/* Header mobile */}
+      <div className="sq-mobile-only" style={{ background:'#1c2b32', borderBottom:'1px solid rgba(255,255,255,0.06)', padding:'14px 20px', display:'flex', alignItems:'center', gap:12 }}>
         <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:29, cursor:'pointer' }}>‹</button>
         <div>
           <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:13, letterSpacing:2 }}>MÓDULO 4</div>
           <div style={{ fontFamily:F.display, color:C.text, fontSize:18, fontWeight:900 }}>Missões de Detecção</div>
         </div>
-        <div style={{ marginLeft:'auto', fontFamily:F.mono, color:C.textDim, fontSize:16 }}>
-          <FaBolt size={11} color={C.amber} style={{ marginRight:4 }} />{done.length}/{MISSIONS.length}
+
+      </div>
+      {/* Header desktop — título + contador inline, sem barra */}
+      <div className="sq-desktop-only" style={{ padding:'20px 20px 0', alignItems:'center', justifyContent:'space-between' }}>
+        <div>
+          <div style={{ fontFamily:F.mono, color:'rgba(255,255,255,0.35)', fontSize:11, letterSpacing:2.5, marginBottom:4 }}>MÓDULO 4</div>
+          <div style={{ fontFamily:F.display, color:'#fff', fontSize:22, fontWeight:900, letterSpacing:-0.3 }}>Missões de Detecção</div>
+        </div>
+        <div style={{ display:'flex', alignItems:'center', gap:6, background:'rgba(255,200,0,0.1)', borderRadius:12, padding:'8px 14px' }}>
+          <FaBolt size={14} color='#ffc800' />
+          <span style={{ fontFamily:F.mono, color:'#ffc800', fontSize:15, fontWeight:800 }}>{done.length}/{MISSIONS.length}</span>
         </div>
       </div>
       {/* Filtro */}
-      <div style={{ display:'flex', gap:6, padding:'8px 16px', background:'#1c2b32', borderBottom:'1px solid rgba(255,255,255,0.06)', overflowX:'auto', flexShrink:0, padding:'8px 16px' }}>
+      <div style={{ display:'flex', gap:6, flexWrap:'wrap', padding:'12px 16px 4px', background:'transparent', borderBottom:'none', flexWrap:'wrap', gap:6, padding:'12px 20px 8px' }}>
         {['Todas', ...cats].map(c => (
           <button key={c} onClick={() => setCatFilter(c)}
             style={{ background: catFilter===c ? '#ff4b7a' : 'rgba(255,255,255,0.05)', border:'none', borderRadius:20, padding:'6px 14px', fontFamily:"'Roboto Mono',monospace", color: catFilter===c ? '#fff' : 'rgba(255,255,255,0.4)', fontSize:16, fontWeight:700, cursor:'pointer', whiteSpace:'nowrap', flexShrink:0, letterSpacing:0.5, transition:'background .15s' }}>

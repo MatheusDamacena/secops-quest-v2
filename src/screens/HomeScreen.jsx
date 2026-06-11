@@ -157,12 +157,13 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
   return (
     <div style={{ minHeight: '100dvh', background: BG, display: 'flex', flexDirection: 'column' }}>
 
-      {/* ── HEADER ──────────────────────────────────────────────────────────────── */}
-      <div style={{
-        background: SURFACE, borderBottom: `1px solid ${BORDER}`,
+      {/* ── HEADER — só no mobile (desktop usa sidebar) ─────────────────────── */}
+      <div className="sq-mobile-only" style={{
+        background: BG, borderBottom: `1px solid ${BORDER}`,
         padding: '12px 20px',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        justifyContent: 'space-between',
         flexShrink: 0,
+        alignItems: 'center',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0, flex: 1 }}>
           <Avatar profile={profile} size={26} />
@@ -190,7 +191,7 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
       </div>
 
       {/* ── CONTEÚDO ────────────────────────────────────────────────────────────── */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '20px max(16px, calc((100% - 600px) / 2)) 90px' }}>
+      <div style={{ flex: 1, overflowY: 'auto', padding: '20px max(16px, calc((100% - 600px) / 2)) clamp(80px, 12vh, 90px)' }}>
 
         {/* ── Progresso geral — bloco limpo sem borda ────────────────────────── */}
         <div style={{ marginBottom: 24 }}>
@@ -291,11 +292,11 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
       </div>
 
       {/* ── BOTTOM NAV ──────────────────────────────────────────────────────────── */}
-      <div style={{
+      <div className="sq-mobile-only" style={{
         position: 'fixed', bottom: 0, left: 0, right: 0,
         background: SURFACE,
         borderTop: `1px solid ${BORDER}`,
-        display: 'flex', justifyContent: 'space-around',
+        justifyContent: 'space-around',
         padding: '6px 0 max(10px, env(safe-area-inset-bottom))',
         zIndex: 50,
       }}>

@@ -96,7 +96,7 @@ function PuzzleDetail({ puzzle, pIdx, totalPuzzles, nextPuzzle, onComplete, onBa
 
   // ── SEM VIDAS ──
   if (lives <= 0) return (
-    <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:32, textAlign:'center' }}>
+    <div className='sq-module-root' style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:32, textAlign:'center' }}>
       <style>{STYLE}</style>
       <FaHeartBroken size={56} color='#ff4d4d' style={{ marginBottom:16 }} />
       <div style={{ fontFamily:F.display, color:C.red, fontSize:'clamp(22px, 5vw, 28px)', fontWeight:800, marginBottom:8 }}>Sem vidas!</div>
@@ -121,7 +121,7 @@ function PuzzleDetail({ puzzle, pIdx, totalPuzzles, nextPuzzle, onComplete, onBa
       <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
         <style>{STYLE}</style>
         {/* Header */}
-        <div style={{ background:'#1c2b32', borderBottom:"1px solid rgba(255,255,255,0.06)", padding:'13px 18px', display:'flex', alignItems:'center', gap:10 }}>
+        <div className='sq-mobile-only' style={{ background:'#1c2b32', borderBottom:"1px solid rgba(255,255,255,0.06)", padding:'13px 18px', display:'flex', alignItems:'center', gap:10 }}>
           <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:'clamp(20px, 4.5vw, 24px)', cursor:'pointer' }}>‹</button>
           <div style={{ flex:1 }}>
             <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(15px, 2.8vw, 17px)', letterSpacing:3 }}>M6 · {puzzle.title.toUpperCase()}</div>

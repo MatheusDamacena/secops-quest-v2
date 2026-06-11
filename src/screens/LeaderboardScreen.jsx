@@ -32,9 +32,9 @@ export default function LeaderboardScreen({ currentUserId, onBack }) {
   };
 
   return (
-    <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
+    <div className='sq-module-root' style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
       {/* Header */}
-      <div style={{ background:'#1c2b32', borderBottom:'1px solid rgba(255,255,255,0.06)', padding:'14px 20px', display:'flex', alignItems:'center', gap:12 }}>
+      <div className="sq-mobile-only" style={{ background:'#1c2b32', borderBottom:'1px solid rgba(255,255,255,0.06)', padding:'14px 20px', display:'flex', alignItems:'center', gap:12 }}>
         <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:29, cursor:'pointer', minWidth:44, minHeight:44 }}>‹</button>
         <div style={{ flex:1 }}>
           <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:2 }}>RANKING GLOBAL</div>
