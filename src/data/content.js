@@ -1057,6 +1057,41 @@ const MISSIONS = [
     explanation:'A regra real do Google detecta ENFORCE_STRONG_AUTHENTICATION ou ALLOW_STRONG_AUTHENTICATION com new_value=false no log de admin do Workspace. Ativar MFA (new_value=true, log 2) é legítimo. Criar usuário (log 4) não altera MFA. Sem match porque cada evento de desativação é crítico individualmente. MITRE T1556 (Modify Authentication Process).',
   },
 
+  // ─── CLOUD 5: GCP API via Tor Exit Node ────────────────────────────────────
+  { id:20,cat:"CLOUD",emoji:"🌐",title:"GCP API via Tor Exit Node",tag:"THREAT INTEL",tagColor:"#9C27B0",xp:300,mitre:"T1090.003",
+    story:"Uma chamada bem-sucedida à API do Google Cloud partiu de um IP listado como nó de saída Tor. Atacantes usam Tor para anonimizar ataques à infra cloud. Detecte essa combinação de Cloud Audit + GCTI Feed.",
+    steps:[
+      {id:"meta",label:"META",color:"#fbbf24",icon:"🏷",instruction:"Metadados da regra",multi:true,minCorrect:2,options:[
+        {id:"a",text:'rule_name = "gcp_api_from_tor_exit_node"',correct:true},
+        {id:"b",text:'rule_name = "api_normal_call"',correct:false},
+        {id:"c",text:'severity = "HIGH"',correct:true},
+        {id:"d",text:'severity = "INFO"',correct:false}]},
+      {id:"events",label:"EVENTS",color:"#00c4cc",icon:"📡",instruction:"Combine log GCP Cloud Audit com GCTI Feed de Tor",multi:true,minCorrect:4,options:[
+        {id:"a",text:'$gcp.metadata.log_type = "GCP_CLOUDAUDIT"',correct:true},
+        {id:"b",text:'$gcp.metadata.log_type = "WINEVTLOG"',correct:false},
+        {id:"c",text:'$gcp.security_result.action = "ALLOW"',correct:true},
+        {id:"d",text:'$gcp.principal.ip = $ip',correct:true},
+        {id:"e",text:'$gcp.principal.ip = "8.8.8.8"',correct:false},
+        {id:"f",text:'$gcti.graph.metadata.threat.threat_feed_name = "Tor Exit Nodes"',correct:true},
+        {id:"g",text:'$gcti.graph.entity.artifact.ip = $ip',correct:true}]},
+      {id:"match",label:"MATCH",color:"#a78bfa",icon:"🔗",instruction:"Agrupe pelo IP Tor em 1 hora",multi:false,minCorrect:1,options:[
+        {id:"a",text:"$ip over 1h",correct:true},
+        {id:"b",text:"$user over 30m",correct:false},
+        {id:"c",text:"$ip over 30d",correct:false}]},
+      {id:"condition",label:"CONDITION",color:"#22d3a0",icon:"⚡",instruction:"Dispare se o IP apareceu em ambos os eventos",multi:false,minCorrect:1,options:[
+        {id:"a",text:"#gcp >= 1 and #gcti >= 1",correct:true},
+        {id:"b",text:"#gcp > 100",correct:false},
+        {id:"c",text:"#gcp >= 1",correct:false}]},
+    ],
+    logs:[
+      {id:1,icon:"🌐",desc:"185.220.101.47",detail:"GCP_CLOUDAUDIT · ALLOW · compute.instances.list · Tor Exit Node confirmado",alert:true},
+      {id:2,icon:"✅",desc:"200.144.10.5",detail:"GCP_CLOUDAUDIT · ALLOW · storage.objects.get · IP corporativo Brasil",alert:false},
+      {id:3,icon:"🌐",desc:"51.15.43.205",detail:"GCP_CLOUDAUDIT · ALLOW · iam.serviceAccounts.list · Tor Exit Node confirmado",alert:true},
+      {id:4,icon:"✅",desc:"104.196.1.100",detail:"GCP_CLOUDAUDIT · DENY · compute.firewalls.insert · IP externo bloqueado",alert:false},
+    ],
+    explanation:'Esta regra combina dois eventos de fontes diferentes usando uma variável de join ($ip): o log real do Cloud Audit (GCP_CLOUDAUDIT) e o GCTI Feed de nós Tor do Google. Só alerta quando o MESMO IP aparece em ambos simultaneamente. O DENY (log 4) não alerta porque security_result.action deve ser ALLOW — chamada bloqueada não representa acesso real. MITRE T1090.003 (Proxy: Multi-hop Proxy).',
+  },
+
 ];
 
 export {
