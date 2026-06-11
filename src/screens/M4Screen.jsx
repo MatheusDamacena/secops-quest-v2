@@ -367,9 +367,13 @@ export default function M4Screen({ progress, onComplete, onBack, lang = 'pt' }) 
               const isDone = done.includes(idx);
               return (
                 <div key={m.id} onClick={() => setMissionId(idx)} title={isDone ? 'Clique para revisar' : 'Clique para jogar'}
-                  style={{ background:C.surface, border:`1.5px solid ${isDone ? C.green+'44' : C.border}`,
-                    borderBottom:`4px solid ${isDone ? C.green+'44' : C.cardDepth}`,
+                  style={{ background:C.surface,
+                    border:`1.5px solid ${isDone ? C.green+'44' : C.border}`,
+                    borderLeft:`4px solid ${isDone ? C.green : (m.tagColor || C.accent)}`,
+                    borderBottom:`3px solid ${isDone ? C.green+'44' : C.cardDepth}`,
                     borderRadius:16, padding:'16px', marginBottom:10, cursor:'pointer',
+                    transition:'transform .15s, box-shadow .15s',
+                    boxShadow:`0 2px 8px rgba(0,0,0,0.2)`,
                     display:'flex', alignItems:'center', gap:14 }}>
                   <div style={{ fontSize:28, flexShrink:0 }}>{m.emoji}</div>
                   <div style={{ flex:1 }}>
@@ -380,8 +384,11 @@ export default function M4Screen({ progress, onComplete, onBack, lang = 'pt' }) 
                       {isDone && <div style={{ fontFamily:F.mono, color:C.green, fontSize:10 }}>✓ COMPLETO</div>}
                     </div>
                     <div style={{ fontFamily:F.display, color:C.text, fontSize:15, fontWeight:800 }}>{m.title}</div>
-                    <div style={{ display:'flex', alignItems:'center', gap:8, marginTop:2 }}>
+                    <div style={{ display:'flex', alignItems:'center', gap:8, marginTop:2, flexWrap:'wrap' }}>
                       <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11 }}>+{m.xp} DX</div>
+                      <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:10, opacity:0.6 }}>
+                        ~{m.xp <= 200 ? '3' : m.xp <= 300 ? '5' : '7'} min
+                      </div>
                       <button onClick={(e) => { e.stopPropagation(); const info = MITRE_MAP[m.mitre]; setMitreMod({ code:m.mitre, ...(info || { tactic:'', tech:m.mitre }) }); }}
                         style={{ fontFamily:F.mono, fontSize:10, color:'#fbbf24', background:'#fbbf2422', border:'1px solid #fbbf2444', borderRadius:6, padding:'1px 7px', cursor:'pointer' }}>
                         {m.mitre} ↗

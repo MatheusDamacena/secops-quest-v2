@@ -75,7 +75,7 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
   return (
     <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column' }}>
       {/* Header */}
-      <div style={{ background:C.surface, borderBottom:`1px solid ${C.border}`, padding:'12px 20px', display:'flex', alignItems:'center', justifyContent:'space-between', flexShrink:0 }}>
+      <div style={{ background:`linear-gradient(135deg,#1c1e21 0%,#181a1f 100%)`, borderBottom:`1px solid rgba(255,26,117,0.18)`, padding:'12px 20px', display:'flex', alignItems:'center', justifyContent:'space-between', flexShrink:0, boxShadow:'0 2px 16px rgba(0,0,0,0.35)' }}>
         <div style={{ display:'flex', alignItems:'center', gap:10 }}>
           <Avatar profile={profile} size={26} />
           <div>
@@ -97,7 +97,8 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
 
       <div style={{ flex:1, overflowY:'auto', padding:'16px max(16px, calc((100% - 600px) / 2)) 80px' }}>
         {/* Card Olá */}
-        <div style={{ background:C.surface, border:`2px solid ${C.border}`, borderBottom:`4px solid ${C.cardDepth}`, borderRadius:20, padding:'20px', marginBottom:20 }}>
+        <div style={{ background:`linear-gradient(135deg,#1c1e21 0%,#1a1c22 100%)`, border:`2px solid rgba(255,26,117,0.2)`, borderBottom:`4px solid rgba(255,26,117,0.1)`, borderRadius:20, padding:'20px', marginBottom:20, position:'relative', overflow:'hidden', boxShadow:'0 4px 32px rgba(0,0,0,0.4)' }}>
+          <div style={{ position:'absolute', top:0, right:0, width:200, height:200, background:'radial-gradient(circle, rgba(255,26,117,0.07) 0%, transparent 70%)', pointerEvents:'none' }} />
           <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:12 }}>
             <div style={{ flex:1 }}>
               <div style={{ fontFamily:F.display, color:C.text, fontSize:20, fontWeight:900, marginBottom:4 }}>
@@ -140,7 +141,7 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
         {/* PRÓXIMOS */}
         {nextMods.length > 0 && (
           <>
-            <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:10, marginTop: inProgressMods.length > 0 ? 8 : 0 }}>
+            <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:10, marginTop: inProgressMods.length > 0 ? 8 : 0, opacity:0.7 }}>
               <FaLock size={12} color={C.textDim} />
               <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:12, fontWeight:700, letterSpacing:2 }}>PRÓXIMOS</div>
             </div>

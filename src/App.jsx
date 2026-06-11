@@ -85,12 +85,15 @@ export default function App() {
 
   return (
     <>
-      {screen === 'home'        && <HomeScreen        {...commonProps} />}
-      {screen === 'celebration'  && <CelebrationScreen profile={profile} totalXp={totalXp} streak={streak} onContinue={() => goTo('profile')} />}
-      {screen === 'glossary'    && <GlossaryScreen    onBack={() => goTo('home')} t={t} />}
-      {screen === 'leaderboard' && <LeaderboardScreen currentUserId={profile?.userId} onBack={() => goTo('home')} />}
-      {screen === 'profile'     && <ProfileScreen     {...commonProps} setProfile={setProfile} fbUser={fbUser} onBack={() => goTo('home')} />}
-      {screen === 'missions'    && <M4Screen          {...moduleProps} />}
+      <style>{`@keyframes sqFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}`}</style>
+      <div key={screen} style={{ animation:'sqFade .18s ease-out' }}>
+        {screen === 'home'        && <HomeScreen        {...commonProps} />}
+        {screen === 'celebration'  && <CelebrationScreen profile={profile} totalXp={totalXp} streak={streak} onContinue={() => goTo('profile')} />}
+        {screen === 'glossary'    && <GlossaryScreen    onBack={() => goTo('home')} t={t} />}
+        {screen === 'leaderboard' && <LeaderboardScreen currentUserId={profile?.userId} onBack={() => goTo('home')} />}
+        {screen === 'profile'     && <ProfileScreen     {...commonProps} setProfile={setProfile} fbUser={fbUser} onBack={() => goTo('home')} />}
+        {screen === 'missions'    && <M4Screen          {...moduleProps} />}
+      </div>
       <IOSInstallBanner />
     </>
   );
