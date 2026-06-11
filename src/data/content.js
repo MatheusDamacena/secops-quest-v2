@@ -1161,6 +1161,174 @@ const MISSIONS = [
     explanation:'O GitHub Secret Scanning analisa automaticamente todos os commits e cria um alerta (secret_scanning_alert.create) quando detecta padrões de credenciais conhecidas — incluindo Google API Keys (prefixo AIzaSy...), chaves privadas de service account e OAuth tokens. O evento resolved (log 2) indica que o segredo já foi revogado e é legítimo. Um push sem alerta (log 4) é operação normal. Sem match porque cada novo segredo exposto exige resposta imediata. MITRE T1552 (Unsecured Credentials).',
   },
 
+  // ─── ENDPOINT 1: Mimikatz Detectado ────────────────────────────────────────
+  { id:23,cat:"ENDPOINT",emoji:"🧠",title:"Mimikatz Detectado",tag:"CREDENTIAL DUMPING",tagColor:"#E53935",xp:300,mitre:"T1003.001",
+    story:"Um processo com argumentos clássicos do Mimikatz foi identificado no endpoint. Mimikatz é a ferramenta mais usada para extração de credenciais do Windows. Detecte pelo command line.",
+    steps:[
+      {id:"meta",label:"META",color:"#fbbf24",icon:"🏷",instruction:"Metadados da regra",multi:true,minCorrect:2,options:[
+        {id:"a",text:'rule_name = "hacktool_mimikatz_execution"',correct:true},
+        {id:"b",text:'rule_name = "process_ok"',correct:false},
+        {id:"c",text:'severity = "HIGH"',correct:true},
+        {id:"d",text:'severity = "INFO"',correct:false}]},
+      {id:"events",label:"EVENTS",color:"#00c4cc",icon:"📡",instruction:"Filtre o lançamento de processo com argumentos Mimikatz",multi:true,minCorrect:3,options:[
+        {id:"a",text:'$process.metadata.event_type = "PROCESS_LAUNCH"',correct:true},
+        {id:"b",text:'$process.metadata.event_type = "USER_LOGIN"',correct:false},
+        {id:"c",text:'strings.contains(strings.to_lower($process.target.process.command_line), "mimikatz")',correct:true},
+        {id:"d",text:'strings.contains(strings.to_lower($process.target.process.command_line), "dumpcreds")',correct:true},
+        {id:"e",text:'$process.target.process.command_line = "notepad.exe"',correct:false}]},
+      {id:"match",label:"MATCH",color:"#a78bfa",icon:"🔗",instruction:"Sem agrupamento — cada execução é crítica",multi:false,minCorrect:1,options:[
+        {id:"a",text:"(sem cláusula match — dispara por evento individual)",correct:true},
+        {id:"b",text:"$hostname over 1h",correct:false},
+        {id:"c",text:"$user over 30m",correct:false}]},
+      {id:"condition",label:"CONDITION",color:"#22d3a0",icon:"⚡",instruction:"Dispare em qualquer ocorrência",multi:false,minCorrect:1,options:[
+        {id:"a",text:"#process >= 1",correct:true},
+        {id:"b",text:"#process > 100",correct:false},
+        {id:"c",text:"#process = 0",correct:false}]},
+    ],
+    logs:[
+      {id:1,icon:"🧠",desc:"DESKTOP-ABC\\admin",detail:"PROCESS_LAUNCH · cmd.exe · mimikatz.exe sekurlsa::logonpasswords",alert:true},
+      {id:2,icon:"✅",desc:"DESKTOP-ABC\\user",detail:"PROCESS_LAUNCH · notepad.exe · C:\\Users\\user\\document.txt",alert:false},
+      {id:3,icon:"🧠",desc:"SRV-DC01\\svc",detail:"PROCESS_LAUNCH · powershell.exe · Invoke-Mimikatz -Command dumpcreds",alert:true},
+      {id:4,icon:"✅",desc:"SRV-WEB01\\admin",detail:"PROCESS_LAUNCH · msiexec.exe · /i software.msi /quiet",alert:false},
+    ],
+    explanation:'A regra detecta PROCESS_LAUNCH com command_line contendo strings como "mimikatz" ou "dumpcreds". O Mimikatz extrai hashes e senhas da memória do Windows. PROCESS_LAUNCH é o event_type UDM para criação de processo — mapeado a partir de eventos Sysmon (Event ID 1) ou Windows Security (Event ID 4688). MITRE T1003.001 (OS Credential Dumping: LSASS Memory).',
+  },
+
+  // ─── ENDPOINT 2: PowerShell Base64 Ofuscado ─────────────────────────────────
+  { id:24,cat:"ENDPOINT",emoji:"⚡",title:"PowerShell Base64 Ofuscado",tag:"EXECUTION",tagColor:"#7B1FA2",xp:250,mitre:"T1059.001",
+    story:"Um comando PowerShell usando FromBase64String foi detectado — técnica clássica de ofuscação para esconder payloads maliciosos. Detecte pelo command line agrupando por hostname.",
+    steps:[
+      {id:"meta",label:"META",color:"#fbbf24",icon:"🏷",instruction:"Metadados da regra",multi:true,minCorrect:2,options:[
+        {id:"a",text:'rule_name = "powershell_base64_encoded_command"',correct:true},
+        {id:"b",text:'rule_name = "ps_normal_use"',correct:false},
+        {id:"c",text:'severity = "HIGH"',correct:true},
+        {id:"d",text:'severity = "LOW"',correct:false}]},
+      {id:"events",label:"EVENTS",color:"#00c4cc",icon:"📡",instruction:"Filtre PowerShell com decodificação Base64",multi:true,minCorrect:3,options:[
+        {id:"a",text:'$process.metadata.event_type = "PROCESS_LAUNCH"',correct:true},
+        {id:"b",text:'$process.metadata.event_type = "NETWORK_CONNECTION"',correct:false},
+        {id:"c",text:'strings.contains(strings.to_lower($process.target.process.command_line), "::frombase64string(")',correct:true},
+        {id:"d",text:'$process.principal.hostname = $hostname',correct:true},
+        {id:"e",text:'$process.target.process.file.full_path = "explorer.exe"',correct:false}]},
+      {id:"match",label:"MATCH",color:"#a78bfa",icon:"🔗",instruction:"Agrupe por hostname em 5 minutos",multi:false,minCorrect:1,options:[
+        {id:"a",text:"$hostname over 5m",correct:true},
+        {id:"b",text:"$user over 1h",correct:false},
+        {id:"c",text:"$hostname over 30d",correct:false}]},
+      {id:"condition",label:"CONDITION",color:"#22d3a0",icon:"⚡",instruction:"Dispare em qualquer ocorrência",multi:false,minCorrect:1,options:[
+        {id:"a",text:"#process >= 1",correct:true},
+        {id:"b",text:"#process > 50",correct:false},
+        {id:"c",text:"#process < 0",correct:false}]},
+    ],
+    logs:[
+      {id:1,icon:"⚡",desc:"LAPTOP-001",detail:"PROCESS_LAUNCH · powershell.exe · [System.Convert]::FromBase64String('aQBl...')",alert:true},
+      {id:2,icon:"✅",desc:"LAPTOP-002",detail:"PROCESS_LAUNCH · powershell.exe · Get-Process | Where-Object {$_.CPU -gt 10}",alert:false},
+      {id:3,icon:"⚡",desc:"SRV-APP01",detail:"PROCESS_LAUNCH · powershell.exe · IEX([System.Convert]::FromBase64String('cG93ZXJz...'))",alert:true},
+      {id:4,icon:"✅",desc:"SRV-WEB01",detail:"PROCESS_LAUNCH · cmd.exe · dir C:\\inetpub\\wwwroot",alert:false},
+    ],
+    explanation:'A regra detecta PROCESS_LAUNCH com command_line contendo "::frombase64string(" — função .NET usada para decodificar Base64, frequentemente usada para esconder payloads. O match por $hostname over 5m agrupa múltiplos eventos do mesmo host. False positives: scripts de administração legítimos podem usar Base64. MITRE T1059.001 (PowerShell).',
+  },
+
+  // ─── ENDPOINT 3: LSASS Dump via comsvcs.dll ─────────────────────────────────
+  { id:25,cat:"ENDPOINT",emoji:"💾",title:"LSASS Dump via comsvcs.dll",tag:"CREDENTIAL DUMPING",tagColor:"#C62828",xp:350,mitre:"T1003.001",
+    story:"rundll32.exe abriu o processo lsass.exe usando MiniDump da comsvcs.dll — técnica nativa do Windows para extrair credenciais sem ferramentas externas. Living-off-the-land clássico.",
+    steps:[
+      {id:"meta",label:"META",color:"#fbbf24",icon:"🏷",instruction:"Metadados da regra",multi:true,minCorrect:2,options:[
+        {id:"a",text:'rule_name = "lsass_dump_via_comsvcs_dll"',correct:true},
+        {id:"b",text:'rule_name = "rundll32_ok"',correct:false},
+        {id:"c",text:'severity = "HIGH"',correct:true},
+        {id:"d",text:'severity = "INFO"',correct:false}]},
+      {id:"events",label:"EVENTS",color:"#00c4cc",icon:"📡",instruction:"Filtre abertura do LSASS via rundll32",multi:true,minCorrect:4,options:[
+        {id:"a",text:'$process.metadata.event_type = "PROCESS_OPEN"',correct:true},
+        {id:"b",text:'$process.metadata.event_type = "PROCESS_LAUNCH"',correct:false},
+        {id:"c",text:'re.regex($process.target.process.file.full_path, `\\lsass\\.exe$`) nocase',correct:true},
+        {id:"d",text:'re.regex($process.principal.process.file.full_path, `\\rundll32\\.exe$`) nocase',correct:true},
+        {id:"e",text:'re.regex($process.principal.process.file.full_path, `\\explorer\\.exe$`) nocase',correct:false},
+        {id:"f",text:'strings.contains(strings.to_lower($process.additional.fields["CallTrace"]), "comsvcs.dll")',correct:true}]},
+      {id:"match",label:"MATCH",color:"#a78bfa",icon:"🔗",instruction:"Sem agrupamento — cada acesso ao LSASS é crítico",multi:false,minCorrect:1,options:[
+        {id:"a",text:"(sem cláusula match — dispara por evento individual)",correct:true},
+        {id:"b",text:"$hostname over 1h",correct:false},
+        {id:"c",text:"$user over 10m",correct:false}]},
+      {id:"condition",label:"CONDITION",color:"#22d3a0",icon:"⚡",instruction:"Dispare em qualquer ocorrência",multi:false,minCorrect:1,options:[
+        {id:"a",text:"#process >= 1",correct:true},
+        {id:"b",text:"#process > 10",correct:false},
+        {id:"c",text:"#process = 0",correct:false}]},
+    ],
+    logs:[
+      {id:1,icon:"💾",desc:"SRV-DC01",detail:"PROCESS_OPEN · principal=rundll32.exe · target=lsass.exe · CallTrace=comsvcs.dll!MiniDump",alert:true},
+      {id:2,icon:"✅",desc:"SRV-WEB01",detail:"PROCESS_OPEN · principal=svchost.exe · target=lsass.exe · CallTrace=ntdll.dll",alert:false},
+      {id:3,icon:"💾",desc:"DESKTOP-ABC",detail:"PROCESS_OPEN · principal=rundll32.exe · target=lsass.exe · CallTrace=comsvcs.dll",alert:true},
+      {id:4,icon:"✅",desc:"LAPTOP-001",detail:"PROCESS_LAUNCH · taskhost.exe · target=svchost.exe · operação normal",alert:false},
+    ],
+    explanation:'PROCESS_OPEN é o event_type UDM para abertura de processo (Sysmon Event ID 10). A combinação rundll32.exe abrindo lsass.exe com CallTrace contendo comsvcs.dll indica MiniDumpWriteDump — técnica living-off-the-land (LoTL) que usa DLL nativa para evitar EDRs. svchost abrindo lsass (log 2) é comportamento normal do sistema. MITRE T1003.001 (LSASS Memory).',
+  },
+
+  // ─── ENDPOINT 4: Event Log Apagado ─────────────────────────────────────────
+  { id:26,cat:"ENDPOINT",emoji:"🗑️",title:"Event Log Apagado",tag:"DEFENSE EVASION",tagColor:"#FF6F00",xp:225,mitre:"T1070.001",
+    story:"O log de eventos do Windows foi apagado — técnica de anti-forensics para cobrir rastros após comprometimento. Detecte via wevtutil cl ou evento nativo SYSTEM_AUDIT_LOG_WIPE.",
+    steps:[
+      {id:"meta",label:"META",color:"#fbbf24",icon:"🏷",instruction:"Metadados da regra",multi:true,minCorrect:2,options:[
+        {id:"a",text:'rule_name = "windows_event_log_cleared"',correct:true},
+        {id:"b",text:'rule_name = "log_rotation_ok"',correct:false},
+        {id:"c",text:'severity = "MEDIUM"',correct:true},
+        {id:"d",text:'severity = "LOW"',correct:false}]},
+      {id:"events",label:"EVENTS",color:"#00c4cc",icon:"📡",instruction:"Filtre limpeza de log via wevtutil ou SYSTEM_AUDIT_LOG_WIPE",multi:true,minCorrect:3,options:[
+        {id:"a",text:'$process.metadata.event_type = "PROCESS_LAUNCH"',correct:true},
+        {id:"b",text:'$process.metadata.event_type = "USER_LOGIN"',correct:false},
+        {id:"c",text:'re.regex($process.target.process.command_line, `wevtutil.*cl.*(system|application|security)`) nocase',correct:true},
+        {id:"d",text:'$process.metadata.event_type = "SYSTEM_AUDIT_LOG_WIPE"',correct:true},
+        {id:"e",text:'$process.target.process.command_line = "wevtutil qe Security"',correct:false}]},
+      {id:"match",label:"MATCH",color:"#a78bfa",icon:"🔗",instruction:"Sem agrupamento — cada limpeza é crítica",multi:false,minCorrect:1,options:[
+        {id:"a",text:"(sem cláusula match — dispara por evento individual)",correct:true},
+        {id:"b",text:"$hostname over 24h",correct:false},
+        {id:"c",text:"$user over 1h",correct:false}]},
+      {id:"condition",label:"CONDITION",color:"#22d3a0",icon:"⚡",instruction:"Dispare em qualquer ocorrência",multi:false,minCorrect:1,options:[
+        {id:"a",text:"#process >= 1",correct:true},
+        {id:"b",text:"#process > 5",correct:false},
+        {id:"c",text:"#process < 0",correct:false}]},
+    ],
+    logs:[
+      {id:1,icon:"🗑️",desc:"SRV-DC01\\admin",detail:"PROCESS_LAUNCH · wevtutil.exe · cl Security",alert:true},
+      {id:2,icon:"✅",desc:"SRV-DC01\\admin",detail:"PROCESS_LAUNCH · wevtutil.exe · qe Security /f:text /c:10",alert:false},
+      {id:3,icon:"🗑️",desc:"DESKTOP-ABC",detail:"SYSTEM_AUDIT_LOG_WIPE · vendor=Microsoft · Security log cleared",alert:true},
+      {id:4,icon:"✅",desc:"SRV-WEB01",detail:"PROCESS_LAUNCH · eventvwr.exe · Windows Event Viewer aberto",alert:false},
+    ],
+    explanation:'A regra cobre dois vetores: wevtutil cl (clear log) via command line E o evento nativo SYSTEM_AUDIT_LOG_WIPE (Windows Security Event ID 1102). O "qe" (query events) no log 2 é leitura legítima — não apaga nada. Abrir o Event Viewer (log 4) também é legítimo. Apagar logs de Security/System/Application é sinal claro de anti-forensics pós-comprometimento. MITRE T1070.001 (Clear Windows Event Logs).',
+  },
+
+  // ─── ENDPOINT 5: Password Spray com Sucesso ─────────────────────────────────
+  { id:27,cat:"ENDPOINT",emoji:"🔐",title:"Password Spray Seguido de Sucesso",tag:"CREDENTIAL ACCESS",tagColor:"#1565C0",xp:275,mitre:"T1110.003",
+    story:"Múltiplas falhas de autenticação do mesmo IP foram seguidas de login bem-sucedido — padrão clássico de password spray. Detecte a combinação falha → sucesso em 15 minutos.",
+    steps:[
+      {id:"meta",label:"META",color:"#fbbf24",icon:"🏷",instruction:"Metadados da regra",multi:true,minCorrect:2,options:[
+        {id:"a",text:'rule_name = "win_repeated_auth_failure_then_success"',correct:true},
+        {id:"b",text:'rule_name = "login_normal"',correct:false},
+        {id:"c",text:'severity = "HIGH"',correct:true},
+        {id:"d",text:'severity = "INFO"',correct:false}]},
+      {id:"events",label:"EVENTS",color:"#00c4cc",icon:"📡",instruction:"Combine falhas e sucesso do mesmo IP",multi:true,minCorrect:5,options:[
+        {id:"a",text:'$fail.metadata.event_type = "USER_LOGIN"',correct:true},
+        {id:"b",text:'$fail.security_result.action = "BLOCK"',correct:true},
+        {id:"c",text:'$fail.security_result.action = "ALLOW"',correct:false},
+        {id:"d",text:'$success.metadata.event_type = "USER_LOGIN"',correct:true},
+        {id:"e",text:'$success.security_result.action = "ALLOW"',correct:true},
+        {id:"f",text:'$success.metadata.event_type = "NETWORK_CONNECTION"',correct:false},
+        {id:"g",text:'$fail.principal.ip = $ip and $success.principal.ip = $ip',correct:true}]},
+      {id:"match",label:"MATCH",color:"#a78bfa",icon:"🔗",instruction:"Agrupe pelo IP em 15 minutos",multi:false,minCorrect:1,options:[
+        {id:"a",text:"$ip over 15m",correct:true},
+        {id:"b",text:"$user over 1h",correct:false},
+        {id:"c",text:"$ip over 7d",correct:false}]},
+      {id:"condition",label:"CONDITION",color:"#22d3a0",icon:"⚡",instruction:"Dispare quando houver falhas E sucesso do mesmo IP",multi:false,minCorrect:1,options:[
+        {id:"a",text:"#fail > 5 and #success >= 1",correct:true},
+        {id:"b",text:"#fail > 5",correct:false},
+        {id:"c",text:"#success >= 1",correct:false}]},
+    ],
+    logs:[
+      {id:1,icon:"🔐",desc:"45.33.32.156",detail:"8× USER_LOGIN BLOCK + 1× USER_LOGIN ALLOW · admin@corp.com · 12min",alert:true},
+      {id:2,icon:"✅",desc:"200.144.10.5",detail:"1× USER_LOGIN BLOCK + 1× USER_LOGIN ALLOW · usuário esqueceu senha",alert:false},
+      {id:3,icon:"🔐",desc:"185.220.101.47",detail:"12× USER_LOGIN BLOCK + 1× USER_LOGIN ALLOW · jsmith@corp.com · 8min",alert:true},
+      {id:4,icon:"✅",desc:"10.0.0.5",detail:"6× USER_LOGIN BLOCK · sem sucesso · IP interno",alert:false},
+    ],
+    explanation:'Esta regra usa dois event variables ($fail e $success) do mesmo tipo USER_LOGIN com actions diferentes — BLOCK para falhas e ALLOW para o sucesso. O join pelo $ip garante que ambos vêm da mesma origem. A condition "#fail > 5 and #success >= 1" dispara só quando há spray (>5 falhas) E comprometimento confirmado (sucesso). Só falhas sem sucesso (log 4) não alerta. MITRE T1110.003 (Password Spraying).',
+  },
+
 ];
 
 export {
