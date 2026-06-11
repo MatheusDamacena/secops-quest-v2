@@ -1,10 +1,40 @@
-import { C, F } from '../styles/tokens';
-import { FaBrain, FaBook, FaGamepad, FaTrophy, FaUser, FaBolt, FaFire, FaLock } from 'react-icons/fa';
+import { useState } from 'react';
+import { FaBrain, FaBook, FaGamepad, FaTrophy, FaUser, FaBolt, FaFire, FaLock, FaCheckCircle } from 'react-icons/fa';
 import Avatar from '../components/Avatar';
 import ModuleIcon from '../components/ModuleIcon';
 import modules from '../data/modules.json';
+import { useContent } from '../hooks/useContent';
 
-export default function HomeScreen({ profile, totalXp, streak, progress, onNavigate }) {
+// ─── Tokens ────────────────────────────────────────────────────────────────────
+// Inspirados no Duolingo dark mode — verde escuro profundo, sem preto puro
+const BG      = '#131f24';   // fundo geral
+const SURFACE = '#1c2b32';   // cards/painéis
+const SURFACE2= '#243540';   // hover/active states
+const BORDER  = 'rgba(255,255,255,0.06)';
+const TEXT    = '#ffffff';
+const TEXT2   = 'rgba(255,255,255,0.55)';
+const TEXT3   = 'rgba(255,255,255,0.3)';
+const ACCENT  = '#ff4b7a';   // rosa SecOps — ação primária
+const ACCENT3D= '#c2003e';   // sombra 3D do botão
+const GREEN   = '#58cc02';   // concluído — verde Duolingo
+const GREEN3D = '#3d8f01';
+const AMBER   = '#ffc800';   // streak
+const AMBER3D = '#cc9e00';
+const MONO    = "'Roboto Mono','Share Tech Mono',monospace";
+const SANS    = "'Inter','Nunito',sans-serif";
+
+const NAV = [
+  { icon: FaBrain,   label: 'APRENDER',  screen: 'home' },
+  { icon: FaBook,    label: 'GLOSSÁRIO', screen: 'glossary' },
+  { icon: FaGamepad, label: 'MISSÕES',   screen: 'missions' },
+  { icon: FaTrophy,  label: 'RANKING',   screen: 'leaderboard' },
+  { icon: FaUser,    label: 'PERFIL',    screen: 'profile' },
+];
+
+export default function HomeScreen({ profile, totalXp, streak, progress, onNavigate, lang = 'pt' }) {
+  const { MISSIONS } = useContent(lang);
+  const [activeNav, setActiveNav] = useState('home');
+
   const getModuleProgress = (id) => {
     const p = progress || {};
     switch(id) {
@@ -12,7 +42,7 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
       case 1: return (p.m0 === true || p.m0 === 100) ? 100 : 0;
       case 2: return p.m2 ? 100 : 0;
       case 3: return Math.round(((p.m3||[]).length / 4) * 100);
-      case 4: return Math.round(((p.m4||[]).length / 16) * 100);
+      case 4: return Math.round(((p.m4||[]).length / MISSIONS.length) * 100);
       case 5: return Math.round(((p.m5||[]).length / 7) * 100);
       case 6: return Math.round(((p.m6||[]).length / 8) * 100);
       default: return 0;
@@ -22,148 +52,280 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
   const completedMods  = modules.filter(m => getModuleProgress(m.id) === 100).length;
   const inProgressMods = modules.filter(m => { const p = getModuleProgress(m.id); return p > 0 && p < 100; });
   const nextMods       = modules.filter(m => getModuleProgress(m.id) === 0);
+  const doneMods       = modules.filter(m => getModuleProgress(m.id) === 100);
   const continueModule = inProgressMods[0] || nextMods[0];
   const isGrandmaster  = completedMods === modules.length;
+  const overallPct     = Math.round((completedMods / modules.length) * 100);
 
-  const NAV = [
-    { Icon: FaBrain,   label: 'Aprender',  screen: 'home' },
-    { Icon: FaBook,    label: 'Glossário', screen: 'glossary' },
-    { Icon: FaGamepad, label: 'Missões',   screen: 'missions' },
-    { Icon: FaTrophy,  label: 'Ranking',   screen: 'leaderboard' },
-    { Icon: FaUser,    label: 'Perfil',    screen: 'profile' },
-  ];
+  const handleNav = (screen) => { setActiveNav(screen); onNavigate(screen); };
 
-  const ModCard = ({ mod, inProgress }) => {
-    const pct = getModuleProgress(mod.id);
-    const done = pct === 100;
+  // ─── Card de módulo ──────────────────────────────────────────────────────────
+  const ModCard = ({ mod }) => {
+    const pct    = getModuleProgress(mod.id);
+    const done   = pct === 100;
+    const active = pct > 0 && pct < 100;
+    const locked = pct === 0;
+
     return (
       <div onClick={() => onNavigate('module', mod.id)}
-        style={{ background: C.surface,
-          border: `2px solid ${inProgress ? C.accent : done ? C.green+'55' : C.border}`,
-          borderBottom: `4px solid ${inProgress ? C.btn3d_pink : done ? C.btn3d_green : C.cardDepth}`,
-          borderRadius: 16, padding: '14px 16px', marginBottom: 12,
-          display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer',
-          boxShadow: inProgress ? `0 0 16px ${C.accentDim}` : 'none' }}>
+        style={{
+          background: done ? '#172b1e' : active ? '#28141f' : SURFACE,
+          border: `1.5px solid ${done ? 'rgba(88,204,2,0.2)' : active ? 'rgba(255,75,122,0.25)' : BORDER}`,
+          borderRadius: 16, padding: '16px 18px', marginBottom: 10,
+          display: 'flex', alignItems: 'center', gap: 16,
+          cursor: 'pointer', opacity: locked ? 0.45 : 1,
+          transition: 'opacity .2s, transform .15s',
+          position: 'relative', overflow: 'hidden',
+        }}
+        onMouseEnter={e => { if (!locked) e.currentTarget.style.transform = 'translateY(-1px)'; }}
+        onMouseLeave={e => { e.currentTarget.style.transform = ''; }}
+      >
+        {/* Barra lateral de status */}
+        {!locked && (
+          <div style={{
+            position: 'absolute', left: 0, top: 0, bottom: 0, width: 4,
+            background: done ? GREEN : ACCENT,
+            borderRadius: '4px 0 0 4px',
+          }} />
+        )}
+
         {/* Ícone */}
-        <div style={{ width:44, height:44, borderRadius:12,
-          background: done ? C.greenDim : inProgress ? C.accentDim : C.surface2,
-          border: `2px solid ${done ? C.green+'44' : inProgress ? C.accentBorder : C.border}`,
-          display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+        <div style={{
+          width: 46, height: 46, borderRadius: 13, flexShrink: 0,
+          background: done ? 'rgba(88,204,2,0.1)' : active ? 'rgba(255,75,122,0.1)' : 'rgba(255,255,255,0.04)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
           <ModuleIcon iconId={mod.iconId} size={22} done={done} />
         </div>
+
         {/* Info */}
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontFamily: F.mono, color: inProgress ? C.accent : C.textDim, fontSize: 10, letterSpacing: 2, marginBottom: 2 }}>
-            MÓDULO {mod.id}{inProgress ? ' · EM PROGRESSO' : done ? ' · CONCLUÍDO' : ''}
+          {/* Label de status */}
+          <div style={{
+            fontFamily: MONO, fontSize: 9, fontWeight: 700, letterSpacing: 2,
+            color: done ? GREEN : active ? ACCENT : TEXT3,
+            marginBottom: 3,
+          }}>
+            {done ? 'CONCLUÍDO' : active ? `MÓDULO ${mod.id} · EM PROGRESSO` : `MÓDULO ${mod.id}`}
           </div>
-          <div style={{ fontFamily: F.display, color: C.text, fontSize: 16, fontWeight: 800, marginBottom: inProgress ? 6 : 2 }}>
+
+          {/* Título */}
+          <div style={{
+            fontFamily: SANS, fontSize: 15, fontWeight: 800,
+            color: locked ? TEXT3 : TEXT,
+            marginBottom: active ? 8 : 2,
+            letterSpacing: -0.2,
+          }}>
             {mod.title}
           </div>
-          {!inProgress && <div style={{ fontFamily: F.mono, color: C.textDim, fontSize: 11 }}>{mod.sub}</div>}
-          {inProgress && (
-            <div style={{ height:5, background: C.border, borderRadius:99, overflow:'hidden' }}>
-              <div style={{ height:'100%', width:`${pct}%`, background:`linear-gradient(90deg,${C.accent},${C.purple})`, borderRadius:99 }}/>
+
+          {/* Sub — só em locked/done */}
+          {!active && (
+            <div style={{ fontFamily: MONO, color: TEXT3, fontSize: 10 }}>{mod.sub}</div>
+          )}
+
+          {/* Barra de progresso — só em active */}
+          {active && (
+            <div>
+              <div style={{ height: 8, background: 'rgba(255,255,255,0.08)', borderRadius: 99, overflow: 'hidden' }}>
+                <div style={{
+                  height: '100%', width: `${pct}%`,
+                  background: `linear-gradient(90deg, ${ACCENT}, #a855f7)`,
+                  borderRadius: 99, transition: 'width .5s',
+                  position: 'relative',
+                }}>
+                  <div style={{ position:'absolute', top:1, left:4, right:8, height:3, background:'rgba(255,255,255,0.3)', borderRadius:2 }} />
+                </div>
+              </div>
+              <div style={{ fontFamily: MONO, color: ACCENT, fontSize: 10, marginTop: 4, fontWeight: 700 }}>{pct}%</div>
             </div>
           )}
-          {inProgress && <div style={{ fontFamily: F.mono, color: C.accent, fontSize: 10, marginTop: 4 }}>{pct}%</div>}
         </div>
-        <div style={{ color: inProgress ? C.accent : C.textDim, fontSize: 20 }}>›</div>
+
+        {/* Direita */}
+        {done
+          ? <FaCheckCircle size={20} color={GREEN} style={{ flexShrink: 0 }} />
+          : locked
+            ? <FaLock size={14} color={TEXT3} style={{ flexShrink: 0 }} />
+            : <div style={{ color: active ? ACCENT : TEXT3, fontSize: 22, flexShrink: 0 }}>›</div>
+        }
       </div>
     );
   };
 
   return (
-    <div style={{ minHeight:'100dvh', background:C.bg, display:'flex', flexDirection:'column' }}>
-      {/* Header */}
-      <div style={{ background:`linear-gradient(135deg,#1c1e21 0%,#181a1f 100%)`, borderBottom:`1px solid rgba(255,26,117,0.18)`, padding:'12px 20px', display:'flex', alignItems:'center', justifyContent:'space-between', flexShrink:0, boxShadow:'0 2px 16px rgba(0,0,0,0.35)' }}>
-        <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-          <Avatar profile={profile} size={26} />
+    <div style={{ minHeight: '100dvh', background: BG, display: 'flex', flexDirection: 'column' }}>
+
+      {/* ── HEADER ──────────────────────────────────────────────────────────────── */}
+      <div style={{
+        background: SURFACE, borderBottom: `1px solid ${BORDER}`,
+        padding: '12px 20px',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        flexShrink: 0,
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <Avatar profile={profile} size={30} />
           <div>
-            <div style={{ fontFamily:F.display, color:C.text, fontSize:15, fontWeight:800 }}>{profile?.name}</div>
-            <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11 }}>{completedMods}/7 módulos</div>
+            <div style={{ fontFamily: SANS, color: TEXT, fontSize: 15, fontWeight: 800, letterSpacing: -0.2 }}>
+              {profile?.name}
+            </div>
+            <div style={{ fontFamily: MONO, color: TEXT3, fontSize: 9, letterSpacing: 1.5 }}>
+              GOOGLE SECOPS ANALYST
+            </div>
           </div>
         </div>
-        <div style={{ display:'flex', gap:10 }}>
-          <div style={{ background:C.surface2, border:`1px solid ${C.border}`, borderRadius:20, padding:'6px 12px', display:'flex', alignItems:'center', gap:5 }}>
-            <FaFire size={13} color={C.orange} />
-            <span style={{ fontFamily:F.mono, color:C.orange, fontSize:13, fontWeight:700 }}>{streak}</span>
+
+        {/* Stats — sem borda, só fundo */}
+        <div style={{ display: 'flex', gap: 6 }}>
+          <div style={{ background: 'rgba(255,200,0,0.1)', borderRadius: 12, padding: '6px 11px', display: 'flex', alignItems: 'center', gap: 5 }}>
+            <FaFire size={13} color={AMBER} />
+            <span style={{ fontFamily: MONO, color: AMBER, fontSize: 13, fontWeight: 800 }}>{streak}</span>
           </div>
-          <div style={{ background:C.accentDim, border:`1px solid ${C.accentBorder}`, borderRadius:20, padding:'6px 12px', display:'flex', alignItems:'center', gap:5 }}>
-            <FaBolt size={13} color={C.accent} />
-            <span style={{ fontFamily:F.mono, color:C.accent, fontSize:13, fontWeight:700 }}>{totalXp} DX</span>
+          <div style={{ background: 'rgba(255,75,122,0.1)', borderRadius: 12, padding: '6px 11px', display: 'flex', alignItems: 'center', gap: 5 }}>
+            <FaBolt size={13} color={ACCENT} />
+            <span style={{ fontFamily: MONO, color: ACCENT, fontSize: 13, fontWeight: 800 }}>{totalXp}</span>
           </div>
         </div>
       </div>
 
-      <div style={{ flex:1, overflowY:'auto', padding:'16px max(16px, calc((100% - 600px) / 2)) 80px' }}>
-        {/* Card Olá */}
-        <div style={{ background:`linear-gradient(135deg,#1c1e21 0%,#1a1c22 100%)`, border:`2px solid rgba(255,26,117,0.2)`, borderBottom:`4px solid rgba(255,26,117,0.1)`, borderRadius:20, padding:'20px', marginBottom:20, position:'relative', overflow:'hidden', boxShadow:'0 4px 32px rgba(0,0,0,0.4)' }}>
-          <div style={{ position:'absolute', top:0, right:0, width:200, height:200, background:'radial-gradient(circle, rgba(255,26,117,0.07) 0%, transparent 70%)', pointerEvents:'none' }} />
-          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:12 }}>
-            <div style={{ flex:1 }}>
-              <div style={{ fontFamily:F.display, color:C.text, fontSize:20, fontWeight:900, marginBottom:4 }}>
+      {/* ── CONTEÚDO ────────────────────────────────────────────────────────────── */}
+      <div style={{ flex: 1, overflowY: 'auto', padding: '20px max(16px, calc((100% - 600px) / 2)) 90px' }}>
+
+        {/* ── Progresso geral — bloco limpo sem borda ────────────────────────── */}
+        <div style={{ marginBottom: 24 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 10 }}>
+            <div>
+              <div style={{ fontFamily: SANS, fontSize: 22, fontWeight: 900, color: TEXT, letterSpacing: -0.5 }}>
                 Olá, {profile?.name?.split(' ')[0]}!
               </div>
-              <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:12, marginBottom:12 }}>
-                {completedMods} DE 7 MÓDULOS · {totalXp} DX
+              <div style={{ fontFamily: MONO, color: TEXT2, fontSize: 11, marginTop: 2 }}>
+                {completedMods} de {modules.length} módulos completos
               </div>
-              <div style={{ height:8, background:C.border, borderRadius:99, overflow:'hidden', marginBottom:6 }}>
-                <div style={{ height:'100%', width:`${Math.round((completedMods/7)*100)}%`, background:`linear-gradient(90deg,${C.accent},${C.purple})`, borderRadius:99, transition:'width .5s' }}/>
-              </div>
-              <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11 }}>{Math.round((completedMods/7)*100)}%</div>
             </div>
-            {continueModule && (
-              <button onClick={() => onNavigate('module', continueModule.id)}
-                style={{ background:C.accent, border:'none', borderBottom:`4px solid ${C.btn3d_pink}`, borderRadius:14, padding:'12px 18px', fontFamily:F.display, fontWeight:900, fontSize:14, color:'#fff', cursor:'pointer', flexShrink:0 }}>
-                ▶ Continuar
-              </button>
-            )}
-            {isGrandmaster && (
-              <button onClick={() => onNavigate('missions')}
-                style={{ background:'linear-gradient(135deg,#FFD700,#fbbf24)', border:'none', borderBottom:'3px solid #a06000', borderRadius:12, padding:'10px 18px', fontFamily:F.display, fontWeight:900, fontSize:13, color:'#0a0b0c', cursor:'pointer', flexShrink:0 }}>
-                🔄 Revisar
-              </button>
-            )}
+            <div style={{ fontFamily: MONO, fontSize: 24, fontWeight: 900, color: TEXT, lineHeight: 1 }}>
+              {overallPct}<span style={{ fontSize: 14, color: TEXT3 }}>%</span>
+            </div>
+          </div>
+
+          {/* Barra de progresso grossa — estilo Duolingo */}
+          <div style={{ height: 16, background: 'rgba(255,255,255,0.06)', borderRadius: 99, overflow: 'hidden', position: 'relative' }}>
+            <div style={{
+              height: '100%', width: `${overallPct}%`,
+              background: `linear-gradient(90deg, ${ACCENT} 0%, #a855f7 100%)`,
+              borderRadius: 99, transition: 'width .6s ease',
+              position: 'relative',
+            }}>
+              {overallPct > 8 && (
+                <div style={{ position:'absolute', top:3, left:6, right:10, height:4, background:'rgba(255,255,255,0.25)', borderRadius:2 }} />
+              )}
+            </div>
           </div>
         </div>
 
-        {/* EM PROGRESSO */}
+        {/* ── CTA Continuar ─────────────────────────────────────────────────── */}
+        {continueModule && (
+          <button onClick={() => onNavigate('module', continueModule.id)}
+            style={{
+              width: '100%', background: ACCENT,
+              border: 'none',
+              borderBottom: `4px solid ${ACCENT3D}`,
+              borderRadius: 16, padding: '16px 20px',
+              fontFamily: SANS, fontWeight: 900, fontSize: 16,
+              color: '#fff', cursor: 'pointer', marginBottom: 24,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+              letterSpacing: 0.2,
+              transition: 'transform .1s, box-shadow .1s',
+              boxShadow: `0 6px 24px rgba(255,75,122,0.3)`,
+            }}
+            onMouseDown={e => { e.currentTarget.style.transform = 'translateY(2px)'; e.currentTarget.style.borderBottomWidth = '2px'; }}
+            onMouseUp={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.borderBottomWidth = '4px'; }}
+          >
+            ▶ Continuar — {continueModule.title}
+          </button>
+        )}
+
+        {/* Botão Revisar — Grandmaster */}
+        {isGrandmaster && (
+          <button onClick={() => onNavigate('missions')}
+            style={{
+              width: '100%', background: AMBER,
+              border: 'none', borderBottom: `4px solid ${AMBER3D}`,
+              borderRadius: 16, padding: '14px 20px',
+              fontFamily: SANS, fontWeight: 900, fontSize: 15,
+              color: '#0a0b0c', cursor: 'pointer', marginBottom: 24,
+            }}>
+            🔄 Revisar — modo Grandmaster
+          </button>
+        )}
+
+        {/* ── Em progresso ───────────────────────────────────────────────────── */}
         {inProgressMods.length > 0 && (
-          <>
-            <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:10 }}>
-              <div style={{ color:C.accent, fontSize:12 }}>▶</div>
-              <div style={{ fontFamily:F.mono, color:C.accent, fontSize:12, fontWeight:700, letterSpacing:2 }}>EM PROGRESSO</div>
+          <div style={{ marginBottom: 20 }}>
+            <div style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, color: TEXT3, letterSpacing: 2.5, marginBottom: 12 }}>
+              EM PROGRESSO
             </div>
-            {inProgressMods.map(mod => <ModCard key={mod.id} mod={mod} inProgress />)}
-          </>
+            {inProgressMods.map(mod => <ModCard key={mod.id} mod={mod} />)}
+          </div>
         )}
 
-        {/* PRÓXIMOS */}
+        {/* ── Concluídos ─────────────────────────────────────────────────────── */}
+        {doneMods.length > 0 && (
+          <div style={{ marginBottom: 20 }}>
+            <div style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, color: TEXT3, letterSpacing: 2.5, marginBottom: 12 }}>
+              CONCLUÍDOS
+            </div>
+            {doneMods.map(mod => <ModCard key={mod.id} mod={mod} />)}
+          </div>
+        )}
+
+        {/* ── Próximos ───────────────────────────────────────────────────────── */}
         {nextMods.length > 0 && (
-          <>
-            <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:10, marginTop: inProgressMods.length > 0 ? 8 : 0, opacity:0.7 }}>
-              <FaLock size={12} color={C.textDim} />
-              <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:12, fontWeight:700, letterSpacing:2 }}>PRÓXIMOS</div>
+          <div>
+            <div style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, color: TEXT3, letterSpacing: 2.5, marginBottom: 12 }}>
+              PRÓXIMOS
             </div>
-            {nextMods.map(mod => <ModCard key={mod.id} mod={mod} inProgress={false} />)}
-          </>
+            {nextMods.map(mod => <ModCard key={mod.id} mod={mod} />)}
+          </div>
         )}
-
-        {/* Concluídos */}
-        {modules.filter(m => getModuleProgress(m.id) === 100).map(mod => (
-          <ModCard key={mod.id} mod={mod} inProgress={false} />
-        ))}
       </div>
 
-      {/* Bottom Nav */}
-      <div style={{ position:'fixed', bottom:0, left:0, right:0, background:C.surface, borderTop:`1px solid ${C.border}`, display:'flex', justifyContent:'space-around', padding:'10px 0 20px' }}>
-        {NAV.map(({ Icon, label, screen }) => (
-          <button key={screen} onClick={() => onNavigate(screen)}
-            style={{ background:'none', border:'none', cursor:'pointer', display:'flex', flexDirection:'column', alignItems:'center', gap:4 }}>
-            <Icon size={22} color={C.textDim} />
-            <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:10, letterSpacing:1 }}>{label}</div>
-          </button>
-        ))}
+      {/* ── BOTTOM NAV ──────────────────────────────────────────────────────────── */}
+      <div style={{
+        position: 'fixed', bottom: 0, left: 0, right: 0,
+        background: SURFACE,
+        borderTop: `1px solid ${BORDER}`,
+        display: 'flex', justifyContent: 'space-around',
+        padding: '8px 0 max(12px, env(safe-area-inset-bottom))',
+        zIndex: 50,
+      }}>
+        {NAV.map(({ icon: Icon, label, screen }) => {
+          const isActive = screen === 'home' ? activeNav === screen : false;
+          return (
+            <button key={screen}
+              onClick={() => handleNav(screen)}
+              style={{
+                background: 'none', border: 'none', cursor: 'pointer',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
+                flex: 1, padding: '4px 0',
+              }}>
+              {/* Pill de fundo para item ativo */}
+              <div style={{
+                width: 44, height: 32, borderRadius: 10,
+                background: screen === 'home' ? 'rgba(255,75,122,0.12)' : 'transparent',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                transition: 'background .2s',
+              }}>
+                <Icon size={20} color={screen === 'home' ? ACCENT : TEXT3} />
+              </div>
+              <div style={{
+                fontFamily: MONO, fontSize: 9, fontWeight: 700, letterSpacing: 1,
+                color: screen === 'home' ? ACCENT : TEXT3,
+              }}>
+                {label}
+              </div>
+            </button>
+          );
+        })}
       </div>
     </div>
   );
