@@ -954,6 +954,75 @@ const MISSIONS = [
     explanation:'A regra real do Google detecta storage.setIamPermissions com ADD de allUsers ou allAuthenticatedUsers em STORAGE_BUCKET. Esses dois membros expõem o bucket à internet inteira — MITRE T1562 (Impair Defenses). Adicionar usuário nomeado (log 2) ou remover acesso público (log 4) são operações legítimas.',
   },
 
+  // ─── CLOUD 2: GCP Firewall Aberto pro Mundo ────────────────────────────────
+  { id:17,cat:"CLOUD",emoji:"🔥",title:"GCP Firewall Aberto pro Mundo",tag:"GCP NETWORK",tagColor:"#EA4335",xp:225,mitre:"T1562",
+    story:"Uma regra de firewall do Compute Engine foi criada liberando 0.0.0.0/0 em todos os protocolos. Qualquer IP do mundo pode acessar a VM. Detecte essa criação antes que seja tarde.",
+    steps:[
+      {id:"meta",label:"META",color:"#fbbf24",icon:"🏷",instruction:"Metadados da regra",multi:true,minCorrect:2,options:[
+        {id:"a",text:'rule_name = "gcp_firewall_opened_to_world"',correct:true},
+        {id:"b",text:'rule_name = "firewall_ok"',correct:false},
+        {id:"c",text:'severity = "HIGH"',correct:true},
+        {id:"d",text:'severity = "LOW"',correct:false}]},
+      {id:"events",label:"EVENTS",color:"#00c4cc",icon:"📡",instruction:"Filtre a criação de firewall aberta ao mundo",multi:true,minCorrect:4,options:[
+        {id:"a",text:'$gcp.metadata.event_type = "RESOURCE_CREATION"',correct:true},
+        {id:"b",text:'$gcp.metadata.event_type = "USER_LOGIN"',correct:false},
+        {id:"c",text:'$gcp.metadata.product_name = "Google Compute Engine"',correct:true},
+        {id:"d",text:'$gcp.metadata.product_event_type = /compute.firewalls.insert$/ nocase',correct:true},
+        {id:"e",text:'$gcp.metadata.product_event_type = /compute.firewalls.delete$/ nocase',correct:false},
+        {id:"f",text:'$gcp.target.resource.attribute.labels["source_ranges"] = "0.0.0.0/0"',correct:true},
+        {id:"g",text:'$gcp.security_result.detection_fields["allowed_ipprotocol"] = "all"',correct:true}]},
+      {id:"match",label:"MATCH",color:"#a78bfa",icon:"🔗",instruction:"Sem agrupamento — disparar por evento",multi:false,minCorrect:1,options:[
+        {id:"a",text:"(sem cláusula match — dispara por evento individual)",correct:true},
+        {id:"b",text:"$ip over 10m",correct:false},
+        {id:"c",text:"$rule over 1h",correct:false}]},
+      {id:"condition",label:"CONDITION",color:"#22d3a0",icon:"⚡",instruction:"Dispare em qualquer ocorrência",multi:false,minCorrect:1,options:[
+        {id:"a",text:"#gcp >= 1",correct:true},
+        {id:"b",text:"#gcp > 100",correct:false},
+        {id:"c",text:"#gcp = 0",correct:false}]},
+    ],
+    logs:[
+      {id:1,icon:"🔥",desc:"allow-all-world",detail:"compute.firewalls.insert · source_ranges=0.0.0.0/0 · protocol=all · RUNNING",alert:true},
+      {id:2,icon:"✅",desc:"allow-http-internal",detail:"compute.firewalls.insert · source_ranges=10.0.0.0/8 · protocol=tcp:80",alert:false},
+      {id:3,icon:"🔥",desc:"debug-open-fw",detail:"compute.firewalls.insert · source_ranges=0.0.0.0/0 · protocol=all · RUNNING",alert:true},
+      {id:4,icon:"✅",desc:"deny-all-ingress",detail:"compute.firewalls.insert · direction=INGRESS · action=DENY · priority=65534",alert:false},
+    ],
+    explanation:'A regra real do Google detecta compute.firewalls.insert com source_ranges=0.0.0.0/0 E protocol=all — os dois juntos significam qualquer IP, qualquer protocolo. Sem cláusula match, a regra dispara por evento individual. Uma regra com source_ranges interno (log 2) ou DENY (log 4) é legítima. MITRE T1562 (Impair Defenses).',
+  },
+
+  // ─── CLOUD 3: Service Account Key Criada ───────────────────────────────────
+  { id:18,cat:"CLOUD",emoji:"🔑",title:"Service Account Key Criada",tag:"GCP IAM",tagColor:"#FBBC04",xp:250,mitre:"T1098.001",
+    story:"Um atacante com acesso ao IAM criou ou fez upload de uma chave de service account — uma técnica clássica de persistência em GCP. Detecte a criação/upload de chaves em janela de 30 minutos.",
+    steps:[
+      {id:"meta",label:"META",color:"#fbbf24",icon:"🏷",instruction:"Metadados da regra",multi:true,minCorrect:2,options:[
+        {id:"a",text:'rule_name = "gcp_service_account_key_created"',correct:true},
+        {id:"b",text:'rule_name = "sa_login_ok"',correct:false},
+        {id:"c",text:'severity = "MEDIUM"',correct:true},
+        {id:"d",text:'severity = "INFO"',correct:false}]},
+      {id:"events",label:"EVENTS",color:"#00c4cc",icon:"📡",instruction:"Filtre criação e upload de chaves IAM",multi:true,minCorrect:3,options:[
+        {id:"a",text:'$gc.metadata.log_type = "GCP_CLOUDAUDIT"',correct:true},
+        {id:"b",text:'$gc.metadata.product_name = "Google Cloud IAM"',correct:true},
+        {id:"c",text:'$gc.metadata.product_name = "Google Cloud Storage"',correct:false},
+        {id:"d",text:'$gc.metadata.product_event_type = "google.iam.admin.v1.CreateServiceAccountKey"',correct:true},
+        {id:"e",text:'$gc.metadata.product_event_type = "google.iam.admin.v1.DeleteServiceAccountKey"',correct:false},
+        {id:"f",text:'$gc.security_result.action = "ALLOW"',correct:true}]},
+      {id:"match",label:"MATCH",color:"#a78bfa",icon:"🔗",instruction:"Agrupe pelo ID da chave em 30 minutos",multi:false,minCorrect:1,options:[
+        {id:"a",text:"$sa_key_id over 30m",correct:true},
+        {id:"b",text:"$user over 1h",correct:false},
+        {id:"c",text:"$sa_key_id over 7d",correct:false}]},
+      {id:"condition",label:"CONDITION",color:"#22d3a0",icon:"⚡",instruction:"Dispare em qualquer ocorrência",multi:false,minCorrect:1,options:[
+        {id:"a",text:"#gc >= 1",correct:true},
+        {id:"b",text:"#gc > 50",correct:false},
+        {id:"c",text:"#gc < 0",correct:false}]},
+    ],
+    logs:[
+      {id:1,icon:"🔑",desc:"sa-prod@proj.iam",detail:"CreateServiceAccountKey · key_id=abc123 · ALLOW · user:hacker@ext.com",alert:true},
+      {id:2,icon:"✅",desc:"terraform@proj.iam",detail:"CreateServiceAccountKey · key_id=tf456 · ALLOW · user:terraform-automation@proj.iam",alert:false},
+      {id:3,icon:"🔑",desc:"sa-admin@proj.iam",detail:"UploadServiceAccountKey · key_id=upl789 · ALLOW · user:admin@empresa.com · IP externo",alert:true},
+      {id:4,icon:"✅",desc:"ci-runner@proj.iam",detail:"DeleteServiceAccountKey · key_id=old111 · ALLOW · rotação automática",alert:false},
+    ],
+    explanation:'A regra detecta CreateServiceAccountKey OU UploadServiceAccountKey com ALLOW no Cloud IAM. Chaves de service account são credenciais de longa duração — atacantes as criam para manter acesso mesmo após remoção do usuário comprometido. Deleção (log 4) é legítima. O match por $sa_key_id over 30m agrupa eventos da mesma chave. MITRE T1098.001 (Account Manipulation: Additional Cloud Credentials).',
+  },
+
 ];
 
 export {
