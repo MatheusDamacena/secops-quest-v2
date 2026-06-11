@@ -963,7 +963,7 @@ const MISSIONS = [
         {id:"b",text:'rule_name = "firewall_ok"',correct:false},
         {id:"c",text:'severity = "HIGH"',correct:true},
         {id:"d",text:'severity = "LOW"',correct:false}]},
-      {id:"events",label:"EVENTS",color:"#00c4cc",icon:"📡",instruction:"Filtre a criação de firewall aberta ao mundo",multi:true,minCorrect:4,options:[
+      {id:"events",label:"EVENTS",color:"#00c4cc",icon:"📡",instruction:"Filtre a criação de firewall aberta ao mundo",multi:true,minCorrect:5,options:[
         {id:"a",text:'$gcp.metadata.event_type = "RESOURCE_CREATION"',correct:true},
         {id:"b",text:'$gcp.metadata.event_type = "USER_LOGIN"',correct:false},
         {id:"c",text:'$gcp.metadata.product_name = "Google Compute Engine"',correct:true},
@@ -998,7 +998,7 @@ const MISSIONS = [
         {id:"b",text:'rule_name = "sa_login_ok"',correct:false},
         {id:"c",text:'severity = "MEDIUM"',correct:true},
         {id:"d",text:'severity = "INFO"',correct:false}]},
-      {id:"events",label:"EVENTS",color:"#00c4cc",icon:"📡",instruction:"Filtre criação e upload de chaves IAM",multi:true,minCorrect:3,options:[
+      {id:"events",label:"EVENTS",color:"#00c4cc",icon:"📡",instruction:"Filtre criação e upload de chaves IAM",multi:true,minCorrect:4,options:[
         {id:"a",text:'$gc.metadata.log_type = "GCP_CLOUDAUDIT"',correct:true},
         {id:"b",text:'$gc.metadata.product_name = "Google Cloud IAM"',correct:true},
         {id:"c",text:'$gc.metadata.product_name = "Google Cloud Storage"',correct:false},
@@ -1066,7 +1066,7 @@ const MISSIONS = [
         {id:"b",text:'rule_name = "api_normal_call"',correct:false},
         {id:"c",text:'severity = "HIGH"',correct:true},
         {id:"d",text:'severity = "INFO"',correct:false}]},
-      {id:"events",label:"EVENTS",color:"#00c4cc",icon:"📡",instruction:"Combine log GCP Cloud Audit com GCTI Feed de Tor",multi:true,minCorrect:4,options:[
+      {id:"events",label:"EVENTS",color:"#00c4cc",icon:"📡",instruction:"Combine log GCP Cloud Audit com GCTI Feed de Tor",multi:true,minCorrect:5,options:[
         {id:"a",text:'$gcp.metadata.log_type = "GCP_CLOUDAUDIT"',correct:true},
         {id:"b",text:'$gcp.metadata.log_type = "WINEVTLOG"',correct:false},
         {id:"c",text:'$gcp.security_result.action = "ALLOW"',correct:true},
