@@ -29,29 +29,29 @@ function RightPanel({ totalXp, streak, completedMods, totalMods }) {
 
       {/* Stats */}
       <div style={{ background: SURFACE, borderRadius: 16, padding: '16px', border: `1px solid ${BORDER}` }}>
-        <div style={{ fontFamily: MONO, color: TEXT3, fontSize: 10, letterSpacing: 2, marginBottom: 14 }}>SEU PROGRESSO</div>
+        <div style={{ fontFamily: MONO, color: TEXT3, fontSize: 12, letterSpacing: 2, marginBottom: 14 }}>SEU PROGRESSO</div>
         <div style={{ display: 'flex', gap: 12 }}>
           <div style={{ flex: 1, background: 'rgba(255,200,0,0.08)', borderRadius: 12, padding: '12px', textAlign: 'center' }}>
             <FaFire size={20} color={AMBER} style={{ marginBottom: 6 }} />
-            <div style={{ fontFamily: MONO, color: AMBER, fontSize: 20, fontWeight: 900 }}>{streak}</div>
-            <div style={{ fontFamily: MONO, color: TEXT3, fontSize: 9, letterSpacing: 1, marginTop: 2 }}>SEQUÊNCIA</div>
+            <div style={{ fontFamily: MONO, color: AMBER, fontSize: 24, fontWeight: 900 }}>{streak}</div>
+            <div style={{ fontFamily: MONO, color: TEXT3, fontSize: 11, letterSpacing: 1, marginTop: 2 }}>SEQUÊNCIA</div>
           </div>
           <div style={{ flex: 1, background: 'rgba(255,75,122,0.08)', borderRadius: 12, padding: '12px', textAlign: 'center' }}>
             <FaBolt size={20} color={ACCENT} style={{ marginBottom: 6 }} />
-            <div style={{ fontFamily: MONO, color: ACCENT, fontSize: 20, fontWeight: 900 }}>{(totalXp||0).toLocaleString()}</div>
-            <div style={{ fontFamily: MONO, color: TEXT3, fontSize: 9, letterSpacing: 1, marginTop: 2 }}>DX TOTAL</div>
+            <div style={{ fontFamily: MONO, color: ACCENT, fontSize: 24, fontWeight: 900 }}>{(totalXp||0).toLocaleString()}</div>
+            <div style={{ fontFamily: MONO, color: TEXT3, fontSize: 11, letterSpacing: 1, marginTop: 2 }}>DX TOTAL</div>
           </div>
         </div>
       </div>
 
       {/* Progresso módulos */}
       <div style={{ background: SURFACE, borderRadius: 16, padding: '16px', border: `1px solid ${BORDER}` }}>
-        <div style={{ fontFamily: MONO, color: TEXT3, fontSize: 10, letterSpacing: 2, marginBottom: 12 }}>MÓDULOS</div>
+        <div style={{ fontFamily: MONO, color: TEXT3, fontSize: 12, letterSpacing: 2, marginBottom: 12 }}>MÓDULOS</div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 8 }}>
-          <div style={{ fontFamily: SANS, color: TEXT, fontSize: 28, fontWeight: 900, lineHeight: 1 }}>
+          <div style={{ fontFamily: SANS, color: TEXT, fontSize: 32, fontWeight: 900, lineHeight: 1 }}>
             {completedMods}<span style={{ color: TEXT3, fontSize: 16 }}>/{totalMods}</span>
           </div>
-          <div style={{ fontFamily: MONO, color: ACCENT, fontSize: 13, fontWeight: 700 }}>
+          <div style={{ fontFamily: MONO, color: ACCENT, fontSize: 15, fontWeight: 700 }}>
             {Math.round((completedMods/totalMods)*100)}%
           </div>
         </div>
@@ -69,9 +69,9 @@ function RightPanel({ totalXp, streak, completedMods, totalMods }) {
 
       {/* Dica do dia */}
       <div style={{ background: SURFACE, borderRadius: 16, padding: '16px', border: `1px solid ${BORDER}` }}>
-        <div style={{ fontFamily: MONO, color: TEXT3, fontSize: 10, letterSpacing: 2, marginBottom: 10 }}>DICA DO DIA</div>
-        <div style={{ fontFamily: MONO, color: GREEN, fontSize: 10, letterSpacing: 1, marginBottom: 6 }}>YARA-L</div>
-        <div style={{ fontFamily: SANS, color: TEXT2, fontSize: 13, lineHeight: 1.6 }}>
+        <div style={{ fontFamily: MONO, color: TEXT3, fontSize: 12, letterSpacing: 2, marginBottom: 10 }}>DICA DO DIA</div>
+        <div style={{ fontFamily: MONO, color: GREEN, fontSize: 12, letterSpacing: 1, marginBottom: 6 }}>YARA-L</div>
+        <div style={{ fontFamily: SANS, color: TEXT2, fontSize: 15, lineHeight: 1.6 }}>
           Use <span style={{ color: '#00c4cc', fontFamily: MONO }}>nocase</span> para comparações case-insensitive em strings de log.
         </div>
       </div>
@@ -95,8 +95,8 @@ function Sidebar({ screen, onNavigate, profile }) {
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', marginBottom: 24 }}>
         <AppLogo size={32} />
         <div>
-          <div style={{ fontFamily: SANS, fontWeight: 900, fontSize: 15, color: TEXT, letterSpacing: -0.3 }}>SecOps Quest</div>
-          <div style={{ fontFamily: MONO, fontSize: 9, color: TEXT3, letterSpacing: 1 }}>GOOGLE SECOPS</div>
+          <div style={{ fontFamily: SANS, fontWeight: 900, fontSize: 17, color: TEXT, letterSpacing: -0.3 }}>SecOps Quest</div>
+          <div style={{ fontFamily: MONO, fontSize: 11, color: TEXT3, letterSpacing: 1 }}>GOOGLE SECOPS</div>
         </div>
       </div>
 
@@ -118,7 +118,7 @@ function Sidebar({ screen, onNavigate, profile }) {
               onMouseLeave={e => { if (!isActive) e.currentTarget.style.background = 'transparent'; }}
             >
               <Icon size={20} color={isActive ? ACCENT : TEXT3} />
-              <span style={{ fontFamily: SANS, fontWeight: 700, fontSize: 15, color: isActive ? ACCENT : TEXT2, letterSpacing: -0.1 }}>
+              <span style={{ fontFamily: SANS, fontWeight: 700, fontSize: 17, color: isActive ? ACCENT : TEXT2, letterSpacing: -0.1 }}>
                 {label}
               </span>
             </button>
@@ -130,10 +130,10 @@ function Sidebar({ screen, onNavigate, profile }) {
       <div style={{ marginTop: 'auto', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 10, borderTop: `1px solid ${BORDER}`, paddingTop: 16 }}>
         <Avatar profile={profile} size={32} />
         <div style={{ minWidth: 0 }}>
-          <div style={{ fontFamily: SANS, fontWeight: 700, fontSize: 14, color: TEXT, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          <div style={{ fontFamily: SANS, fontWeight: 700, fontSize: 16, color: TEXT, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             {profile?.name}
           </div>
-          <div style={{ fontFamily: MONO, fontSize: 9, color: TEXT3, letterSpacing: 1 }}>GRANDMASTER</div>
+          <div style={{ fontFamily: MONO, fontSize: 11, color: TEXT3, letterSpacing: 1 }}>GRANDMASTER</div>
         </div>
       </div>
     </div>
