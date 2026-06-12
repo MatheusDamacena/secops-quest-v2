@@ -46,20 +46,20 @@ function StepsPhase({ mission, onDone, onBack }) {
       <ProgressHeader current={stepIdx} total={totalSteps + 2} onBack={onBack} xpEarned={xp} />
       <div style={{ flex:1, padding:'20px 16px 120px', maxWidth:600, width:'100%', margin:'0 auto' }}>
         {/* Story */}
-        <div style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:12, padding:'12px 16px', marginBottom:16, fontFamily:F.mono, color:C.textDim, fontSize:12, lineHeight:1.7 }}>
+        <div style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:12, padding:'12px 16px', marginBottom:16, fontFamily:F.mono, color:C.textDim, fontSize:16, lineHeight:1.7 }}>
           {mission.story}
         </div>
         {/* Header da seção */}
         <div style={{ background:C.surface, border:`2px solid ${step.color}44`, borderRadius:14, padding:'14px 16px', marginBottom:12 }}>
           <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:6 }}>
             <NodeIcon icon={step.icon} color={step.color} size={20} />
-            <div style={{ fontFamily:F.display, color:step.color, fontSize:15, fontWeight:800 }}>{step.label}</div>
-            {step.multi && <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:10, background:'#243540', borderRadius:6, padding:'2px 8px' }}>múltipla escolha</div>}
+            <div style={{ fontFamily:F.display, color:step.color, fontSize:16, fontWeight:800 }}>{step.label}</div>
+            {step.multi && <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:14, background:'#243540', borderRadius:6, padding:'2px 8px' }}>múltipla escolha</div>}
           </div>
-          <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:12, lineHeight:1.6 }}>{step.instruction}</div>
+          <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:16, lineHeight:1.6 }}>{step.instruction}</div>
         </div>
         {/* Dica */}
-        <div style={{ fontFamily:F.mono, fontSize:11, marginBottom:12, display:'flex', alignItems:'center', gap:12, flexWrap:'wrap' }}>
+        <div style={{ fontFamily:F.mono, fontSize:15, marginBottom:12, display:'flex', alignItems:'center', gap:12, flexWrap:'wrap' }}>
           <span style={{ color:C.textDim }}>Mínimo {minRequired} correto(s) · sem erros</span>
           {selCorrect.length > 0 && selWrong.length === 0 && (
             <span style={{ color:C.green }}>✓ {selCorrect.length} certo{selCorrect.length > 1 ? 's' : ''}</span>
@@ -80,7 +80,7 @@ function StepsPhase({ mission, onDone, onBack }) {
                 borderBottom:`4px solid ${isWrong ? '#a00' : isSel ? '#a06000' : C.cardDepth}`,
                 borderRadius:14, padding:'12px 14px', marginBottom:10, cursor:'pointer',
                 fontFamily:F.mono, color: isWrong ? C.wrong : isSel ? C.amber : C.text,
-                fontSize:12, lineHeight:1.5, display:'flex', alignItems:'center', gap:10 }}>
+                fontSize:16, lineHeight:1.5, display:'flex', alignItems:'center', gap:10 }}>
               <div style={{ width:18, height:18, borderRadius: step.multi ? 4 : 9, flexShrink:0,
                 border:`2px solid ${isWrong ? C.wrong : isSel ? C.amber : C.border}`,
                 background: isSel ? (isWrong ? C.wrong : C.amber) : 'transparent',
@@ -97,7 +97,7 @@ function StepsPhase({ mission, onDone, onBack }) {
           display:'block', margin:'0 auto', width:'100%', maxWidth:480,
           background: canProceed ? C.amber : C.surface2,
           border:'none', borderBottom:`4px solid ${canProceed ? '#a06000' : C.cardDepth}`,
-          borderRadius:14, padding:'16px', fontFamily:F.display, fontWeight:800, fontSize:16,
+          borderRadius:14, padding:'16px', fontFamily:F.display, fontWeight:800, fontSize:14,
           color: canProceed ? '#fff' : C.textDim, cursor: canProceed ? 'pointer' : 'not-allowed', transition:'all .2s' }}>
           {nextLabel}
         </button>
@@ -119,11 +119,11 @@ function ReviewPhase({ mission, answers, xp, onExecute }) {
   return (
     <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
       <div className="sq-mobile-only" style={{ background:'transparent', borderBottom:'none', padding:'14px 20px', display:'flex', alignItems:'center', gap:8 }}>
-        <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:2 }}>REVISÃO</div>
-        <div style={{ fontFamily:F.display, color:C.text, fontSize:17, fontWeight:900 }}>· {mission.title}</div>
+        <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:15, letterSpacing:2 }}>REVISÃO</div>
+        <div style={{ fontFamily:F.display, color:C.text, fontSize:15, fontWeight:900 }}>· {mission.title}</div>
       </div>
       <div style={{ flex:1, padding:'24px 16px 120px', maxWidth:600, width:'100%', margin:'0 auto' }}>
-        <div style={{ background:'#0d1117', border:`1px solid ${C.border}`, borderRadius:16, padding:'20px', fontFamily:'monospace', fontSize:13, lineHeight:2.2 }}>
+        <div style={{ background:'#0d1117', border:`1px solid ${C.border}`, borderRadius:16, padding:'20px', fontFamily:'monospace', fontSize:14, lineHeight:2.2 }}>
           <div style={{ color:C.textDim }}>rule detection {'{'}</div>
           {Object.entries(sections).map(([key, lines]) => (
             <div key={key}>
@@ -172,8 +172,8 @@ function SimulatePhase({ mission, onResult }) {
   return (
     <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
       <div style={{ background:'transparent', borderBottom:'none', padding:'14px 20px' }}>
-        <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:2 }}>SIMULAÇÃO · LOGS UDM</div>
-        <div style={{ fontFamily:F.display, color:C.text, fontSize:17, fontWeight:900 }}>Testando sua regra...</div>
+        <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:15, letterSpacing:2 }}>SIMULAÇÃO · LOGS UDM</div>
+        <div style={{ fontFamily:F.display, color:C.text, fontSize:15, fontWeight:900 }}>Testando sua regra...</div>
       </div>
       <div style={{ flex:1, padding:'16px 16px 120px', maxWidth:600, width:'100%', margin:'0 auto' }}>
         {mission.logs.map((log, idx) => {
@@ -196,9 +196,9 @@ function SimulatePhase({ mission, onResult }) {
             }}>
               <div style={{ flexShrink:0, width:28, display:'flex', alignItems:'center', justifyContent:'center' }}><NodeIcon icon={log.icon} size={20} /></div>
               <div style={{ flex:1 }}>
-                <div style={{ fontFamily:F.display, color:C.text, fontSize:15, fontWeight:800 }}>{log.desc}</div>
-                <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, marginTop:2 }}>{log.detail}</div>
-                <div style={{ fontFamily:F.mono, fontSize:10, marginTop:4, color: log.alert ? C.red : C.green }}>
+                <div style={{ fontFamily:F.display, color:C.text, fontSize:16, fontWeight:800 }}>{log.desc}</div>
+                <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:15, marginTop:2 }}>{log.detail}</div>
+                <div style={{ fontFamily:F.mono, fontSize:14, marginTop:4, color: log.alert ? C.red : C.green }}>
                   esperado: {log.alert ? 'ALERTAR' : 'ignorar'}
                 </div>
               </div>
@@ -207,7 +207,7 @@ function SimulatePhase({ mission, onResult }) {
                 <div style={{
                   background: log.alert ? C.red : C.green,
                   border:`2px solid ${log.alert ? C.red : C.green}`,
-                  borderRadius:10, padding:'6px 14px', fontFamily:F.display, fontWeight:800, fontSize:12,
+                  borderRadius:10, padding:'6px 14px', fontFamily:F.display, fontWeight:800, fontSize:16,
                   color:'#fff', whiteSpace:'nowrap', flexShrink:0,
                 }}>
                   {badge}
@@ -222,7 +222,7 @@ function SimulatePhase({ mission, onResult }) {
           display:'block', margin:'0 auto', width:'100%', maxWidth:480,
           background: done ? C.green : C.surface2,
           border:'none', borderBottom:`4px solid ${done ? C.btn3d_green : C.cardDepth}`,
-          borderRadius:14, padding:'16px', fontFamily:F.display, fontWeight:800, fontSize:16,
+          borderRadius:14, padding:'16px', fontFamily:F.display, fontWeight:800, fontSize:14,
           color: done ? '#fff' : C.textDim, cursor: done ? 'pointer' : 'not-allowed',
           transition:'all .3s' }}>
           VER RESULTADO →
@@ -237,17 +237,17 @@ function ResultPhase({ mission, score, xpBonus, totalXp, onComplete }) {
   const approved = score >= 75;
   return (
     <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:32 }}>
-      <div style={{ fontSize:64, marginBottom:16 }}>{approved ? '🎯' : '💡'}</div>
-      <div style={{ fontFamily:F.display, color: approved ? C.green : C.amber, fontSize:24, fontWeight:900, marginBottom:8, textAlign:'center' }}>
+      <div style={{ fontSize:48, marginBottom:16 }}>{approved ? '🎯' : '💡'}</div>
+      <div style={{ fontFamily:F.display, color: approved ? C.green : C.amber, fontSize:22, fontWeight:900, marginBottom:8, textAlign:'center' }}>
         {approved ? 'REGRA APROVADA!' : 'QUASE LÁ!'}
       </div>
-      <div style={{ fontFamily:F.display, color:C.amber, fontSize:20, fontWeight:900, marginBottom:4 }}>
+      <div style={{ fontFamily:F.display, color:C.amber, fontSize:14, fontWeight:900, marginBottom:4 }}>
         +{xpBonus} DX
       </div>
-      <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:12, marginBottom:24 }}>MITRE {mission.mitre}</div>
-      <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:2, marginBottom:8 }}>✓ POR QUE FUNCIONA</div>
+      <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:16, marginBottom:24 }}>MITRE {mission.mitre}</div>
+      <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:15, letterSpacing:2, marginBottom:8 }}>✓ POR QUE FUNCIONA</div>
       <div style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:14, padding:'16px 20px', maxWidth:480, width:'100%', marginBottom:32 }}>
-        <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:13, lineHeight:1.8 }}>{mission.explanation}</div>
+        <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:14, lineHeight:1.8 }}>{mission.explanation}</div>
       </div>
       <div style={{ maxWidth:480, width:'100%' }}>
         <Btn3D color={C.green} shadow={C.btn3d_green} onClick={() => onComplete(totalXp + xpBonus)}>
@@ -338,30 +338,20 @@ export default function M4Screen({ progress, onComplete, onBack, lang = 'pt' }) 
   return (
     <div style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
       {/* Header mobile */}
-      <div className="sq-mobile-only" style={{ background:'#1c2b32', borderBottom:'1px solid rgba(255,255,255,0.06)', padding:'14px 20px', display:'flex', alignItems:'center', gap:12 }}>
-        <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:29, cursor:'pointer' }}>‹</button>
-        <div>
-          <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:13, letterSpacing:2 }}>MÓDULO 4</div>
-          <div style={{ fontFamily:F.display, color:C.text, fontSize:18, fontWeight:900 }}>Missões de Detecção</div>
+      <div style={{ background:'transparent', borderBottom:'1px solid rgba(255,255,255,0.06)', padding:'16px 24px', display:'flex', alignItems:'center', gap:14 }}>
+        <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:22, cursor:'pointer' }}>‹</button>
+        <div style={{ flex:1 }}>
+          <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:13, letterSpacing:3 }}>MÓDULO 4</div>
+          <div style={{ fontFamily:F.display, color:C.text, fontSize:22, fontWeight:900, letterSpacing:-0.3 }}>Missões de Detecção</div>
         </div>
-
       </div>
       {/* Header desktop — título + contador inline, sem barra */}
-      <div className="sq-desktop-only" style={{ padding:'20px 20px 0', alignItems:'center', justifyContent:'space-between' }}>
-        <div>
-          <div style={{ fontFamily:F.mono, color:'rgba(255,255,255,0.35)', fontSize:11, letterSpacing:2.5, marginBottom:4 }}>MÓDULO 4</div>
-          <div style={{ fontFamily:F.display, color:'#fff', fontSize:22, fontWeight:900, letterSpacing:-0.3 }}>Missões de Detecção</div>
-        </div>
-        <div style={{ display:'flex', alignItems:'center', gap:6, background:'rgba(255,200,0,0.1)', borderRadius:12, padding:'8px 14px' }}>
-          <FaBolt size={14} color='#ffc800' />
-          <span style={{ fontFamily:F.mono, color:'#ffc800', fontSize:15, fontWeight:800 }}>{done.length}/{MISSIONS.length}</span>
-        </div>
-      </div>
+
       {/* Filtro */}
       <div style={{ display:'flex', gap:6, flexWrap:'wrap', padding:'12px 16px 4px', background:'transparent', borderBottom:'none', flexWrap:'wrap', gap:6, padding:'12px 20px 8px' }}>
         {['Todas', ...cats].map(c => (
           <button key={c} onClick={() => setCatFilter(c)}
-            style={{ background: catFilter===c ? '#ff4b7a' : 'rgba(255,255,255,0.05)', border:'none', borderRadius:20, padding:'6px 14px', fontFamily:"'Roboto Mono',monospace", color: catFilter===c ? '#fff' : 'rgba(255,255,255,0.4)', fontSize:16, fontWeight:700, cursor:'pointer', whiteSpace:'nowrap', flexShrink:0, letterSpacing:0.5, transition:'background .15s' }}>
+            style={{ background: catFilter===c ? '#ff4b7a' : 'rgba(255,255,255,0.05)', border:'none', borderRadius:20, padding:'6px 14px', fontFamily:"'Roboto Mono',monospace", color: catFilter===c ? '#fff' : 'rgba(255,255,255,0.4)', fontSize:14, fontWeight:700, cursor:'pointer', whiteSpace:'nowrap', flexShrink:0, letterSpacing:0.5, transition:'background .15s' }}>
             {c}{c !== 'Todas' ? ` · ${MISSIONS.filter(m=>m.cat===c).length}` : ''}
           </button>
         ))}
@@ -369,7 +359,7 @@ export default function M4Screen({ progress, onComplete, onBack, lang = 'pt' }) 
       <div style={{ flex:1, overflowY:'auto', padding:'16px 16px 80px', maxWidth:600, width:'100%', margin:'0 auto' }}>
         {cats.filter(c => catFilter === 'Todas' || c === catFilter).map(cat => (
           <div key={cat} style={{ marginBottom:24 }}>
-            <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:13, letterSpacing:2, marginBottom:12 }}>
+            <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:14, letterSpacing:2, marginBottom:12 }}>
               {cat} · {MISSIONS.filter(m => m.cat === cat).length}
             </div>
             {MISSIONS.filter(m => m.cat === cat).map((m) => {
@@ -389,27 +379,27 @@ export default function M4Screen({ progress, onComplete, onBack, lang = 'pt' }) 
                   <div style={{ flex:1 }}>
                     <div style={{ display:'flex', alignItems:'center', gap:4, marginBottom:4, overflow:'hidden', flexWrap:'nowrap' }}>
                       <div style={{ background:m.tagColor+'18', border:'none',
-                        borderRadius:20, padding:'3px 10px', fontFamily:"'Roboto Mono',monospace", color:m.tagColor, fontSize:10, fontWeight:700, letterSpacing:0, whiteSpace:'nowrap' }}>{m.tag}</div>
-                      <div style={{ background:getDifficulty(m.xp).color+'18', border:'none', borderRadius:20, padding:'3px 10px', fontFamily:"'Roboto Mono',monospace", color:getDifficulty(m.xp).color, fontSize:13, fontWeight:700, letterSpacing:0.5 }}>{getDifficulty(m.xp).label}</div>
+                        borderRadius:20, padding:'3px 10px', fontFamily:"'Roboto Mono',monospace", color:m.tagColor, fontSize:14, fontWeight:700, letterSpacing:0, whiteSpace:'nowrap' }}>{m.tag}</div>
+                      <div style={{ background:getDifficulty(m.xp).color+'18', border:'none', borderRadius:20, padding:'3px 10px', fontFamily:"'Roboto Mono',monospace", color:getDifficulty(m.xp).color, fontSize:14, fontWeight:700, letterSpacing:0.5 }}>{getDifficulty(m.xp).label}</div>
                       {isDone && (
                       <div style={{ width:22, height:22, borderRadius:'50%', background:'rgba(88,204,2,0.15)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
-                        <span style={{ color:'#58cc02', fontSize:13, lineHeight:1 }}>✓</span>
+                        <span style={{ color:'#58cc02', fontSize:14, lineHeight:1 }}>✓</span>
                       </div>
                     )}
                     </div>
-                    <div style={{ fontFamily:F.display, color:C.text, fontSize:17, fontWeight:800, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{m.title}</div>
+                    <div style={{ fontFamily:F.display, color:C.text, fontSize:15, fontWeight:800, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{m.title}</div>
                     <div style={{ display:'flex', alignItems:'center', gap:8, marginTop:2, flexWrap:'wrap' }}>
-                      <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:13 }}>+{m.xp} DX</div>
-                      <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:16, opacity:0.6 }}>
+                      <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:14 }}>+{m.xp} DX</div>
+                      <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:14, opacity:0.6 }}>
                         ~{m.xp <= 200 ? '3' : m.xp <= 300 ? '5' : '7'} min
                       </div>
                       <button onClick={(e) => { e.stopPropagation(); const info = MITRE_MAP[m.mitre]; setMitreMod({ code:m.mitre, ...(info || { tactic:'', tech:m.mitre }) }); }}
-                        style={{ fontFamily:"'Roboto Mono',monospace", fontSize:13, color:'#ffc800', background:'rgba(255,200,0,0.1)', border:'none', borderRadius:20, padding:'3px 9px', cursor:'pointer', fontWeight:700 }}>
+                        style={{ fontFamily:"'Roboto Mono',monospace", fontSize:14, color:'#ffc800', background:'rgba(255,200,0,0.1)', border:'none', borderRadius:20, padding:'3px 9px', cursor:'pointer', fontWeight:700 }}>
                         {m.mitre} ↗
                       </button>
                     </div>
                   </div>
-                  <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:18 }}>›</div>
+                  <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:16 }}>›</div>
                 </div>
               );
             })}
@@ -421,18 +411,18 @@ export default function M4Screen({ progress, onComplete, onBack, lang = 'pt' }) 
       {mitreMod && (
         <div onClick={() => setMitreMod(null)} style={{ position:'fixed', inset:0, background:'#000b', zIndex:999, display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}>
           <div onClick={e => e.stopPropagation()} style={{ background:C.surface, border:`1px solid #fbbf2466`, borderRadius:20, padding:24, maxWidth:380, width:'100%' }}>
-            <div style={{ fontFamily:F.mono, color:'#fbbf24', fontSize:16, letterSpacing:2, marginBottom:4 }}>MITRE ATT&CK</div>
-            <div style={{ fontFamily:F.display, color:C.text, fontSize:24, fontWeight:900, marginBottom:8 }}>{mitreMod.code}</div>
-            <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:16, lineHeight:1.8 }}>
+            <div style={{ fontFamily:F.mono, color:'#fbbf24', fontSize:14, letterSpacing:2, marginBottom:4 }}>MITRE ATT&CK</div>
+            <div style={{ fontFamily:F.display, color:C.text, fontSize:22, fontWeight:900, marginBottom:8 }}>{mitreMod.code}</div>
+            <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:14, lineHeight:1.8 }}>
               <div>Tática: <span style={{color:C.text}}>{mitreMod.tactic}</span></div>
               <div>Técnica: <span style={{color:C.text}}>{mitreMod.tech}</span></div>
             </div>
             <button onClick={() => window.open(`https://attack.mitre.org/techniques/${mitreMod.code.replace('.','/')}/`, '_blank')}
-              style={{ display:'block', width:'100%', textAlign:'center', background:'#fbbf24', color:'#0a0b0c', border:'none', borderRadius:12, padding:'12px', fontFamily:F.display, fontWeight:800, fontSize:16, cursor:'pointer', marginTop:20 }}>
+              style={{ display:'block', width:'100%', textAlign:'center', background:'#fbbf24', color:'#131f24', border:'none', borderRadius:12, padding:'12px', fontFamily:F.display, fontWeight:800, fontSize:14, cursor:'pointer', marginTop:20 }}>
               Ver no MITRE ATT&CK ↗
             </button>
             <button onClick={() => setMitreMod(null)}
-              style={{ marginTop:8, width:'100%', background:'transparent', color:C.textDim, border:`1px solid ${C.border}`, borderRadius:12, padding:'10px', fontFamily:F.mono, fontSize:16, cursor:'pointer' }}>
+              style={{ marginTop:8, width:'100%', background:'transparent', color:C.textDim, border:`1px solid ${C.border}`, borderRadius:12, padding:'10px', fontFamily:F.mono, fontSize:14, cursor:'pointer' }}>
               Fechar
             </button>
           </div>

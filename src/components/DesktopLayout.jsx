@@ -1,4 +1,4 @@
-import { FaBrain, FaBook, FaGamepad, FaTrophy, FaUser, FaBolt, FaFire } from 'react-icons/fa';
+import { FaBrain, FaBook, FaGamepad, FaTrophy, FaUser, FaBolt, FaFire, FaChevronLeft } from 'react-icons/fa';
 import AppLogo from './AppLogo';
 import Avatar from './Avatar';
 
@@ -81,7 +81,7 @@ function RightPanel({ totalXp, streak, completedMods, totalMods }) {
 }
 
 // Sidebar desktop
-function Sidebar({ screen, onNavigate, profile }) {
+function Sidebar({ screen, onNavigate, profile, sidebarTitle }) {
   return (
     <div style={{
       width: 240, flexShrink: 0,
@@ -133,7 +133,7 @@ function Sidebar({ screen, onNavigate, profile }) {
           <div style={{ fontFamily: SANS, fontWeight: 700, fontSize: 18, color: TEXT, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             {profile?.name}
           </div>
-          <div style={{ fontFamily: MONO, fontSize: 13, color: TEXT3, letterSpacing: 1 }}>GRANDMASTER</div>
+          <div style={{ fontFamily: MONO, fontSize: 13, color: TEXT3, letterSpacing: 1 }}>{sidebarTitle || 'SECOPS ANALYST'}</div>
         </div>
       </div>
     </div>
@@ -141,7 +141,7 @@ function Sidebar({ screen, onNavigate, profile }) {
 }
 
 // Wrapper principal — detecta desktop vs mobile via CSS
-export default function DesktopLayout({ children, screen, onNavigate, profile, totalXp, streak, completedMods, totalMods }) {
+export default function DesktopLayout({ children, screen, onNavigate, profile, totalXp, streak, completedMods, totalMods, sidebarTitle }) {
   return (
     <>
       {/* CSS para controlar visibilidade por breakpoint */}
@@ -170,18 +170,32 @@ export default function DesktopLayout({ children, screen, onNavigate, profile, t
         minHeight: '100dvh', background: '#131f24',
         flexDirection: 'row', alignItems: 'flex-start',
       }}>
-        {/* Sidebar esquerda */}
-        <Sidebar screen={screen} onNavigate={onNavigate} profile={profile} />
+        {screen === 'missions' ? (
+          /* Missões — tela cheia, sem sidebar nem gadgets */
+          <div style={{ flex: 1, overflowY: 'auto', height: '100vh', background: '#131f24' }}>
+            {children}
+          </div>
+        ) : (
+          <>
+            {/* Sidebar esquerda — sempre colada no canto */}
+            <Sidebar screen={screen} onNavigate={onNavigate} profile={profile} sidebarTitle={sidebarTitle} />
 
-        {/* Conteúdo central */}
-        <div style={{ flex: 1, minWidth: 0, maxWidth: 680, margin: '0 auto', overflowY: 'auto', height: '100vh', background: '#131f24' }}>
-          {children}
-        </div>
+            {/* Wrapper central + gadgets — centralizados no espaço restante */}
+            <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'flex-start', minWidth: 0 }}>
 
-        {/* Painel direito */}
-        <div style={{ width: 300, flexShrink: 0, padding: '24px 20px', position: 'sticky', top: 0, maxHeight: '100vh', overflowY: 'auto' }}>
-          <RightPanel totalXp={totalXp} streak={streak} completedMods={completedMods} totalMods={totalMods} />
-        </div>
+              {/* Coluna central */}
+              <div style={{ width: '100%', maxWidth: 680, overflowY: 'auto', height: '100vh', background: '#131f24' }}>
+                {children}
+              </div>
+
+              {/* Painel gadgets — junto ao conteúdo, não no canto */}
+              <div style={{ width: 300, flexShrink: 0, padding: '24px 20px', position: 'sticky', top: 0, maxHeight: '100vh', overflowY: 'auto' }}>
+                <RightPanel totalXp={totalXp} streak={streak} completedMods={completedMods} totalMods={totalMods} />
+              </div>
+
+            </div>
+          </>
+        )}
       </div>
 
       {/* MOBILE LAYOUT — sem mudança */}

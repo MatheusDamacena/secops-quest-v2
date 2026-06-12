@@ -92,13 +92,14 @@ export default function App() {
   };
   const completedMods = modules.filter(m => getModPct(m.id) >= 1).length;
 
+  const sidebarTitle = isGrandmaster(progress) ? 'GRANDMASTER' : (profile?.title || 'SECOPS ANALYST');
   const commonProps = { profile, totalXp, streak, progress, onNavigate: goTo, lang, setLang, t };
 
   return (
     <>
       <style>{`@keyframes sqFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}`}</style>
       <DesktopLayout screen={screen} onNavigate={goTo} profile={profile}
-        totalXp={totalXp} streak={streak} completedMods={completedMods} totalMods={modules.length}>
+        totalXp={totalXp} streak={streak} completedMods={completedMods} totalMods={modules.length} sidebarTitle={sidebarTitle}>
         <div key={screen} style={{ animation:'sqFade .18s ease-out' }}>
           {screen === 'home'        && <HomeScreen        {...commonProps} />}
           {screen === 'celebration'  && <CelebrationScreen profile={profile} totalXp={totalXp} streak={streak} onContinue={() => goTo('profile')} />}

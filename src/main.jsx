@@ -7,7 +7,7 @@ const style = document.createElement('style');
 style.textContent = `
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    background: #0a0b0c;
+    background: #131f24;
     -webkit-font-smoothing: antialiased;
     color: #f0f0f0;
   }

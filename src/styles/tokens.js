@@ -3,13 +3,13 @@
 
 export const C = {
   // Base
-  bg:        '#0a0b0c',
-  surface:   '#1c1e21',
-  surface2:  '#15171a',
-  border:    'rgba(255,255,255,0.07)',
+  bg:        '#131f24',
+  surface:   '#1c2b32',
+  surface2:  '#243540',
+  border:    'rgba(255,255,255,0.06)',
   borderBright: 'rgba(255,255,255,0.15)',
-  cardBg:    '#1c1e21',
-  cardDepth: 'rgba(255,255,255,0.07)',
+  cardBg:    '#1c2b32',
+  cardDepth: 'rgba(255,255,255,0.06)',
 
   // Text
   text:    '#f0f0f1',

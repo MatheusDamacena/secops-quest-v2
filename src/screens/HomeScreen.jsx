@@ -168,10 +168,10 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0, flex: 1 }}>
           <Avatar profile={profile} size={26} />
           <div style={{ minWidth: 0, flex: 1 }}>
-            <div style={{ fontFamily: SANS, color: TEXT, fontSize: 'clamp(13px, 3vw, 15px)', fontWeight: 800, letterSpacing: -0.2, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>
+            <div style={{ fontFamily: SANS, color: TEXT, fontSize: 18, fontWeight: 800, letterSpacing: -0.2, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>
               {profile?.name}
             </div>
-            <div style={{ fontFamily: MONO, color: TEXT3, fontSize: 'clamp(8px, 1.8vw, 11px)', letterSpacing: 1, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>
+            <div style={{ fontFamily: MONO, color: TEXT3, fontSize: 13, letterSpacing: 1, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>
               SECOPS ANALYST
             </div>
           </div>
@@ -204,8 +204,8 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
                 {completedMods} de {modules.length} módulos completos
               </div>
             </div>
-            <div style={{ fontFamily: MONO, fontSize: 'clamp(22px, 6.1vw + 20px, 27px)', fontWeight: 900, color: TEXT, lineHeight: 1 }}>
-              {overallPct}<span style={{ fontSize: 17, color: TEXT3 }}>%</span>
+            <div style={{ fontFamily: MONO, fontSize: 27, fontWeight: 900, color: TEXT, lineHeight: 1 }}>
+              {overallPct}<span style={{ fontSize: 13, color: TEXT3 }}>%</span>
             </div>
           </div>
 
@@ -232,7 +232,7 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
               border: 'none',
               borderBottom: `4px solid ${ACCENT3D}`,
               borderRadius: 16, padding: '16px 20px',
-              fontFamily: SANS, fontWeight: 900, fontSize: 19,
+              fontFamily: SANS, fontWeight: 900, fontSize: 18,
               color: '#fff', cursor: 'pointer', marginBottom: 24,
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
               letterSpacing: 0.2,
@@ -253,10 +253,10 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
               width: '100%', background: AMBER,
               border: 'none', borderBottom: `4px solid ${AMBER3D}`,
               borderRadius: 16, padding: '14px 20px',
-              fontFamily: SANS, fontWeight: 900, fontSize: 'clamp(15px, 4.1vw + 13px, 18px)',
-              color: '#0a0b0c', cursor: 'pointer', marginBottom: 24,
+              fontFamily: SANS, fontWeight: 900, fontSize: 18,
+              color: '#131f24', cursor: 'pointer', marginBottom: 24,
             }}>
-            🔄 Revisar — modo Grandmaster
+            Revisar modo Grandmaster
           </button>
         )}
 
@@ -320,7 +320,7 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
                 <Icon size={18} color={screen === 'home' ? ACCENT : TEXT3} />
               </div>
               <div style={{
-                fontFamily: MONO, fontSize: 9, fontWeight: 700, letterSpacing: 0,
+                fontFamily: MONO, fontSize: 13, fontWeight: 700, letterSpacing: 0,
                 color: screen === 'home' ? ACCENT : TEXT3,
                 whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
                 maxWidth: '100%',
