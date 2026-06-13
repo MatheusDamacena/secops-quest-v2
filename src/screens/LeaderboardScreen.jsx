@@ -35,13 +35,13 @@ export default function LeaderboardScreen({ currentUserId, onBack }) {
     <div className='sq-module-root' style={{ minHeight:'100dvh', background:'#131f24', display:'flex', flexDirection:'column' }}>
       {/* Header */}
       <div className="sq-mobile-only" style={{ background:'#1c2b32', borderBottom:'1px solid rgba(255,255,255,0.06)', padding:'14px 20px', display:'flex', alignItems:'center', gap:12 }}>
-        <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:29, cursor:'pointer', minWidth:44, minHeight:44 }}>‹</button>
+        <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:27, cursor:'pointer', minWidth:44, minHeight:44 }}>‹</button>
         <div style={{ flex:1 }}>
-          <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:11, letterSpacing:2 }}>RANKING GLOBAL</div>
-          <div style={{ fontFamily:F.display, color:C.text, fontSize:20, fontWeight:900, display:'flex', alignItems:'center', gap:8 }}><FaTrophy size={18} color={C.yellow} /> Leaderboard</div>
+          <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:13, letterSpacing:2 }}>RANKING GLOBAL</div>
+          <div style={{ fontFamily:F.display, color:C.text, fontSize:18, fontWeight:900, display:'flex', alignItems:'center', gap:8 }}><FaTrophy size={18} color={C.yellow} /> Leaderboard</div>
         </div>
         <button onClick={() => { setEntries([]); setRefresh(r => r+1); }}
-          style={{ background:'none', border:`1px solid ${C.border}`, borderRadius:10, color: loading ? C.accent : C.textDim, fontSize:18, cursor:'pointer', padding:'8px 12px' }}>
+          style={{ background:'none', border:`1px solid ${C.border}`, borderRadius:10, color: loading ? C.accent : C.textDim, fontSize:13, cursor:'pointer', padding:'8px 12px' }}>
           {loading ? '⟳' : '↺'}
         </button>
       </div>
@@ -49,27 +49,27 @@ export default function LeaderboardScreen({ currentUserId, onBack }) {
       {/* Legenda */}
       {!loading && total >= 7 && (
         <div style={{ display:'flex', gap:12, padding:'8px 16px 4px', justifyContent:'flex-end' }}>
-          <span style={{ fontFamily:F.mono, fontSize:10, color:'#22d3a0', display:'flex', alignItems:'center', gap:3 }}><FaArrowUp size={9} /> PROMOÇÃO</span>
-          <span style={{ fontFamily:F.mono, fontSize:10, color:'#ff4d4d', display:'flex', alignItems:'center', gap:3 }}><FaArrowDown size={9} /> REBAIXAMENTO</span>
+          <span style={{ fontFamily:F.mono, fontSize:18, fontWeight:700, color:'#22d3a0', display:'flex', alignItems:'center', gap:4, letterSpacing:1 }}><FaArrowUp size={10} /> PROMOÇÃO</span>
+          <span style={{ fontFamily:F.mono, fontSize:18, fontWeight:700, color:'#ff4d4d', display:'flex', alignItems:'center', gap:4, letterSpacing:1 }}><FaArrowDown size={10} /> REBAIXAMENTO</span>
         </div>
       )}
 
       <div style={{ flex:1, overflowY:'auto', padding:'8px 0 80px' }}>
         {loading ? (
           <div style={{ textAlign:'center', padding:80 }}>
-            <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:14 }}>Carregando ranking…</div>
+            <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:16 }}>Carregando ranking…</div>
           </div>
         ) : entries.length === 0 ? (
           <div style={{ textAlign:'center', padding:80 }}>
             <FaTrophy size={56} color={C.yellow} style={{ marginBottom:16 }} />
-            <div style={{ fontFamily:F.display, color:C.text, fontSize:20, fontWeight:800, marginBottom:8 }}>Seja o primeiro!</div>
+            <div style={{ fontFamily:F.display, color:C.text, fontSize:18, fontWeight:800, marginBottom:8 }}>Seja o primeiro!</div>
           </div>
         ) : (
           <div style={{ maxWidth:640, margin:'0 auto' }}>
             {/* Separador zona promoção */}
             <div style={{ display:'flex', alignItems:'center', gap:8, padding:'0 16px 8px' }}>
               <div style={{ flex:1, height:1, background:'#22d3a044' }}/>
-              <div style={{ fontFamily:F.mono, fontSize:10, color:'#22d3a0', letterSpacing:1 }}>⬆ ZONA DE PROMOÇÃO</div>
+              <div style={{ fontFamily:F.mono, fontSize:18, fontWeight:700, color:'#22d3a0', letterSpacing:2, textTransform:'uppercase' }}>⬆ ZONA DE PROMOÇÃO</div>
               <div style={{ flex:1, height:1, background:'#22d3a044' }}/>
             </div>
 
@@ -85,7 +85,7 @@ export default function LeaderboardScreen({ currentUserId, onBack }) {
                   {showDemoteSep && (
                     <div style={{ display:'flex', alignItems:'center', gap:8, padding:'8px 16px 6px' }}>
                       <div style={{ flex:1, height:1, background:'#ff4d4d44' }}/>
-                      <div style={{ fontFamily:F.mono, fontSize:10, color:'#ff4d4d', letterSpacing:1 }}>⬇ ZONA DE REBAIXAMENTO</div>
+                      <div style={{ fontFamily:F.mono, fontSize:18, fontWeight:700, color:'#ff4d4d', letterSpacing:2, textTransform:'uppercase' }}>⬇ ZONA DE REBAIXAMENTO</div>
                       <div style={{ flex:1, height:1, background:'#ff4d4d44' }}/>
                     </div>
                   )}
@@ -100,21 +100,21 @@ export default function LeaderboardScreen({ currentUserId, onBack }) {
                     <div style={{ fontFamily:"'Roboto Mono',monospace", fontSize:rank<=3?20:15, fontWeight:900, color:zone||(isMe?'#ff4b7a':'rgba(255,255,255,0.3)'), minWidth:32, textAlign:'center', flexShrink:0 }}>
                       {rankIcon(rank, entry.grandmaster)}
                     </div>
-                    <div style={{ fontSize:30, lineHeight:1, flexShrink:0 }}><Avatar profile={{ avatarId: entry.avatarId, avatarColor: entry.avatarColor }} size={36} /></div>
+                    <div style={{ fontSize:28, lineHeight:1, flexShrink:0 }}><Avatar profile={{ avatarId: entry.avatarId, avatarColor: entry.avatarColor }} size={36} /></div>
                     <div style={{ flex:1, minWidth:0 }}>
                       <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:6 }}>
-                        <div style={{ fontFamily:F.display, color:isMe?(zone||C.accent):C.text, fontSize:15, fontWeight:800, overflow:'hidden', whiteSpace:'nowrap', textOverflow:'ellipsis' }}>
+                        <div style={{ fontFamily:F.display, color:isMe?(zone||C.accent):C.text, fontSize:18, fontWeight:800, overflow:'hidden', whiteSpace:'nowrap', textOverflow:'ellipsis' }}>
                           {entry.name}
                         </div>
-                        {isMe && <div style={{ fontFamily:F.mono, fontSize:10, color:zone||C.accent, background:(zone||C.accent)+'22', borderRadius:6, padding:'2px 7px', flexShrink:0, letterSpacing:1 }}>VOCÊ</div>}
+                        {isMe && <div style={{ fontFamily:F.mono, fontSize:8, color:zone||C.accent, background:(zone||C.accent)+'22', borderRadius:6, padding:'2px 7px', flexShrink:0, letterSpacing:1 }}>VOCÊ</div>}
                       </div>
                       <div style={{ height:6, background:C.border, borderRadius:99, overflow:'hidden' }}>
                         <div style={{ height:'100%', width:`${barW}%`, background:isMe?(zone||C.accent):zone||C.cyan, borderRadius:99, transition:'width .6s ease' }}/>
                       </div>
                     </div>
                     <div style={{ textAlign:'right', flexShrink:0 }}>
-                      <div style={{ fontFamily:F.display, fontSize:16, fontWeight:900, color:zone||(isMe?C.accent:C.text), display:'flex', alignItems:'center', gap:4 }}><FaBolt size={12} />{entry.dx||0} DX</div>
-                      <div style={{ fontFamily:F.mono, fontSize:11, color:C.textDim, marginTop:2, display:'flex', alignItems:'center', gap:4 }}><FaFire size={10} color={C.orange} />{entry.streak||0} dias</div>
+                      <div style={{ fontFamily:F.display, fontSize:18, fontWeight:900, color:zone||(isMe?C.accent:C.text), display:'flex', alignItems:'center', gap:4 }}><FaBolt size={12} />{entry.dx||0} DX</div>
+                      <div style={{ fontFamily:F.mono, fontSize:13, color:C.textDim, marginTop:2, display:'flex', alignItems:'center', gap:4 }}><FaFire size={10} color={C.orange} />{entry.streak||0} dias</div>
                     </div>
                   </div>
                 </div>

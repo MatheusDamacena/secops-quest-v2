@@ -22,7 +22,7 @@ export default function M1Screen({ progress, onComplete, onBack, lang = 'pt', t 
         <div className="sq-mobile-only" style={{ background:'#1c2b32', borderBottom:"1px solid rgba(255,255,255,0.06)", padding:'14px 20px', display:'flex', alignItems:'center', gap:12 }}>
           <button onClick={onBack} style={{ background:'none', border:'none', color:C.textDim, fontSize:'clamp(24px, 5vw, 30px)', cursor:'pointer' }}>‹</button>
           <div>
-            <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(15px, 2.8vw, 17px)', letterSpacing:2 }}>MÓDULO 1</div>
+            <div style={{ fontFamily:F.mono, color:C.textDim, fontSize:'clamp(15px, 2.8vw, 17px)', letterSpacing:2 }}>MÓDULO 0</div>
             <div style={{ fontFamily:F.display, color:C.text, fontSize:'clamp(18px, 4vw, 22px)', fontWeight:900, display:'flex', alignItems:'center', gap:8 }}><FaLandmark size={18} color={C.cyan} /> Conceitos Fundamentais</div>
           </div>
         </div>
