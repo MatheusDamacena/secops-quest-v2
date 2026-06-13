@@ -46,6 +46,8 @@ export default function HomeScreen({ profile, totalXp, streak, progress, onNavig
       case 4: return Math.round(((p.m4||[]).length / MISSIONS.length) * 100);
       case 5: return Math.round(((p.m5||[]).length / 7) * 100);
       case 6: return Math.round(((p.m6||[]).length / 8) * 100);
+      case 7: return Math.round(((p.m7||[]).length / 7) * 100);
+      case 8: return Math.round(((p.m8||[]).length / 7) * 100);
       default: return 0;
     }
   };

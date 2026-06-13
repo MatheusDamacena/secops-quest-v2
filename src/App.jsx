@@ -22,6 +22,7 @@ import M4Screen          from './screens/M4Screen';
 import M5Screen          from './screens/M5Screen';
 import M6Screen          from './screens/M6Screen';
 import M7Screen          from './screens/M7Screen';
+import M8Screen          from './screens/M8Screen';
 import PlaybookScreen     from './screens/PlaybookScreen';
 import CelebrationScreen  from './screens/CelebrationScreen';
 import OnboardingScreen   from './screens/OnboardingScreen';
@@ -61,7 +62,8 @@ export default function App() {
            (p?.m4||[]).length >= 16 &&
            (p?.m5||[]).length >= 7 &&
            (p?.m6||[]).length >= 8 &&
-           (p?.m7||[]).length >= 7;
+           (p?.m7||[]).length >= 7 &&
+           (p?.m8||[]).length >= 7;
   };
 
   const handleModuleComplete = (progressUpdate, xpEarned, isModuleDone) => {
@@ -85,6 +87,7 @@ export default function App() {
     if (moduleId === 5) return <M5Screen {...moduleProps} />;
     if (moduleId === 6) return <M6Screen {...moduleProps} />;
     if (moduleId === 7) return <M7Screen {...moduleProps} />;
+    if (moduleId === 8) return <M8Screen {...moduleProps} />;
   }
 
   // Calcular módulos concluídos para o DesktopLayout
@@ -99,6 +102,7 @@ export default function App() {
       case 5: return Math.round(((p.m5||[]).length / 7) * 100);
       case 6: return Math.round(((p.m6||[]).length / 8) * 100);
       case 7: return Math.round(((p.m7||[]).length / 7) * 100);
+      case 8: return Math.round(((p.m8||[]).length / 7) * 100);
       default: return 0;
     }
   };

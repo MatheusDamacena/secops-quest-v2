@@ -51,8 +51,15 @@
   {
     "id": 7,
     "title": "Google Threat Intelligence",
-    "subtitle": "GTI · VirusTotal · Mandiant · Threat Hunting",
-    "icon": "🔍",
-    "color": "#00c4cc"
+    "sub": "GTI · VirusTotal · Mandiant · IOCs · Threat Hunting",
+    "iconId": "m7",
+    "lessons": 7
+  },
+  {
+    "id": 8,
+    "title": "SOAR & Automação",
+    "sub": "Playbooks · Integrações · Automação · Cases · Gemini",
+    "iconId": "m8",
+    "lessons": 7
   }
 ]
