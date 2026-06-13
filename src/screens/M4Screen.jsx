@@ -348,7 +348,7 @@ export default function M4Screen({ progress, onComplete, onBack, lang = 'pt' }) 
       {/* Header desktop — título + contador inline, sem barra */}
 
       {/* Filtro */}
-      <div style={{ display:'flex', gap:6, flexWrap:'wrap', padding:'12px 16px 4px', background:'transparent', borderBottom:'none', flexWrap:'wrap', gap:6, padding:'12px 20px 8px' }}>
+      <div style={{ display:'flex', gap:6, flexWrap:'wrap', padding:'12px 20px 8px', background:'transparent' }}>
         {['Todas', ...cats].map(c => (
           <button key={c} onClick={() => setCatFilter(c)}
             style={{ background: catFilter===c ? '#ff4b7a' : 'rgba(255,255,255,0.05)', border:'none', borderRadius:20, padding:'6px 14px', fontFamily:"'Roboto Mono',monospace", color: catFilter===c ? '#fff' : 'rgba(255,255,255,0.4)', fontSize:14, fontWeight:700, cursor:'pointer', whiteSpace:'nowrap', flexShrink:0, letterSpacing:0.5, transition:'background .15s' }}>

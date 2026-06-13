@@ -21,6 +21,7 @@ import M3Screen          from './screens/M3Screen';
 import M4Screen          from './screens/M4Screen';
 import M5Screen          from './screens/M5Screen';
 import M6Screen          from './screens/M6Screen';
+import PlaybookScreen     from './screens/PlaybookScreen';
 import CelebrationScreen  from './screens/CelebrationScreen';
 import OnboardingScreen   from './screens/OnboardingScreen';
 
@@ -86,20 +87,26 @@ export default function App() {
   // Calcular módulos concluídos para o DesktopLayout
   const getModPct = (id) => {
     const p = progress || {};
-    const m = { 0:(p.m1||[]).length/7, 1:p.m0?1:0, 2:p.m2?1:0, 3:(p.m3||[]).length/4,
-                4:0.5, 5:(p.m5||[]).length/7, 6:(p.m6||[]).length/8 };
-    return (m[id]||0) >= 1 ? 1 : (m[id]||0);
+    switch(id) {
+      case 0: return Math.round(((p.m1||[]).length / 7) * 100);
+      case 1: return (p.m0 === true || p.m0 === 100) ? 100 : 0;
+      case 2: return p.m2 ? 100 : 0;
+      case 3: return Math.round(((p.m3||[]).length / 4) * 100);
+      case 4: return Math.round(((p.m4||[]).length / 27) * 100);
+      case 5: return Math.round(((p.m5||[]).length / 7) * 100);
+      case 6: return Math.round(((p.m6||[]).length / 8) * 100);
+      default: return 0;
+    }
   };
-  const completedMods = modules.filter(m => getModPct(m.id) >= 1).length;
+  const completedMods = modules.filter(m => getModPct(m.id) === 100).length;
 
-  const sidebarTitle = isGrandmaster(progress) ? 'GRANDMASTER' : (profile?.title || 'SECOPS ANALYST');
   const commonProps = { profile, totalXp, streak, progress, onNavigate: goTo, lang, setLang, t };
 
   return (
     <>
       <style>{`@keyframes sqFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}`}</style>
       <DesktopLayout screen={screen} onNavigate={goTo} profile={profile}
-        totalXp={totalXp} streak={streak} completedMods={completedMods} totalMods={modules.length} sidebarTitle={sidebarTitle}>
+        totalXp={totalXp} streak={streak} completedMods={completedMods} totalMods={modules.length}>
         <div key={screen} style={{ animation:'sqFade .18s ease-out' }}>
           {screen === 'home'        && <HomeScreen        {...commonProps} />}
           {screen === 'celebration'  && <CelebrationScreen profile={profile} totalXp={totalXp} streak={streak} onContinue={() => goTo('profile')} />}
@@ -107,6 +114,7 @@ export default function App() {
           {screen === 'leaderboard' && <LeaderboardScreen currentUserId={profile?.userId} onBack={() => goTo('home')} />}
           {screen === 'profile'     && <ProfileScreen     {...commonProps} setProfile={setProfile} fbUser={fbUser} onBack={() => goTo('home')} />}
           {screen === 'missions'    && <M4Screen          {...moduleProps} />}
+          {screen === 'playbook'    && <PlaybookScreen    onBack={() => goTo('home')} onXpGain={(dx) => setTotalXp(x => x + dx)} />}
         </div>
       </DesktopLayout>
       <IOSInstallBanner />

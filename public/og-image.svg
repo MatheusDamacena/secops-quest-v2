@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&amp;family=Inter:wght@400;600&amp;display=swap');
+      .title { font-family: 'Comfortaa', sans-serif; font-weight: 700; font-size: 72px; fill: #ffffff; text-anchor: middle; }
+      .subtitle { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 26px; fill: #ffcd00; text-anchor: middle; letter-spacing: 3px; text-transform: uppercase; }
+      .tagline { font-family: 'Inter', sans-serif; font-weight: 400; font-size: 22px; fill: #94a3b8; text-anchor: middle; }
+    </style>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0d151a" />
+      <stop offset="100%" stop-color="#121e26" />
+    </linearGradient>
+    <linearGradient id="lupaGlass" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00E5FF" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#00E5FF" stop-opacity="0.1"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)" />
+  <g opacity="0.05" stroke="#ffffff" stroke-width="1">
+    <line x1="200" y1="0" x2="200" y2="630" /><line x1="400" y1="0" x2="400" y2="630" /><line x1="600" y1="0" x2="600" y2="630" /><line x1="800" y1="0" x2="800" y2="630" /><line x1="1000" y1="0" x2="1000" y2="630" />
+    <line x1="0" y1="150" x2="1200" y2="150" /><line x1="0" y1="300" x2="1200" y2="300" /><line x1="0" y1="450" x2="1200" y2="450" />
+  </g>
+  <circle cx="600" cy="315" r="500" fill="#ff4b8b" opacity="0.02" filter="blur(80px)" />
+  <g transform="translate(540, 60) scale(1.0)">
+    <path d="M 60 115 C 60 115, 10 90, 10 40 C 10 20, 25 15, 60 15 C 95 15, 110 20, 110 40 C 110 90, 60 115, 60 115 Z" fill="#b92b6a" />
+    <path d="M 60 110 C 60 110, 10 85, 10 35 C 10 15, 25 10, 60 10 C 95 10, 110 15, 110 35 C 110 85, 60 110, 60 110 Z" fill="#ff4b8b" />
+    <path d="M 60 102 C 60 102, 18 80, 18 38 C 18 22, 30 18, 60 18 C 90 18, 102 22, 102 38 C 102 80, 60 102, 60 102 Z" fill="#1b2733" />
+    <path d="M 30 100 C 30 80, 40 75, 60 75 C 80 75, 90 80, 90 100" fill="#2c3e50" />
+    <circle cx="60" cy="55" r="28" fill="#2c3e50" />
+    <path d="M 35 55 C 20 50, 15 65, 15 65 C 15 65, 25 60, 32 62 Z" fill="#2c3e50" />
+    <path d="M 35 55 C 22 55, 18 70, 18 70 C 18 70, 28 65, 33 66 Z" fill="#1a252f" />
+    <rect x="40" y="44" width="40" height="16" rx="8" fill="#fcdbb5" />
+    <circle cx="48" cy="52" r="4" fill="#121e26" />
+    <circle cx="46.5" cy="50.5" r="1.5" fill="#ffffff" />
+    <circle cx="70" cy="52" r="5" fill="#121e26" />
+    <circle cx="68" cy="50" r="2" fill="#ffffff" />
+    <path d="M 82 68 L 95 85" stroke="#ffcd00" stroke-width="6" stroke-linecap="round" />
+    <circle cx="72" cy="54" r="16" fill="none" stroke="#ffcd00" stroke-width="5" />
+    <circle cx="72" cy="54" r="13.5" fill="url(#lupaGlass)" />
+  </g>
+  <text x="600" y="310" class="title">SecOps <tspan fill="#ff4b8b">Quest</tspan></text>
+  <text x="600" y="380" class="subtitle">Plataforma Gamificada de Aprendizagem</text>
+  <text x="600" y="450" class="tagline">Domine a engenharia de deteção, análise de UDM e regras YARA-L.</text>
+</svg>

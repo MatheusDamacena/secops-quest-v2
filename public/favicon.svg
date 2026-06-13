@@ -1,5 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <rect width="100" height="100" rx="20" fill="#0a0b0c"/>
-  <path d="M50 15 L80 30 L80 55 C80 70 65 82 50 87 C35 82 20 70 20 55 L20 30 Z" fill="none" stroke="#00c4cc" stroke-width="4"/>
-  <text x="50" y="62" text-anchor="middle" font-size="30" fill="#00c4cc">🔒</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <path d="M60 115C60 115,10 90,10 40C10 20,25 15,60 15C95 15,110 20,110 40C110 90,60 115,60 115Z" fill="#ff4b8b"/>
+  <path d="M60 102C60 102,18 80,18 38C18 22,30 18,60 18C90 18,102 22,102 38C102 80,60 102,60 102Z" fill="#1b2733"/>
+  <circle cx="60" cy="50" r="28" fill="none" stroke="#ffcd00" stroke-width="14"/>
+  <path d="M76 68L100 95" stroke="#ffcd00" stroke-width="18" stroke-linecap="round"/>
 </svg>

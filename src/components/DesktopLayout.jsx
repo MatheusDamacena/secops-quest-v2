@@ -91,13 +91,12 @@ function Sidebar({ screen, onNavigate, profile, sidebarTitle }) {
       position: 'sticky', top: 0, height: '100vh',
       overflowY: 'auto',
     }}>
-      {/* Logo */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', marginBottom: 24 }}>
-        <AppLogo size={32} />
-        <div>
-          <div style={{ fontFamily: SANS, fontWeight: 900, fontSize: 19, color: TEXT, letterSpacing: -0.3 }}>SecOps Quest</div>
-          <div style={{ fontFamily: MONO, fontSize: 13, color: TEXT3, letterSpacing: 1 }}>GOOGLE SECOPS</div>
-        </div>
+      {/* Logo — mascote grande + wordmark */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '12px 12px', marginBottom: 20, gap: 8 }}>
+        <AppLogo size={96} />
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 350 60" width="160" height="28">
+          <text x="0" y="45" fontFamily="Inter,Nunito,sans-serif" fontWeight="900" fontSize="45" fill="#ffffff">SecOps Quest</text>
+        </svg>
       </div>
 
       {/* Nav items */}
